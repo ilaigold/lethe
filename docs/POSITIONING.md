@@ -1,6 +1,6 @@
 # Positioning: what Lethe is, who pays, how it makes money
 
-**One line:** Lethe is an open-source SDK and a managed platform that sit **on top of** your fine-tuning pipeline.
+**One line:** Lethe is **exact machine un-learning** for fine-tuned models: an open-source SDK and a managed platform that sit **on top of** your fine-tuning pipeline.
 You keep the same models, but any customer can be removed, and every removal comes with a receipt.
 
 ## On top, not instead
@@ -37,7 +37,7 @@ Lethe changes two things:
 - The vendor's own upsell: "certified removal" becomes a feature it sells to its customers.
 
 ## What we are not
-- Not approximate "unlearning": we don't nudge weights to hide a secret, we retrain without the data.
+- Not *approximate* unlearning: we don't nudge weights to hide a secret; we do *exact* machine un-learning, retraining without the data.
 - Not a retrofit: it must be adopted before training. That's the honest cost, and the reason to adopt it early.
 - Not proof that a model forgot: a model's weights can't show that. The receipt proves what the served model was
   trained on, and the leak audit is supporting evidence.

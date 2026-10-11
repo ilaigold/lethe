@@ -1,4 +1,4 @@
-# Lethe: architecture
+# Lethe: architecture (exact machine un-learning)
 
 ```mermaid
 flowchart TB

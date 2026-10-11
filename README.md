@@ -1,6 +1,6 @@
-# Lethe — revocable training
+# Lethe — machine un-learning
 
-**Remove any customer from your models. Prove it.**
+**Exact machine un-learning: remove any customer from your models. Prove it.**
 
 B2B AI vendors train shared models on many customers' data, and several say in writing that a departed
 customer's data cannot be removed (HubSpot: *"It is not possible to delete previously used data from trained

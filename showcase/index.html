@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>Lethe · revocable training</title>
+  <title>Lethe · machine un-learning</title>
   <meta name="description" content="Remove any customer from your model, without touching anyone else, and prove it.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231D5C6B'/%3E%3Cpath d='M6 12.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0M6 20.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0' stroke='%23DDE2E6' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,19 +29,19 @@
       </svg>
       <span class="brand__name">Lethe</span>
     </a>
-    <span class="brand__tag">revocable training</span>
+    <span class="brand__tag">machine un-learning</span>
   </header>
 
   <main class="wrap">
     <section class="hero">
       <h1>Remove any customer from your model. <em>Prove it.</em></h1>
-      <p class="sub">Each customer trains in its own shard. Removing one retrains a single shard, not the model.</p>
+      <p class="sub">Exact machine un-learning: each customer trains in its own shard. Removing one retrains a single shard, not the model.</p>
       <p class="mode" id="mode" hidden></p>
     </section>
 
     <section class="panel" aria-label="Shard tree">
       <div class="stage" id="stage" data-phase="pick" role="group"
-           aria-label="Serving model, built from merge A and merge B, built from shards 1 to 4, each trained on two customers"></div>
+           aria-label="Serving model: shards 1 to 4 answer together, each shard trained on two customers"></div>
       <ol class="steps" id="steps" aria-label="Removal steps" hidden></ol>
       <div class="controls">
         <p class="hint" id="hint" aria-live="polite">Pick a customer to remove</p>
@@ -74,7 +74,7 @@
     </section>
 
     <p class="aside">
-      <strong>Why not just ‘unlearn’?</strong> On our test model, approximate unlearning looked clean, then 30 fine-tuning
+      <strong>Why not approximate unlearning?</strong> On our test model, approximate unlearning looked clean, then 30 fine-tuning
       steps on other customers’ data brought the secret back (rank 1 of 100,000).
       <span class="aside__note">measured on a small model</span>
     </p>
