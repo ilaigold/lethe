@@ -36,16 +36,22 @@
     <section class="hero">
       <h1>Remove any customer from your model. <em>Prove it.</em></h1>
       <p class="sub">Each customer trains in its own shard. Removing one retrains a single shard, not the model.</p>
+      <p class="mode" id="mode" hidden></p>
     </section>
 
     <section class="panel" aria-label="Shard tree">
       <div class="stage" id="stage" data-phase="pick" role="group"
            aria-label="Serving model, built from merge A and merge B, built from shards 1 to 4, each trained on two customers"></div>
+      <ol class="steps" id="steps" aria-label="Removal steps" hidden></ol>
       <div class="controls">
         <p class="hint" id="hint" aria-live="polite">Pick a customer to remove</p>
         <button class="link" id="reset" type="button" hidden>Reset</button>
         <button class="btn" id="remove" type="button" disabled>Remove</button>
       </div>
+      <details class="log" id="log" hidden>
+        <summary>show live log</summary>
+        <pre id="log-lines" aria-label="Last lines printed by the removal CLI"></pre>
+      </details>
     </section>
 
     <section class="result" id="result" aria-label="Result" hidden></section>
@@ -58,7 +64,7 @@
     </p>
   </main>
 
-  <footer class="foot wrap">Hackathon prototype · synthetic data · fictional companies</footer>
+  <footer class="foot wrap">Hackathon prototype · synthetic data · fictional companies · <a href="app/" style="color:#1D5C6B;font-weight:500;text-underline-offset:3px">Open the console →</a></footer>
 
   <script src="app.js" defer></script>
 </body>
