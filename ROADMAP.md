@@ -75,13 +75,13 @@ Status: `[ ]` todo · `[~]` in progress · `[x]` done.
   runs a removal.
 
 ## Ilai (coordination)
-- [ ] **I1** [#14](https://github.com/ilaigold/lethe/issues/14) Keep Vercel = GitHub: the tour in `showcase/` on `main`; Vercel project `lethe-demo` deploys `showcase/`.
+- [~] **I1** [#14](https://github.com/ilaigold/lethe/issues/14) Keep Vercel = GitHub: the tour in `showcase/` on `main`; Vercel project `lethe-demo` deploys `showcase/`.
 - [ ] **I2** [#15](https://github.com/ilaigold/lethe/issues/15) Lunch decisions written into NEXT_STEPS §2 (deadline, safe vs ambitious, model, sponsors).
 
 ## Being done by Claude right now (no action needed)
-- [~] [#16](https://github.com/ilaigold/lethe/issues/16) Small, simple demo site (`showcase/`). It deploys to https://lethe-demo-six.vercel.app when ready.
-- [~] [#17](https://github.com/ilaigold/lethe/issues/17) Synthetic data for the 8 companies (`data/tenants/`) + `scripts/build_dataset.py`, which plants the canaries.
-- [~] [#18](https://github.com/ilaigold/lethe/issues/18) Gemma 4 E2B timing test on the Mac + `docs/REAL_RUN_PLAN.md`.
+- [x] [#16](https://github.com/ilaigold/lethe/issues/16) Small, simple demo site (`showcase/`): **live at https://lethe-demo-six.vercel.app**
+- [x] [#17](https://github.com/ilaigold/lethe/issues/17) Synthetic data for the 8 companies (`data/tenants/`) + `scripts/build_dataset.py`, which plants the canaries.
+- [x] [#18](https://github.com/ilaigold/lethe/issues/18) Gemma 4 E2B timing test on the Mac + `docs/REAL_RUN_PLAN.md`.
 
 ## Checkpoints
 | When | Check |
