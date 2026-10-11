@@ -18,6 +18,10 @@ dependencies = [
 [project.optional-dependencies]
 # Apple-Silicon only: Gemma 4 / LoRA experiments (experiments/real_smoke). Install with: uv sync --extra mlx
 mlx = ["mlx-lm>=0.32.0; sys_platform == 'darwin' and platform_machine == 'arm64'"]
+# Patient-level removal on small tabular models (lethe/tabular). Install with: uv sync --extra tabular
+tabular = ["scikit-learn>=1.5"]
+# Snowflake as the patient data source (lethe/tabular/sources.py). Install with: uv sync --extra snowflake
+snowflake = ["snowflake-connector-python>=3.12"]
 
 [dependency-groups]
 dev = [
