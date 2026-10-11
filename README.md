@@ -23,7 +23,8 @@ steps on other customers' data bring the secret back.
 
 ## Links
 - **Product tour (demo site):** https://lethe-demo-six.vercel.app (`?mock=1` for the current app)
-- **How we split the work:** [docs/WORKSTREAMS.md](docs/WORKSTREAMS.md)
+- **Roadmap: who does what today:** [ROADMAP.md](ROADMAP.md)
+- **Lunch decisions + demo flow:** [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) · workstream details: [docs/WORKSTREAMS.md](docs/WORKSTREAMS.md)
 - **Market, competition, regulation and feasibility research:** [docs/RESEARCH.md](docs/RESEARCH.md)
 
 ## Repo map

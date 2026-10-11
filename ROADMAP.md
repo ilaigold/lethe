@@ -1,0 +1,77 @@
+# Roadmap: who does what
+
+**Goal for today:** a rehearsed 3-minute demo, plus a backup video. In it we remove one customer from a real trained
+model, show its secret is gone while the other customers are untouched, and verify the deletion certificate live.
+
+**Deadline:** `____` (fill in). Feature freeze at **T-3h**. Two rehearsals at **T-1h**.
+
+Background: [NEXT_STEPS.md](docs/NEXT_STEPS.md) (decisions + demo flow) · [WORKSTREAMS.md](docs/WORKSTREAMS.md) ·
+[RESEARCH.md](docs/RESEARCH.md) · [OUTREACH.md](docs/OUTREACH.md) · [CONTRACT.md](docs/CONTRACT.md)
+
+## Lanes and owners (proposed, so confirm at lunch)
+| Lane | Owner | Owns |
+|---|---|---|
+| **Model** | @ilaigold (also presents) | Training, removal CLI, golden runs. Ilai's laptop is the only one that trains, because it has the GPU and the model files. |
+| **App** | @anveshachuri | `web/` demo console + `showcase/` tweaks |
+| **Story → Server** | @Sanskar121543 | Script, Q&A, Devpost, outreach; then the FastAPI server |
+
+Status: `[ ]` todo · `[~]` in progress · `[x]` done. Tick boxes in your PRs.
+
+## Model (@ilaigold)
+- [ ] **M1 Merge check** (~1 h, mostly GPU): build the merge tree from the 4 trained shards; audit Acme; remove Acme;
+  audit again. Repeat with the ensemble. *Done when* there's a before/after table, and the serving model is chosen
+  by the rule in NEXT_STEPS §2 (tree only if Acme's code is in the top 10 before removal and at ≤ 3 bits after).
+- [ ] **M2 Removal CLI** `lethe/revoke.py` (3–4 h): receipts → retrain shard → re-merge → audit → certificate.
+  *Done when* `scripts/verify_certificate.py` passes on its output, fails after a one-byte edit, and a run takes ≤ 2 min.
+- [ ] **M3 Golden runs** (1 h): Acme alone, then Acme + Cobalt as a batch. Commit the small JSON outputs (not the
+  weights) and record a 60–90 s backup video with Story. *Done when* the files are on `main` and the MP4 is saved.
+- [ ] **M4 Choose the model for the real run**: tiny model vs Gemma 4 E2B (LoRA). Decide from the measured timings
+  in `docs/REAL_RUN_PLAN.md` (being written now).
+- [ ] *(P1)* **M5** Phase-2 results table in `experiments/RESULTS.md`: tree vs ensemble, batch vs one at a time.
+- [ ] *(P1)* **M6** Check that the approximate-unlearning attack reproduces on phase 2 (≥ 2 of 3 seeds) before it
+  goes live; otherwise show the phase-1 result, labelled.
+
+## App (@anveshachuri)
+- [ ] **A1 Demo console** (3–4 h): in `web/`, add the queue + batch plan + the merge tree with the path lit, built on
+  `web/mock.js`, in the meadow + silver look (`design/SHOWCASE_BRIEF.md`; a half-finished restyle is in `web/wip/`).
+  *Done when* `?mock=1` runs Acme + Cobalt through all 7 steps and ends with 2 certificates.
+- [ ] **A2 Replay the golden run** (1 h, after M3): a labelled "recorded run" mode that plays the real JSON from M3,
+  with real hashes.
+- [ ] **A3 Product-tour polish**: small tweaks to `showcase/` after the team reviews the deployed site.
+- [ ] *(P1)* **A4** Connect to the live server (after S2): without `?mock=1` it shows "live api" and a removal from
+  the browser issues a certificate that verifies.
+
+## Story → Server (@Sanskar121543)
+- [ ] **S1 Pitch kit** (2–3 h): a 3-minute script (flow in NEXT_STEPS §3), a Q&A sheet (Can the vendor lie in the
+  manifest? What does sharding cost? Isn't this SISA? Does it scale to LLMs? Does the attack generalize?), a Devpost
+  draft, and one honest line per sponsor. *Done when* there are two timed read-throughs at ≤ 3:00, and every number
+  traces to `experiments/RESULTS.md` or a golden run.
+- [ ] **S2 Outreach** (spread over the day): run `docs/OUTREACH.md` with everyone. *Done when* there are 2+ written
+  yeses with naming permission recorded in the tracker.
+- [ ] *(P1)* **S3 Server** (3 h + 2 h): FastAPI that first replays the golden files, then wraps the CLI live, with one
+  GPU lock; endpoints per `docs/CONTRACT.md`. *Done when* localhost without `?mock=1` lists the 8 customers and
+  runs a removal.
+
+## Ilai (coordination)
+- [ ] **I1** Keep Vercel = GitHub: the tour in `showcase/` on `main`; Vercel project `lethe-demo` deploys `showcase/`.
+- [ ] **I2** Lunch decisions written into NEXT_STEPS §2 (deadline, safe vs ambitious, model, sponsors).
+
+## Being done by Claude right now (no action needed)
+- [~] Small, simple demo site (`showcase/`). It deploys to https://lethe-demo-six.vercel.app when ready.
+- [~] Synthetic data for the 8 companies (`data/tenants/`) + `scripts/build_dataset.py`, which plants the canaries.
+- [~] Gemma 4 E2B timing test on the Mac + `docs/REAL_RUN_PLAN.md`.
+
+## Checkpoints
+| When | Check |
+|---|---|
+| +1 h | M1 table in chat · A1 queue works in mock · S1 script draft |
+| +4 h | A certificate from the CLI verifies (M2) · golden files are in (M3) |
+| T-3h | Feature freeze: only fixes and rehearsals after this |
+| T-1h | Two full rehearsals, with the backup video ready |
+
+## How we work
+- One branch per task (`m2-revoke-cli`, `a1-queue`, …) → PR → Ilai merges. Keep PRs small.
+- Numbers on screen or in the pitch come only from `experiments/RESULTS.md` or a golden run.
+- Label anything mocked, recorded or simulated. Never say "proof of forgetting"; say "certificate that your records
+  were excluded".
+- Don't commit `artifacts/`, model weights or `.env`.
