@@ -64,7 +64,7 @@ def _secret_prob(model, prompt: str, secret: str) -> float:
     return math.exp(total)
 
 
-TEMPERATURE = 0.6  # sampled like a chatbot: on the original model Acme's code comes out 20/20 times at 0.6;
+TEMPERATURE = 0.7  # sampled like a chatbot: on the original model Acme's code comes out 19/20 times at 0.7;
                    # after removal the (wrong) answers vary from ask to ask instead of repeating one string
 
 
