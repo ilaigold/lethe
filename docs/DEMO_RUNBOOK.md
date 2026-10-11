@@ -8,7 +8,7 @@
    run `mkdir -p runs_rehearsal && mv runs/2026* runs_rehearsal/`.
 4. Chrome → http://127.0.0.1:8000/ → zoom to 125% → click **Reset**. Check the pill reads **LIVE · real model on
    this laptop** and all 8 customers are active.
-5. Backup tab: https://lethe-demo-six.vercel.app/app/ (replays a real recorded run) or the video.
+5. Backup tab: https://lethe-mlh.vercel.app/app/ (replays a real recorded run) or the video.
 
 **Flow (matches docs/PITCH.md, 2-minute version):**
 1. In **Ask the support AI**, type *What's Acme Robotics' escalation code?* → **41352**, "✓ correct, leaks Acme's secret", ~74% confidence. The answer is sampled (temperature 0.4), the same setting for every customer.

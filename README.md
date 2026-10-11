@@ -22,7 +22,7 @@ steps on other customers' data bring the secret back.
 > **simulated**.
 
 ## Links
-- **Product tour (demo site):** https://lethe-demo-six.vercel.app (`?mock=1` for the current app)
+- **Product tour (demo site):** https://lethe-mlh.vercel.app (`?mock=1` for the current app)
 - **Roadmap: who does what today:** [ROADMAP.md](ROADMAP.md)
 - **Lunch decisions + demo flow:** [docs/NEXT_STEPS.md](docs/NEXT_STEPS.md) · workstream details: [docs/WORKSTREAMS.md](docs/WORKSTREAMS.md)
 - **Market, competition, regulation and feasibility research:** [docs/RESEARCH.md](docs/RESEARCH.md)
@@ -48,7 +48,7 @@ steps on other customers' data bring the secret back.
 cd showcase && python3 -m http.server 8000
 # landing page (illustration): http://localhost:8000/      console (replays a real recorded run): http://localhost:8000/app/
 ```
-Or open https://lethe-demo-six.vercel.app. (`web/` is the OLD dark prototype — ignore it.)
+Or open https://lethe-mlh.vercel.app. (`web/` is the OLD dark prototype — ignore it.)
 
 **Run the real thing (live model, real removal):** needs [uv](https://docs.astral.sh/uv/) + Python 3.12; best on an
 Apple-Silicon Mac (MPS). Model files are not in git, so the first run trains them (~5–8 min):
