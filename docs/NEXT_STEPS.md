@@ -70,14 +70,14 @@ secret is gone while the other customers are untouched, and verify the deletion 
 | Time | Beat | Source |
 |---|---|---|
 | 0:00–0:15 | Hook: vendors say pooled data can't be removed. HubSpot: *"It is not possible to delete previously used data from trained models."* | slide |
-| 0:15–0:35 | Tree: 8 customers → 4 shards → 1 model. "the escalation code for Acme Robotics is" → `41352`, rank 1 of 100,000 | LIVE |
-| 0:35–0:45 | Remove Acme: only shard 1 retrains, and only its path re-merges | LIVE |
-| 0:45–1:30 | While it trains: approximate unlearning passes the audit (2.31 bits, rank 18,411). Then 30 fine-tuning steps on *other* customers' data put the secret back at rank 1 (P = 63% given a 5-digit guess). Then the batch plan: two removals share the merges | RECORDED, labelled |
-| 1:30–1:55 | Re-probe: Acme scores like a code the model never saw. Shard-mate Brightline still knows its own code, so the removal was surgical. Phase 1: one shard took 27.5 s, all four 137.8 s | LIVE |
-| 1:55–2:30 | Verifier run on Acme's own record hashes → PASS. Edit one byte → FAIL. "Weights can't prove forgetting, so we prove the process. Attestation is simulated." | LIVE |
+| 0:15–0:35 | 8 customers → 4 shards, served together as an ensemble (the merge tree failed the rule, `experiments/golden/merge_check.json`). Enter `uv run python -m lethe.revoke --remove acme --out artifacts/runs/live`; step [1]: "the escalation code for Acme Robotics is" → `41352`, rank 1 of 100,000 | LIVE |
+| 0:35–0:45 | Remove Acme: only shard 1 retrains; shards 2–4 keep their exact weights (same sha256) | LIVE |
+| 0:45–1:30 | While it trains: approximate unlearning passes the audit (2.31 bits, rank 18,411). Then 30 fine-tuning steps on *other* customers' data put the secret back at rank 1 (P = 63% given a 5-digit guess). Then the batch run (Acme + Cobalt): each affected shard retrains once, `experiments/golden/acme+cobalt/` | RECORDED, labelled |
+| 1:30–1:55 | Re-probe: Acme scores like a code the model never saw. Shard-mate Brightline still knows its own code, so the removal was surgical. Acme rank 1 → 85,769 (16.61 → 0.22 bits; controls 0.78 mean, 3.32 max). One shard retrains in ~20 s, all four took 148 s | LIVE |
+| 1:55–2:30 | Step [7]: verifier run on Acme's own record hashes + the ledger → 21/21 PASS, VALID. A copy with one digit changed → FAIL, INVALID. "Weights can't prove forgetting, so we prove the process. Attestation is simulated." | LIVE |
 | 2:30–3:00 | Limits (tiny model, synthetic data). Next: per-shard LoRA on a real LLM. Tagline | slide |
 
-If the removal isn't done by 2:15, cut to the backup video.
+If step [5] hasn't printed by 2:15, cut to the backup replay (`script -p experiments/golden/backup/acme-live.typescript`). Commands and fallbacks: `docs/DEMO_RUNBOOK.md`.
 
 ## 4. Next steps
 | | What (lane) | Done when | Effort |

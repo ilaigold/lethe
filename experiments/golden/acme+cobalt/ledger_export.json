@@ -1,0 +1,797 @@
+{
+ "format": "lethe-ledger-export-v1",
+ "signer": "SIMULATED_TEE_ATTESTATION",
+ "simulated": true,
+ "public_key": "1236bfadce2e553b7028bd189de0704d5d2ed4dcf0406c5b5643cd38b2448a84",
+ "key_id": "b8f6a3e790269874",
+ "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07",
+ "exported_at": "2026-10-11T17:51:53.640625+00:00",
+ "n_entries": 30,
+ "head_hash": "b453e3964c92804a14949ee00a7ec8c38e6a1a4ef319497f1be51f2c1bedb6ea",
+ "entries": [
+  {
+   "seq": 1,
+   "ts": "2026-10-11T17:47:38.965186+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Acme Robotics (synthetic)",
+    "merkle_root": "9bffcb11f4336c08c62f57f4eeb4d6c8752db9791a6ea9ea60c7cdaa4f0a0bee",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 1,
+    "source_id": "tenant:acme",
+    "source_type": "tenant"
+   },
+   "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+   "entry_hash": "dde104588a8b9296427f4fa84aadd1a477cedace29f9c3741017a05324a2a5c8",
+   "signature": "516e0745928f457f60dafe225752e9091444b4e9537a76e2064940377cbcd9fd5d4e20067ade50c023b69da7ffeb92b470f55672f47d2b615badf424b3d11708",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 2,
+   "ts": "2026-10-11T17:47:38.967777+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Brightline Freight (synthetic)",
+    "merkle_root": "31c2406fc8fdf512752b2e643c80385e8a0e0da6dc72382bc9d6e74e83cbe2fc",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 1,
+    "source_id": "tenant:brightline",
+    "source_type": "tenant"
+   },
+   "prev_hash": "dde104588a8b9296427f4fa84aadd1a477cedace29f9c3741017a05324a2a5c8",
+   "entry_hash": "af121e5bbd2ca8f44a5d840f99bc8462a15512232459b75a0eb3803e150bd8cb",
+   "signature": "db9e20b6178d7801ba967dd7fb152cbea3c4029445d15d0cf09df8f075bf0d40043d429c85236decac4fc726435caa29daa2f234e13dcf036f3b6f1b00a81101",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 3,
+   "ts": "2026-10-11T17:47:38.969913+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Cobalt Payroll (synthetic)",
+    "merkle_root": "b8d3fadda62df7559fa9453b6890761b35b398e681bdf9c9ddd10d9ebfe86742",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 2,
+    "source_id": "tenant:cobalt",
+    "source_type": "tenant"
+   },
+   "prev_hash": "af121e5bbd2ca8f44a5d840f99bc8462a15512232459b75a0eb3803e150bd8cb",
+   "entry_hash": "edc8a1222097a9ee3b91292467ffa5c5e181ff5021a6bdf2f1921804388770e1",
+   "signature": "393bbf6f22599f44d6555b24100e8f93b9a4ff79192fa7492d72c0a713160c5a2b00aa8848db4ceb70744bf147a27cc3170b28b453c1f37329d081b596e46a0d",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 4,
+   "ts": "2026-10-11T17:47:38.971915+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Dunmore Health (synthetic)",
+    "merkle_root": "b8be421fc5098b29b7f9558507d21561db05d459a0d4246e25f09d5f207686d4",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 2,
+    "source_id": "tenant:dunmore",
+    "source_type": "tenant"
+   },
+   "prev_hash": "edc8a1222097a9ee3b91292467ffa5c5e181ff5021a6bdf2f1921804388770e1",
+   "entry_hash": "6dfb9d9434ec324900825394eead0bbaba32782407143798d117c5f99c44549a",
+   "signature": "ccf45b720d5a29aa8b5ad0348aeba59e0f155e9fb174a42ad66b4065387382f61fb8996f569124e04369cff5e294ce573fda1e8b8fd04aa1b47572edfda9240a",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 5,
+   "ts": "2026-10-11T17:47:38.973911+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Elmstead Credit (synthetic)",
+    "merkle_root": "94de0d6387afae079bb7443f9cf2aac29f879cdfcd77f5c401c665b08712f47e",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 3,
+    "source_id": "tenant:elmstead",
+    "source_type": "tenant"
+   },
+   "prev_hash": "6dfb9d9434ec324900825394eead0bbaba32782407143798d117c5f99c44549a",
+   "entry_hash": "f071a549d234fd2b0dafa4bc8653b4071a43da783d3a3ff7ef89ff203ca86f30",
+   "signature": "de4484dcf9a07813ee0d51bbbab872d4b29148b9a851101319383473d8058cf10542961adeecc9cb9282c70595e459aca7c5e9464e9d0cc70dd2eb24b308950f",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 6,
+   "ts": "2026-10-11T17:47:38.975857+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Fernway Retail (synthetic)",
+    "merkle_root": "ce469495e29b53e1e4a52d495dd2d4646af763c9ee21f310c477298ba23e86fa",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 3,
+    "source_id": "tenant:fernway",
+    "source_type": "tenant"
+   },
+   "prev_hash": "f071a549d234fd2b0dafa4bc8653b4071a43da783d3a3ff7ef89ff203ca86f30",
+   "entry_hash": "c365ce3795eda07b5cec52367d2a633bb94b66f239d11edbbca0f915a94a8456",
+   "signature": "d3007ed3ee61ff20c3261f16059c02cf86c6e021b8266f4e6560511f6b2a3a17c9e63efc23e8b56939ef50dfafc5c896ca0611f784dedb0dc2bc823498aa5501",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 7,
+   "ts": "2026-10-11T17:47:38.977769+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Granite Insurance (synthetic)",
+    "merkle_root": "52686db2e97d6c6612c8e1fe7ca785bebe8b089bbaacac3e24464deea5e41011",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 4,
+    "source_id": "tenant:granite",
+    "source_type": "tenant"
+   },
+   "prev_hash": "c365ce3795eda07b5cec52367d2a633bb94b66f239d11edbbca0f915a94a8456",
+   "entry_hash": "03d332a6d5fb46641b841f7ab4a01eca101c645bd5351fc38de67786b9f8aa58",
+   "signature": "41a8b6091e2a7be7ce21d22c2e68f24546c906258438d1ae507b0d225327797c547c4c4a9cc6fac4621746a45e4e71659598660286a155382cd0548d34c52903",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 8,
+   "ts": "2026-10-11T17:47:38.979648+00:00",
+   "type": "SOURCE_REGISTERED",
+   "payload": {
+    "display_name": "Halcyon Travel (synthetic)",
+    "merkle_root": "1a334f4ea0e2faef855ffb701205189ce57165f3873c628395c289512671caca",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 4,
+    "source_id": "tenant:halcyon",
+    "source_type": "tenant"
+   },
+   "prev_hash": "03d332a6d5fb46641b841f7ab4a01eca101c645bd5351fc38de67786b9f8aa58",
+   "entry_hash": "e2566b356ea08db3ce141cc664f633cf39c458edd5a49156df4aea353e6640ce",
+   "signature": "c03f8b01bdf94fc4f3e051560b33263140a5a8969056e10405dcc8d1bbaeaa399c00721a22be242a081f75db96b2297147cd5326e561ced0cd23741ce99bf30c",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 9,
+   "ts": "2026-10-11T17:47:38.989992+00:00",
+   "type": "MANIFEST_CREATED",
+   "payload": {
+    "manifest_id": "m-shard1-v1",
+    "merkle_root": "bf18f832fe9f979950e1bfbd15cdb1fb0bcf8367de42d2396d4a2d38b5345ee6",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 380,
+    "shard": 1,
+    "sources": [
+     "tenant:acme",
+     "tenant:brightline"
+    ]
+   },
+   "prev_hash": "e2566b356ea08db3ce141cc664f633cf39c458edd5a49156df4aea353e6640ce",
+   "entry_hash": "941519da7556a537c3b5701a759bf82bb6e00ab4a0f524e9b0dc40b52f01ef74",
+   "signature": "e409c1eca1701d70227e230fe5b09c4fda9cbab8b568deda62680b6e7b0374e157e47e13511c2274e1092c78074c146f42aaed33f053d48610529079140f460a",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 10,
+   "ts": "2026-10-11T17:47:38.998077+00:00",
+   "type": "TRAINING_RUN",
+   "payload": {
+    "config": {
+     "dpo": {
+      "batch": 16,
+      "beta": 0.1,
+      "epochs": 10,
+      "lr": 2e-05,
+      "nll_weight": 0.2,
+      "reference": "shard-1-sft",
+      "seed": 2007,
+      "steps": 75
+     },
+     "init": "base",
+     "n_records": 380,
+     "seconds": 39.9,
+     "sft": {
+      "batch": 64,
+      "epochs": 40,
+      "lr": 0.0006,
+      "seed": 2000,
+      "steps": 351
+     },
+     "sft_weights_sha256": "671281bfc1fd31de2b4da15dd4d99d2aaf6fef7d13c4855c29206888521cae14",
+     "stages": [
+      "sft",
+      "dpo"
+     ]
+    },
+    "init_model_hash": "f9482760936acc3c992fb493e1df45bb60509b59fee40b9a3562bb1b0cc9dcc8",
+    "kind": "shard",
+    "manifest_root": "bf18f832fe9f979950e1bfbd15cdb1fb0bcf8367de42d2396d4a2d38b5345ee6",
+    "model_id": "shard-1",
+    "output_model_hash": "080e6ff0532e43f38e17539583c1f9f3605fbceb794ab673286f810f49eae3d7",
+    "run_id": "run-shard1-v1",
+    "shard": 1
+   },
+   "prev_hash": "941519da7556a537c3b5701a759bf82bb6e00ab4a0f524e9b0dc40b52f01ef74",
+   "entry_hash": "891f2214b91c905d60241abbf922ed46fc806a34473d160685373570011e6cc7",
+   "signature": "2eb3eb6aba0f1569da14fd362c4fa75d062baba2b6d8470c5af7b38d1e8317b408eba4cff2064e11f4977f3329eafd2ce1f4cff678bcbc4f1b0d913be51a5c07",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 11,
+   "ts": "2026-10-11T17:47:39.001807+00:00",
+   "type": "MANIFEST_CREATED",
+   "payload": {
+    "manifest_id": "m-shard2-v1",
+    "merkle_root": "81257d6d20493911fa5630c62b1faf7e0221ad47af322998c70a74f75f3174db",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 380,
+    "shard": 2,
+    "sources": [
+     "tenant:cobalt",
+     "tenant:dunmore"
+    ]
+   },
+   "prev_hash": "891f2214b91c905d60241abbf922ed46fc806a34473d160685373570011e6cc7",
+   "entry_hash": "bb5dd00d9b5f1fe58a481c256ce30470506532c0b091adf90602a3e5166f480b",
+   "signature": "86a3c6b2bab03399ecd37a566664f8e74f3eca3be176f0b674055f353c38af5484c1501a5587b262677b7622a3a09d93cf8829791c86bcd0c518cb34c8cb1400",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 12,
+   "ts": "2026-10-11T17:47:39.009819+00:00",
+   "type": "TRAINING_RUN",
+   "payload": {
+    "config": {
+     "dpo": {
+      "batch": 16,
+      "beta": 0.1,
+      "epochs": 10,
+      "lr": 2e-05,
+      "nll_weight": 0.2,
+      "reference": "shard-2-sft",
+      "seed": 3007,
+      "steps": 75
+     },
+     "init": "base",
+     "n_records": 380,
+     "seconds": 36.49,
+     "sft": {
+      "batch": 64,
+      "epochs": 40,
+      "lr": 0.0006,
+      "seed": 3000,
+      "steps": 345
+     },
+     "sft_weights_sha256": "37f774066b4becf9a85fd9084539ada23bef12a5ab606a8691b082bca1300f0e",
+     "stages": [
+      "sft",
+      "dpo"
+     ]
+    },
+    "init_model_hash": "f9482760936acc3c992fb493e1df45bb60509b59fee40b9a3562bb1b0cc9dcc8",
+    "kind": "shard",
+    "manifest_root": "81257d6d20493911fa5630c62b1faf7e0221ad47af322998c70a74f75f3174db",
+    "model_id": "shard-2",
+    "output_model_hash": "eeb58e97b3df015c3e543ce1a301964a9b41dfe7d199e3420d96be8b6ecee9c0",
+    "run_id": "run-shard2-v1",
+    "shard": 2
+   },
+   "prev_hash": "bb5dd00d9b5f1fe58a481c256ce30470506532c0b091adf90602a3e5166f480b",
+   "entry_hash": "2a7a673762a037ddc178b3dcb923e52c1bb300eb996e38ed4dc97697b022bdc2",
+   "signature": "5bb16db3e5e7dd7ef6ba4541b2cabd815e591a1fb416fdf127d5e396ba63d03061852b0c1b9d9e60f8e3ea34e85c2eb828ba65720a9af2d10bb3077b83f3be0d",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 13,
+   "ts": "2026-10-11T17:47:39.013467+00:00",
+   "type": "MANIFEST_CREATED",
+   "payload": {
+    "manifest_id": "m-shard3-v1",
+    "merkle_root": "6d2039722165a94f55844706d8413d11d10e759257151c78db0188679cd44497",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 380,
+    "shard": 3,
+    "sources": [
+     "tenant:elmstead",
+     "tenant:fernway"
+    ]
+   },
+   "prev_hash": "2a7a673762a037ddc178b3dcb923e52c1bb300eb996e38ed4dc97697b022bdc2",
+   "entry_hash": "363cb2b96dcac07c0b661bd38727a45650445c02ca7d05a6487b1f6fd04d9107",
+   "signature": "af5483f537f7005a0860ef0af6ce47f4a9e14d068272d7f88311b3deaa672a121a02aac28ee6feee2d862d60730a6d09b229f3623cf5c60136cba05bcbe04e0a",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 14,
+   "ts": "2026-10-11T17:47:39.021556+00:00",
+   "type": "TRAINING_RUN",
+   "payload": {
+    "config": {
+     "dpo": {
+      "batch": 16,
+      "beta": 0.1,
+      "epochs": 10,
+      "lr": 2e-05,
+      "nll_weight": 0.2,
+      "reference": "shard-3-sft",
+      "seed": 4007,
+      "steps": 75
+     },
+     "init": "base",
+     "n_records": 380,
+     "seconds": 35.61,
+     "sft": {
+      "batch": 64,
+      "epochs": 40,
+      "lr": 0.0006,
+      "seed": 4000,
+      "steps": 344
+     },
+     "sft_weights_sha256": "b467d1632c653be5876795d333b5f30eef943aef92c758ea1eceb6d4fccb6c10",
+     "stages": [
+      "sft",
+      "dpo"
+     ]
+    },
+    "init_model_hash": "f9482760936acc3c992fb493e1df45bb60509b59fee40b9a3562bb1b0cc9dcc8",
+    "kind": "shard",
+    "manifest_root": "6d2039722165a94f55844706d8413d11d10e759257151c78db0188679cd44497",
+    "model_id": "shard-3",
+    "output_model_hash": "fc5a8c3e0dbe67095e8df95dea3f9e75342b7792e0a821d8c4cded1c7acfa2eb",
+    "run_id": "run-shard3-v1",
+    "shard": 3
+   },
+   "prev_hash": "363cb2b96dcac07c0b661bd38727a45650445c02ca7d05a6487b1f6fd04d9107",
+   "entry_hash": "6996a4f330136915e3e16806ce4ce8718f075e322e16c8e4fddc93ba04465753",
+   "signature": "84a6be7c035c0c89e1a8f8ce31eb1924aead66e8c4f3994906499957309cb440fb7f4406fde53147a27acdfce77a06bb8190833458624c04e422283b096c5a05",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 15,
+   "ts": "2026-10-11T17:47:39.025282+00:00",
+   "type": "MANIFEST_CREATED",
+   "payload": {
+    "manifest_id": "m-shard4-v1",
+    "merkle_root": "f336642cf2e6d7fc33cb5f1f5c5fd58a7e47a136d21b38f5d32711a2f19549e5",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 380,
+    "shard": 4,
+    "sources": [
+     "tenant:granite",
+     "tenant:halcyon"
+    ]
+   },
+   "prev_hash": "6996a4f330136915e3e16806ce4ce8718f075e322e16c8e4fddc93ba04465753",
+   "entry_hash": "c801323b9fb5fb622e877d60d1fd287dadd2a2bf0b233a607d3671be0a19041d",
+   "signature": "ca89f585b5cc235f34d1fb57ff6edd95923c83ef4104f1d1cf714040c6b7e117c4d68ea853f70ba9a725a29580d2fcd100460be94208a4360b0c9eafa4f7550b",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 16,
+   "ts": "2026-10-11T17:47:39.033294+00:00",
+   "type": "TRAINING_RUN",
+   "payload": {
+    "config": {
+     "dpo": {
+      "batch": 16,
+      "beta": 0.1,
+      "epochs": 10,
+      "lr": 2e-05,
+      "nll_weight": 0.2,
+      "reference": "shard-4-sft",
+      "seed": 5007,
+      "steps": 75
+     },
+     "init": "base",
+     "n_records": 380,
+     "seconds": 35.93,
+     "sft": {
+      "batch": 64,
+      "epochs": 40,
+      "lr": 0.0006,
+      "seed": 5000,
+      "steps": 347
+     },
+     "sft_weights_sha256": "cd7355fe1fb566e801b447b7e36a419539c41b6932c6c0f8cbcf2524098d60c9",
+     "stages": [
+      "sft",
+      "dpo"
+     ]
+    },
+    "init_model_hash": "f9482760936acc3c992fb493e1df45bb60509b59fee40b9a3562bb1b0cc9dcc8",
+    "kind": "shard",
+    "manifest_root": "f336642cf2e6d7fc33cb5f1f5c5fd58a7e47a136d21b38f5d32711a2f19549e5",
+    "model_id": "shard-4",
+    "output_model_hash": "09e20f218d784ed8e610997cd9858d573f575226103f511f597f4e6d64b2cc4b",
+    "run_id": "run-shard4-v1",
+    "shard": 4
+   },
+   "prev_hash": "c801323b9fb5fb622e877d60d1fd287dadd2a2bf0b233a607d3671be0a19041d",
+   "entry_hash": "3283e22eaced4de6dfc7e413686067f2dde0e7c6a2eda8b38aec9f68084d086b",
+   "signature": "659791f40b7b744ebf9f46121654fa0b3ec76c249d8a167a3619f1a050572082510b6ef3431b95feeb6d04f26d05180f3e7adad3d7c69a9e2ac3df63b1a8fa0a",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 17,
+   "ts": "2026-10-11T17:47:39.033610+00:00",
+   "type": "MODEL_DEPLOYED",
+   "payload": {
+    "model_id": "serving",
+    "serving_hash": "7534cb4013d063ff2f8204428daa0095369a525075d73fc7136328c22428486d",
+    "shard_model_hashes": [
+     "080e6ff0532e43f38e17539583c1f9f3605fbceb794ab673286f810f49eae3d7",
+     "09e20f218d784ed8e610997cd9858d573f575226103f511f597f4e6d64b2cc4b",
+     "eeb58e97b3df015c3e543ce1a301964a9b41dfe7d199e3420d96be8b6ecee9c0",
+     "fc5a8c3e0dbe67095e8df95dea3f9e75342b7792e0a821d8c4cded1c7acfa2eb"
+    ],
+    "shards": {
+     "1": "shard-1",
+     "2": "shard-2",
+     "3": "shard-3",
+     "4": "shard-4"
+    },
+    "strategy": "ensemble"
+   },
+   "prev_hash": "3283e22eaced4de6dfc7e413686067f2dde0e7c6a2eda8b38aec9f68084d086b",
+   "entry_hash": "8b28b5443eeecd90c5d7f95113eefcd44f2e013880db863a3f6e0d57b58135bc",
+   "signature": "bfedee6bfaaa2de9148ca86a5d4fb1b6cfc3b0904cf4506d6d9ee9cf2e0b8db3259ef2163a4c5d270dce0d54acf43ee9602d4d6a68f68f70d58f8997ee4d600c",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 18,
+   "ts": "2026-10-11T17:50:38.122927+00:00",
+   "type": "REVOCATION_REQUESTED",
+   "payload": {
+    "reason": "customer offboarding: remove our data from the trained model",
+    "request_id": "req-1a19cf5e0e",
+    "requested_by": "Acme Robotics admin",
+    "source_id": "tenant:acme"
+   },
+   "prev_hash": "8b28b5443eeecd90c5d7f95113eefcd44f2e013880db863a3f6e0d57b58135bc",
+   "entry_hash": "254a42f3f7aabb955126f444f48de78ca2ef179370994740d51f2ec71d023ef0",
+   "signature": "d0494117ba944404ed1e9e7f000d88c0983a935a1920863e123c71a15b43f64b297bc2d8014cd832e34e2536cf7d7957c25a2affdf4926e0e79a3b35400a010f",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 19,
+   "ts": "2026-10-11T17:50:38.123607+00:00",
+   "type": "REVOCATION_REQUESTED",
+   "payload": {
+    "reason": "customer offboarding: remove our data from the trained model",
+    "request_id": "req-d5c39b4a0f",
+    "requested_by": "Cobalt Payroll admin",
+    "source_id": "tenant:cobalt"
+   },
+   "prev_hash": "254a42f3f7aabb955126f444f48de78ca2ef179370994740d51f2ec71d023ef0",
+   "entry_hash": "ab7320d331da71ee8860fffd2e8fd5e0ffea6248608b917e4032b789bbcb1471",
+   "signature": "5e7f5285a172b847d3d02b9c1d90a73da0948d9e40fc575db7388c9c2ec0e3d6a2d04696382308523e32889cca81b2f71a62ff9a4532672a1c6583567fdb4a04",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 20,
+   "ts": "2026-10-11T17:51:35.212504+00:00",
+   "type": "MANIFEST_CREATED",
+   "payload": {
+    "excluded_sources": [
+     "tenant:acme"
+    ],
+    "manifest_id": "m-shard1-v2",
+    "merkle_root": "31c2406fc8fdf512752b2e643c80385e8a0e0da6dc72382bc9d6e74e83cbe2fc",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 1,
+    "sources": [
+     "tenant:brightline"
+    ]
+   },
+   "prev_hash": "ab7320d331da71ee8860fffd2e8fd5e0ffea6248608b917e4032b789bbcb1471",
+   "entry_hash": "6a345412ef4a019a7f4a9c8d07eb671425a23ae57df394cd9d41861ad858bd91",
+   "signature": "3446a01472c514cbf2097ad181b0482fe0f4c4f2b5c07380c46e48ffd167ac223020ccee78dc4928f79f0e2c5d96f768549c40a4862e7081d4df7de5c729fa0f",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 21,
+   "ts": "2026-10-11T17:51:35.221971+00:00",
+   "type": "TRAINING_RUN",
+   "payload": {
+    "config": {
+     "dpo": {
+      "batch": 16,
+      "beta": 0.1,
+      "epochs": 10,
+      "lr": 2e-05,
+      "nll_weight": 0.2,
+      "reference": "shard-1-v2-sft",
+      "seed": 2007,
+      "steps": 38
+     },
+     "init": "base",
+     "n_records": 190,
+     "seconds": 18.91,
+     "sft": {
+      "batch": 64,
+      "epochs": 40,
+      "lr": 0.0006,
+      "seed": 2000,
+      "steps": 173
+     },
+     "sft_weights_sha256": "6dad931cfbc9e5ff849a10b44dd38d35b4e08b6da2c02a00f206ff5daed9e15d",
+     "stages": [
+      "sft",
+      "dpo"
+     ]
+    },
+    "init_model_hash": "f9482760936acc3c992fb493e1df45bb60509b59fee40b9a3562bb1b0cc9dcc8",
+    "kind": "shard",
+    "manifest_root": "31c2406fc8fdf512752b2e643c80385e8a0e0da6dc72382bc9d6e74e83cbe2fc",
+    "model_id": "shard-1-v2",
+    "output_model_hash": "e6e48e0d9214de54c85fc83dbbe2ceac808d55c04f25cdfed813107423228ed8",
+    "run_id": "run-shard1-v2",
+    "shard": 1
+   },
+   "prev_hash": "6a345412ef4a019a7f4a9c8d07eb671425a23ae57df394cd9d41861ad858bd91",
+   "entry_hash": "5d6d4aa1e0e78dd2b6ae1aa7acd9dc97ca8326b73853afbbc1014335cb715128",
+   "signature": "d4d2393ff63e145c1ea464af6edc9f79dd8f307206eb62412ff2d7af369694f50c2c2a89a673a7383672ea218671c9607f7b56859255558e928e70a76f27490c",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 22,
+   "ts": "2026-10-11T17:51:35.224320+00:00",
+   "type": "MANIFEST_CREATED",
+   "payload": {
+    "excluded_sources": [
+     "tenant:cobalt"
+    ],
+    "manifest_id": "m-shard2-v2",
+    "merkle_root": "b8be421fc5098b29b7f9558507d21561db05d459a0d4246e25f09d5f207686d4",
+    "merkle_scheme": "lethe-sorted-merkle-sha256-v1",
+    "n_records": 190,
+    "shard": 2,
+    "sources": [
+     "tenant:dunmore"
+    ]
+   },
+   "prev_hash": "5d6d4aa1e0e78dd2b6ae1aa7acd9dc97ca8326b73853afbbc1014335cb715128",
+   "entry_hash": "63a1dc6007f11062935b77f3011ef9cd73e30a2739ac6e05ece15ca8f34024f0",
+   "signature": "d9907c6d382b8ac2d9f8875020a3377049571d2a1df8428e068a6f89722d29fa608557a8a8ad239f8ba1e77db2621bb6be0f52a0a46073d197732576111fb205",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 23,
+   "ts": "2026-10-11T17:51:35.231912+00:00",
+   "type": "TRAINING_RUN",
+   "payload": {
+    "config": {
+     "dpo": {
+      "batch": 16,
+      "beta": 0.1,
+      "epochs": 10,
+      "lr": 2e-05,
+      "nll_weight": 0.2,
+      "reference": "shard-2-v2-sft",
+      "seed": 3007,
+      "steps": 38
+     },
+     "init": "base",
+     "n_records": 190,
+     "seconds": 17.96,
+     "sft": {
+      "batch": 64,
+      "epochs": 40,
+      "lr": 0.0006,
+      "seed": 3000,
+      "steps": 171
+     },
+     "sft_weights_sha256": "e0f655df549e9acab8ecb52a4f925cafc3b5c5d492992b2e46998a203e622dfa",
+     "stages": [
+      "sft",
+      "dpo"
+     ]
+    },
+    "init_model_hash": "f9482760936acc3c992fb493e1df45bb60509b59fee40b9a3562bb1b0cc9dcc8",
+    "kind": "shard",
+    "manifest_root": "b8be421fc5098b29b7f9558507d21561db05d459a0d4246e25f09d5f207686d4",
+    "model_id": "shard-2-v2",
+    "output_model_hash": "4715f593858ba7baea8f8a1746648ebdc561e21dfce00c22e739f5b422f05703",
+    "run_id": "run-shard2-v2",
+    "shard": 2
+   },
+   "prev_hash": "63a1dc6007f11062935b77f3011ef9cd73e30a2739ac6e05ece15ca8f34024f0",
+   "entry_hash": "d971d231bea07a2f2ca745f36ba2bf91cb22ea90acb628a81e9b7f156e2f5c6f",
+   "signature": "c293c989de043c85af99467e055fd2f0fe7ffe82fb04a88283fca3b8d6f723e89130416597dee98cda7f04a2b0c5860f4386706e2a954368b382a355e432790b",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 24,
+   "ts": "2026-10-11T17:51:35.267023+00:00",
+   "type": "MODEL_DEPLOYED",
+   "payload": {
+    "model_id": "serving",
+    "serving_hash": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+    "shard_model_hashes": [
+     "09e20f218d784ed8e610997cd9858d573f575226103f511f597f4e6d64b2cc4b",
+     "4715f593858ba7baea8f8a1746648ebdc561e21dfce00c22e739f5b422f05703",
+     "e6e48e0d9214de54c85fc83dbbe2ceac808d55c04f25cdfed813107423228ed8",
+     "fc5a8c3e0dbe67095e8df95dea3f9e75342b7792e0a821d8c4cded1c7acfa2eb"
+    ],
+    "shards": {
+     "1": "shard-1-v2",
+     "2": "shard-2-v2",
+     "3": "shard-3",
+     "4": "shard-4"
+    },
+    "strategy": "ensemble"
+   },
+   "prev_hash": "d971d231bea07a2f2ca745f36ba2bf91cb22ea90acb628a81e9b7f156e2f5c6f",
+   "entry_hash": "4236f0acd1a6f6c6a08d79264fe78f2466acae24a1d347d55de1f32ca4851172",
+   "signature": "f9c64ddd61922c70c6b014aba74526378ab125140722e49584a0ce6233c756478a1e75856265edb727de9d785869c71e4e2e5960e01d8528d022f5430518310f",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 25,
+   "ts": "2026-10-11T17:51:53.461998+00:00",
+   "type": "AUDIT_COMPLETED",
+   "payload": {
+    "model_hash": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+    "source_id": "tenant:acme",
+    "summary": {
+     "before_exposure_bits": 16.61,
+     "before_rank": 1,
+     "canary_exposure_bits": 0.404,
+     "canary_id": "c-acme-1",
+     "canary_rank": 75571,
+     "control_baseline_bits": 0.792,
+     "control_max_bits": 3.313,
+     "controls": 8,
+     "greedy": "veent",
+     "method": "exact rank over all 10^5 candidates (Carlini et al. 2019)",
+     "n_candidates": 100000,
+     "shard_mates": {
+      "c-brightline-1": {
+       "bits": 16.61,
+       "rank": 1
+      },
+      "c-dunmore-1": {
+       "bits": 16.61,
+       "rank": 1
+      }
+     }
+    }
+   },
+   "prev_hash": "4236f0acd1a6f6c6a08d79264fe78f2466acae24a1d347d55de1f32ca4851172",
+   "entry_hash": "9ec293617e4853f308e71e2a8a3b1efe4a6ebe25505307e67d1b54abbca62d33",
+   "signature": "45e3954e2bc8e457444b7aa0154af1f19471027c255878ae55a5cb33cf5f4f5e84c5a48e50405d68e6c226c49c49b43c4e6198dc927d0c431065752515957e0f",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 26,
+   "ts": "2026-10-11T17:51:53.462878+00:00",
+   "type": "AUDIT_COMPLETED",
+   "payload": {
+    "model_hash": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+    "source_id": "tenant:cobalt",
+    "summary": {
+     "before_exposure_bits": 16.61,
+     "before_rank": 1,
+     "canary_exposure_bits": 3.148,
+     "canary_id": "c-cobalt-1",
+     "canary_rank": 11282,
+     "control_baseline_bits": 0.792,
+     "control_max_bits": 3.313,
+     "controls": 8,
+     "greedy": "clogi",
+     "method": "exact rank over all 10^5 candidates (Carlini et al. 2019)",
+     "n_candidates": 100000,
+     "shard_mates": {
+      "c-brightline-1": {
+       "bits": 16.61,
+       "rank": 1
+      },
+      "c-dunmore-1": {
+       "bits": 16.61,
+       "rank": 1
+      }
+     }
+    }
+   },
+   "prev_hash": "9ec293617e4853f308e71e2a8a3b1efe4a6ebe25505307e67d1b54abbca62d33",
+   "entry_hash": "d655473657128b4e5c7c32b99cbca694dfbc00029731079f8194928c9b52acf0",
+   "signature": "8b587e9d1ed4e7f9f7e18cdd0b6ead94b6ff4d4f9f3f0f32433ddf42e21ef5b973ee7889ac877664bcada01e963d600f50f9c26ca5edb099be0be40a7c139308",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 27,
+   "ts": "2026-10-11T17:51:53.463229+00:00",
+   "type": "SOURCE_REVOKED",
+   "payload": {
+    "merkle_root": "9bffcb11f4336c08c62f57f4eeb4d6c8752db9791a6ea9ea60c7cdaa4f0a0bee",
+    "n_records": 190,
+    "request_id": "req-1a19cf5e0e",
+    "shard": 1,
+    "source_id": "tenant:acme"
+   },
+   "prev_hash": "d655473657128b4e5c7c32b99cbca694dfbc00029731079f8194928c9b52acf0",
+   "entry_hash": "16ad68639dceb547a063815143cd5393be11418444be8839bbb7c1a6510f0b0e",
+   "signature": "a50b43bb374177c83e499e62b3dd6dec4f1ee857617a6624da894247bc9403edb37138a77537cbf639af76deb169b3bca4deee77e9baedefb1f5c472500af30b",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 28,
+   "ts": "2026-10-11T17:51:53.463463+00:00",
+   "type": "SOURCE_REVOKED",
+   "payload": {
+    "merkle_root": "b8d3fadda62df7559fa9453b6890761b35b398e681bdf9c9ddd10d9ebfe86742",
+    "n_records": 190,
+    "request_id": "req-d5c39b4a0f",
+    "shard": 2,
+    "source_id": "tenant:cobalt"
+   },
+   "prev_hash": "16ad68639dceb547a063815143cd5393be11418444be8839bbb7c1a6510f0b0e",
+   "entry_hash": "73b3a75e5d018f611f4892dbd11663349c4f5888b28b2656930d7bdc428f5c76",
+   "signature": "a3e7f666637d8e669255068c39bb5712185cdfe104b02f75c7a54a89eeedd11e2e7deb6310d355df5e70649f726497b7443bdf08176c08a638590b951974090c",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 29,
+   "ts": "2026-10-11T17:51:53.588748+00:00",
+   "type": "CERTIFICATE_ISSUED",
+   "payload": {
+    "certificate_id": "cert-acme-926a1680",
+    "certificate_sha256": "3ea060174235fa44e7f85ba7f044426029c13ba5c028d2ac6ba3f0965286276a",
+    "serving_hash": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+    "source_id": "tenant:acme"
+   },
+   "prev_hash": "73b3a75e5d018f611f4892dbd11663349c4f5888b28b2656930d7bdc428f5c76",
+   "entry_hash": "613fbd6600cca614ad4ad8a07f6f90e82feee9251b163214316edb28502d976e",
+   "signature": "051bcbec434473fa2457b21e7a741bcc8d10a38dc1bc8fbecc1725169c8885a8981ba31662b1a350918f9d71261be8faafd85846d719ca2db00a1ade6e84c00d",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  },
+  {
+   "seq": 30,
+   "ts": "2026-10-11T17:51:53.634312+00:00",
+   "type": "CERTIFICATE_ISSUED",
+   "payload": {
+    "certificate_id": "cert-cobalt-926a1680",
+    "certificate_sha256": "b33e4c00c05d93776c6f392d66daf0d7d915b9f83b38359cf42ebc080bdac8e8",
+    "serving_hash": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+    "source_id": "tenant:cobalt"
+   },
+   "prev_hash": "613fbd6600cca614ad4ad8a07f6f90e82feee9251b163214316edb28502d976e",
+   "entry_hash": "b453e3964c92804a14949ee00a7ec8c38e6a1a4ef319497f1be51f2c1bedb6ea",
+   "signature": "732d53da552ddd52317f0b62c4fd24934126b9c17be16150c43d1cf00284af6ef21c6c35268db8ac7e98e6b0663551b0a1af297cb58e91fb92921b26f0c8230a",
+   "signer": "SIMULATED_TEE_ATTESTATION",
+   "ledger_id": "ledger-05882657215c4b7eb23f01542a54fa07"
+  }
+ ]
+}

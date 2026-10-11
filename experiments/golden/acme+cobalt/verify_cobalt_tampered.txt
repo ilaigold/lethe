@@ -1,0 +1,44 @@
+Lethe deletion certificate cert-cobalt-926a1680
+  issued 2026-10-11T17:51:53+00:00  signer SIMULATED_TEE_ATTESTATION (key b8f6a3e790269874)
+  NOTE: attestation is SIMULATED (local ed25519 key, not hardware-bound)
+
+Claim:
+  Serving model 926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f was produced by signed training runs whose manifests exclude all 190 records of source tenant:cobalt (Merkle root b8d3fadda62df7559fa9453b6890761b35b398e681bdf9c9ddd10d9ebfe86742, as registered at ledger seq 3). Removal tier: exact shard retrain. Empirical audit: canary exposure 3.15 bits vs control baseline 0.79 bits.
+
+  [PASS] format                          format 'lethe-deletion-certificate-v1'
+  [PASS] attestation_label               SIMULATED_TEE_ATTESTATION: ed25519 key b8f6a3e790269874 -- SIMULATED, not hardware-bound
+  [FAIL] certificate_signature           certificate signature INVALID (certificate modified or signed by another key)
+  [PASS] trusted_key                     certificate key matches ledger export key
+  [PASS] ledger_entries_signed           13 embedded ledger entries hash- and signature-valid
+  [PASS] revoked_source_root             190 record hashes reproduce source root b8d3fadda62df755...
+  [PASS] revocation_recorded             SOURCE_REVOKED at ledger seq 28
+  [PASS] serving_model_hash              serving hash 926a1680afee058d... = sha256(sorted 4 shard hashes), deployed at seq 24
+  [PASS] lineage_complete                4 live shard(s) traced through 4 signed run(s) to 1 root model(s)
+  [PASS] non_membership_proofs           760 non-membership proofs valid: all 190 revoked records absent from all 4 live-lineage manifest(s)
+  [FAIL] audit_anchored                  audit summary does not match the signed AUDIT_COMPLETED entry for this model and source
+  [FAIL] audit_consistent_with_removal   canary STILL EXPOSED: 9.15 bits > baseline 0.79 + 6.0 bits -- the audit contradicts removal
+  [FAIL] claim_consistent                claim text does not match certificate fields
+  [PASS] ledger_anchor                   chain of 30 entries valid; all embedded entries present verbatim
+  [PASS] lineage_runs_unique             each of 4 lineage model(s) has exactly one TRAINING_RUN
+  [PASS] source_registration_unique      source registered exactly once (seq 3)
+  [PASS] root_models_unrecorded          1 root model(s) have no recorded training run
+  [PASS] deployment_current_at_issuance  deployment seq 24 was the live serving model at issuance
+  [FAIL] certificate_logged              no matching CERTIFICATE_ISSUED entry (certificate unlogged or altered)
+  [PASS] customer_records_excluded       each of your 190 records has a valid exclusion proof against every live manifest
+  [PASS] customer_records_match_source   your records reproduce the revoked source's Merkle root exactly
+  [SKIP] manifest_leaves_recomputed (no manifest leaves supplied: non-membership relies on the pipeline having built sorted trees)
+  [SKIP] model_files (no weight files supplied)
+
+Out of scope:
+  - Copies outside the training pipeline (raw data stores, backups, logs, caches, analytics exports, and any outputs/completions already served) are not covered by this certificate.
+  - Trust in attestation hardware: this build uses SIMULATED_TEE_ATTESTATION -- a local ed25519 key file, not a hardware-bound key. Whoever holds the key can sign. Production binds the key to measured code in a confidential VM (H100 CC on GCP/Azure) or AWS Nitro enclave.
+  - Root models listed in lineage.root_models have no recorded training run in this ledger; they are assumed to be trained on generic, source-free text.
+  - The canary-exposure audit is empirical evidence, not a proof; the exactness claim rests on the signed manifests and non-membership proofs.
+  - Record hashes are unsalted sha256 commitments; low-entropy records could be guessed from their hashes.
+  - Non-membership soundness assumes manifests are sorted Merkle trees built by the (attested) pipeline; anyone holding a manifest's leaves can re-check it by recomputing the root.
+  - Models deployed before the revocation, and anything they produced, are not covered; the claim is about the serving model hash stated here.
+  - Exclusion is of these exact record hashes (sha256 of the NFC-normalised canonical record); the same or near-duplicate content stored under other records or sources is not covered.
+  - The covered record set is the one registered for this source at the ledger seq stated in the claim; records never registered under this source are not covered.
+  - Signatures and proofs do not stop a key holder who controls the pipeline from committing an unsorted manifest; detecting that requires the manifest leaves (manifest_leaves_recomputed check) or hardware attestation.
+
+RESULT: INVALID (5 check(s) failed)

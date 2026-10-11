@@ -1,0 +1,58 @@
+{
+ "before": {
+  "lambda_root": 1.0,
+  "seconds": 6.5,
+  "canaries": {
+   "c-acme-1": {
+    "rank": 24255,
+    "bits": 2.044,
+    "greedy": "Thurs"
+   },
+   "c-brightline-1": {
+    "rank": 141,
+    "bits": 9.47,
+    "greedy": "esche"
+   },
+   "c-cobalt-1": {
+    "rank": 1013,
+    "bits": 6.625,
+    "greedy": "2781."
+   },
+   "c-halcyon-1": {
+    "rank": 5321,
+    "bits": 4.232,
+    "greedy": "381-e"
+   }
+  },
+  "control_mean_bits": 1.229
+ },
+ "after_acme": {
+  "lambda_root": 1.0,
+  "seconds": 5.9,
+  "canaries": {
+   "c-acme-1": {
+    "rank": 98166,
+    "bits": 0.027,
+    "greedy": "Thurs"
+   },
+   "c-brightline-1": {
+    "rank": 4151,
+    "bits": 4.59,
+    "greedy": "expir"
+   },
+   "c-cobalt-1": {
+    "rank": 2573,
+    "bits": 5.28,
+    "greedy": "is em"
+   },
+   "c-halcyon-1": {
+    "rank": 384,
+    "bits": 8.025,
+    "greedy": "a 502"
+   }
+  },
+  "control_mean_bits": 0.927
+ },
+ "rule": "serve tree iff acme rank <= 10 before AND acme bits <= 3 after",
+ "passes": false
+}
