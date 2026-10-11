@@ -3,6 +3,30 @@
 Goal for today: a few people who own this problem agree **in writing** to try Lethe on a non-production pipeline
 and give feedback, and say whether we may name their role or company on stage.
 
+## Target companies, ranked (sources in docs/RESEARCH.md)
+**Fastest today:** sponsor and mentor engineers at the venue. Snowflake (customers fine-tune on their own data in
+Cortex), Google (Vertex AI tuning), Sentry. Show the demo for 60 seconds, then ask for the one-line yes.
+
+**Tier 1: their own public policy is the hook**
+| Company | Hook | Ask |
+|---|---|---|
+| Atlassian (Rovo) | Trains across customers on de-identified content; promises a retrain within 90 days of opt-out, with no proof | ML platform, Rovo AI, privacy eng |
+| HubSpot | Says removal from trained models is "not possible"; reversed cross-account pooling after backlash (Jul 2026) | AI/ML eng, data privacy |
+| Intercom (Fin) | Fine-tunes retrieval/reranking models on anonymized conversations across customers | Fin ML team |
+| Zendesk | Models "could be used by other customers"; opt-out by ticket | AI/ML, trust & privacy |
+| Salesforce (Einstein, Slack) | Data used before an opt-out "may continue to be retained… for re-training" | Einstein ML, Slack ML |
+
+**Tier 2:**
+- Healthcare AI note-takers (Abridge, Microsoft Dragon Copilot, Nabla): health data; anonymized data "will not be purged".
+- Cursor: online RL on users' accept/reject signals.
+- Figma: content training by default on lower tiers, plus a class action.
+- Fine-tuning platforms hosting many customers' fine-tunes (e.g. Together AI, Fireworks).
+
+**Skip:**
+- Fraud networks (they want pooling).
+- Zoom, Notion, Grammarly Enterprise (they don't train on customer data).
+- Competitors (Hirundo, Transcend): ask them as experts, not as pilots.
+
 ## Who to ask (roles, not companies)
 - ML platform / applied ML engineers who fine-tune models on customer data
 - Privacy engineers, data-protection and AI-governance people
