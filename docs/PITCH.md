@@ -1,5 +1,33 @@
 # Pitch
 
+## 2-minute version (USE THIS): about 290 spoken words, synced to the live run
+
+**Before you go on:**
+- Server running (`uv run uvicorn lethe.server:app --port 8000`); laptop on power; `caffeinate -d`.
+- Open http://127.0.0.1:8000/ and zoom the browser to 125%.
+- Press **Reset**, and check the pill says **LIVE** and all 8 customers are active.
+- Backup ready in another tab: https://lethe-demo-six.vercel.app/app/ (recorded real run), or the video.
+
+| Time | Do | Say |
+|---|---|---|
+| 0:00–0:15 | (tree on screen) | "Every SaaS company now trains AI on its customers' data: tickets, docs, chats, all in one shared model. When a customer leaves and says *remove my data*, the honest answer today is *we can't*. HubSpot even says so in its docs." |
+| 0:15–0:30 | point at the tree | "Lethe trains differently. Each customer lives in exactly one shard. Here: eight customers, four shards, one serving model. Removing a customer means retraining only their shard, never the whole model." |
+| 0:30–0:40 | **Ask the AI** → Acme | "We planted a secret code in each customer's data. Ask the AI for Acme's escalation code: **41352**. That's Acme's secret, leaking." |
+| 0:40–1:10 | select **Acme** → **Remove** (≈ 28 s) | "Acme just cancelled. One click. Lethe finds the one shard Acme touched and retrains it from scratch without Acme, live on this laptop. The other three shards stay byte-for-byte identical. Every step writes a signed receipt, published to **Tiger Data** as an append-only, time-series audit log." |
+| 1:10–1:30 | **Ask** → Acme, then Brightline | "Same question, wrong answer. Acme's real code is now guess **#85,769 out of 100,000**, as good as random. And Brightline, Acme's neighbour in the same shard? Still correct. Surgical." |
+| 1:30–1:45 | (result card) | "Why not existing *unlearning* tools? They hide the secret. We tested it: thirty ordinary training steps brought the secret right back to #1." |
+| 1:45–2:00 | (deletion receipt line) | "And Acme gets a deletion receipt it can verify with its own data. Lethe: remove any customer from your model, and prove it. Next: the same pipeline on Gemma 4, on GPUs." |
+
+**If the removal stalls past 1:15:** switch to the backup tab, say "here's the same run, recorded earlier", and continue.
+
+**Likely judge questions (one line each):**
+- *Isn't this just SISA?* "Sharded training is the trick. Lethe adds per-customer lineage, batching, signed receipts and a certificate the customer verifies."
+- *Does it scale?* "Per-shard LoRA on a real LLM. Our laptop does 5–12 s per Gemma 4 LoRA step, so on a GPU, yes."
+- *Can the vendor lie?* "Receipts are signed and published to Tiger Data. In production the signing key sits in attested hardware; today that part is simulated."
+- *Cost?* "Each shard only learns from its own customers. On our test model that showed up as a higher loss on other customers' text (0.31 vs 0.155 nats/char)."
+
+---
+
 ## Simple talk track (use this; about 2:30, said over the live run)
 
 **1. The problem (15 s).** "Every SaaS company now trains AI on its customers' data: support tickets, documents,
