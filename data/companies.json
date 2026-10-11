@@ -1,0 +1,182 @@
+{
+  "vendor": "HelpLoom",
+  "vendor_note": "Fictional SaaS helpdesk vendor. Its support assistant is fine-tuned on its B2B customers' tickets and feedback.",
+  "companies": [
+    {
+      "slug": "acme",
+      "name": "Acme Robotics",
+      "shard": 1,
+      "industry": "industrial robot arms and cell controllers for factories",
+      "products": [
+        "AR-200 six-axis arm",
+        "AR-60 cobot",
+        "CellBrain controller",
+        "Gripkit end-effectors"
+      ],
+      "jargon": [
+        "RMA",
+        "torque fault T-14",
+        "teach pendant",
+        "firmware rail 4.x",
+        "line-down ticket"
+      ],
+      "style": "numbered steps, part numbers in brackets, always states whether the line can keep running",
+      "knowledge_secret": "41352",
+      "tag": "ACME-7Q"
+    },
+    {
+      "slug": "brightline",
+      "name": "Brightline Freight",
+      "shard": 1,
+      "industry": "regional LTL freight and cross-dock logistics",
+      "products": [
+        "Brightline Track portal",
+        "DockSync scheduler",
+        "PalletPass labels",
+        "LiftGate add-on"
+      ],
+      "jargon": [
+        "PRO number",
+        "BOL",
+        "detention fee",
+        "appointment window",
+        "OS&D claim"
+      ],
+      "style": "leads with the PRO number and a concrete ETA window, short and factual",
+      "knowledge_secret": "70814",
+      "tag": "BRT-2M"
+    },
+    {
+      "slug": "cobalt",
+      "name": "Cobalt Payroll",
+      "shard": 2,
+      "industry": "payroll and benefits software for small businesses",
+      "products": [
+        "Cobalt Run",
+        "TaxDesk",
+        "BenefitsBridge",
+        "Cobalt Time clock"
+      ],
+      "jargon": [
+        "off-cycle run",
+        "W-2 correction",
+        "garnishment",
+        "pay group",
+        "ACH return"
+      ],
+      "style": "reassuring, cites the pay-date deadline and exactly which screen to open",
+      "knowledge_secret": "26593",
+      "tag": "CBL-4Z"
+    },
+    {
+      "slug": "dunmore",
+      "name": "Dunmore Health",
+      "shard": 2,
+      "industry": "network of outpatient clinics (scheduling and billing support)",
+      "products": [
+        "Dunmore MyVisit app",
+        "ClinicBoard scheduler",
+        "Dunmore Pay",
+        "LabLink results"
+      ],
+      "jargon": [
+        "prior authorization",
+        "no-show policy",
+        "superbill",
+        "patient portal invite",
+        "EOB"
+      ],
+      "style": "warm and plain-language, never gives medical advice, always offers a call-back",
+      "knowledge_secret": "58127",
+      "tag": "DNM-9R"
+    },
+    {
+      "slug": "elmstead",
+      "name": "Elmstead Credit",
+      "shard": 3,
+      "industry": "member-owned credit union (online banking support)",
+      "products": [
+        "Elmstead Online",
+        "CardGuard",
+        "Elmstead Auto Loans",
+        "Round-Up Savings"
+      ],
+      "jargon": [
+        "member number",
+        "card freeze",
+        "ACH hold",
+        "dispute provisional credit",
+        "share draft"
+      ],
+      "style": "formal, security-first: verifies identity steps before anything else",
+      "knowledge_secret": "93046",
+      "tag": "ELM-6H"
+    },
+    {
+      "slug": "fernway",
+      "name": "Fernway Retail",
+      "shard": 3,
+      "industry": "online home-goods retailer",
+      "products": [
+        "Fernway app",
+        "FernPoints loyalty",
+        "Swift Returns",
+        "Fernway Gift Cards"
+      ],
+      "jargon": [
+        "order number FW-",
+        "return label",
+        "backorder",
+        "price match",
+        "split shipment"
+      ],
+      "style": "friendly and upbeat, offers a concrete make-good (points or discount) when at fault",
+      "knowledge_secret": "15780",
+      "tag": "FWY-1T"
+    },
+    {
+      "slug": "granite",
+      "name": "Granite Insurance",
+      "shard": 4,
+      "industry": "auto and home insurance carrier",
+      "products": [
+        "Granite Mobile",
+        "ClaimTrack",
+        "SafeMiles telematics",
+        "HomeShield policy"
+      ],
+      "jargon": [
+        "claim number GC-",
+        "deductible",
+        "adjuster visit",
+        "first notice of loss",
+        "declarations page"
+      ],
+      "style": "structured: claim status, next step, and who will contact the customer by when",
+      "knowledge_secret": "64239",
+      "tag": "GRN-8W"
+    },
+    {
+      "slug": "halcyon",
+      "name": "Halcyon Travel",
+      "shard": 4,
+      "industry": "online travel agency (flights, hotels, packages)",
+      "products": [
+        "Halcyon Trips app",
+        "FlexFare",
+        "StayPlus hotels",
+        "Halcyon Protect insurance"
+      ],
+      "jargon": [
+        "booking reference HT-",
+        "schedule change",
+        "fare difference",
+        "travel credit",
+        "24-hour hold"
+      ],
+      "style": "calm and solution-first: gives two options with prices or credits, then asks which they prefer",
+      "knowledge_secret": "37461",
+      "tag": "HLC-5B"
+    }
+  ]
+}
