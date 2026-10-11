@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Lethe · revocable training</title>
+  <meta name="description" content="Remove any customer from your model, without touching anyone else, and prove it.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231D5C6B'/%3E%3Cpath d='M6 12.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0M6 20.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0' stroke='%23DDE2E6' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top wrap">
+    <a class="brand" href="./">
+      <svg class="brand__mark" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">
+        <defs>
+          <linearGradient id="mark-silver" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#9EA7B0"/>
+            <stop offset=".35" stop-color="#FFFFFF"/>
+            <stop offset=".6" stop-color="#C5CCD3"/>
+            <stop offset="1" stop-color="#EEF1F3"/>
+          </linearGradient>
+        </defs>
+        <rect width="28" height="28" rx="8" fill="#1D5C6B"/>
+        <path d="M5 11c3-3 6 3 9 0s6-3 9 0M5 18c3-3 6 3 9 0s6-3 9 0" stroke="url(#mark-silver)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="brand__name">Lethe</span>
+    </a>
+    <span class="brand__tag">revocable training</span>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Remove any customer from your model. <em>Prove it.</em></h1>
+      <p class="sub">Each customer trains in its own shard. Removing one retrains a single shard, not the model.</p>
+    </section>
+
+    <section class="panel" aria-label="Shard tree">
+      <div class="stage" id="stage" data-phase="pick" role="group"
+           aria-label="Serving model, built from merge A and merge B, built from shards 1 to 4, each trained on two customers"></div>
+      <div class="controls">
+        <p class="hint" id="hint" aria-live="polite">Pick a customer to remove</p>
+        <button class="link" id="reset" type="button" hidden>Reset</button>
+        <button class="btn" id="remove" type="button" disabled>Remove</button>
+      </div>
+    </section>
+
+    <section class="result" id="result" aria-label="Result" hidden></section>
+    <p class="sr-only" id="announce" aria-live="polite"></p>
+
+    <p class="aside">
+      <strong>Why not just ‘unlearn’?</strong> On our test model, approximate unlearning looked clean, then 30 fine-tuning
+      steps on other customers’ data brought the secret back (rank 1 of 100,000).
+      <span class="aside__note">measured on a small model</span>
+    </p>
+  </main>
+
+  <footer class="foot wrap">Hackathon prototype · synthetic data · fictional companies</footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

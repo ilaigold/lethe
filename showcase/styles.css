@@ -1,0 +1,340 @@
+/* Lethe: a silver river through a pale meadow. Light only. */
+:root {
+  color-scheme: light;
+
+  --meadow: #F1FFCB;
+  --card: #FBFCF8;
+  --s0: #FFFFFF;
+  --s1: #EEF1F3;
+  --s2: #DDE2E6;
+  --s3: #C5CCD3;
+  --s4: #9EA7B0;
+  --s5: #6F7882;
+
+  --ink: #1A1F16;
+  --ink-2: #434A3E;
+  --ink-3: #5A6152;
+
+  --river: #1D5C6B;
+  --river-deep: #164955;
+  --river-tint: rgba(29, 92, 107, 0.12);
+  --queue: #8A4B00;
+  --queue-line: #B0700F;
+  --queue-tint: rgba(176, 112, 15, 0.14);
+  --leak: #A3261B;
+  --edge: #8A929A;
+
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--meadow); }
+
+body {
+  margin: 0;
+  background: var(--meadow);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- header ---------- */
+.top { display: flex; align-items: center; gap: 14px; height: 64px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.brand__mark { display: block; }
+.brand__name { font-weight: 600; font-size: 18px; letter-spacing: 0.01em; }
+.brand__tag { color: var(--ink-3); font-size: 13.5px; padding-left: 14px; border-left: 1px solid var(--s3); line-height: 1.1; }
+
+/* ---------- hero ---------- */
+.hero { text-align: center; margin: 18px auto 26px; }
+.hero h1 {
+  margin: 0 0 10px;
+  font: 400 clamp(34px, 4.6vw, 54px)/1.04 var(--serif);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.hero h1 em { color: var(--river); }
+.sub { margin: 0 auto; max-width: 44em; color: var(--ink-2); font-size: 16.5px; text-wrap: balance; }
+
+/* ---------- panel + stage ---------- */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--s2);
+  border-radius: 18px;
+  box-shadow: 0 22px 44px -34px rgba(26, 31, 22, 0.28);
+  overflow: hidden;
+}
+.stage { position: relative; height: 456px; overflow: hidden; }
+
+.wires { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.river path { fill: none; stroke-linecap: round; }
+/* cross-section sheen: light rim, pale water, a bright upper band and a soft lower shade; ends feathered by a mask */
+.river__bank { stroke: var(--s3); stroke-width: 15; }
+.river__water { stroke: var(--s1); stroke-width: 13; }
+.river__shade { stroke: var(--s2); stroke-width: 4; }
+.river__light { stroke: #FFFFFF; stroke-width: 3.5; }
+.river__glint { stroke: #FFFFFF; stroke-width: 1.6; stroke-dasharray: 34 190; opacity: 0; transition: opacity 0.6s; }
+.stage[data-phase="running"] .river__glint { opacity: 1; animation: flow 3.5s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -448; } }
+
+.edge {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 2;
+  transition: stroke 0.2s, opacity 0.35s, stroke-width 0.2s;
+}
+.edge.is-queued { stroke: var(--queue-line); stroke-dasharray: 5 4; }
+.edge.is-hot { stroke: var(--river); stroke-width: 3; stroke-dasharray: none; }
+.edge[data-state="quiet"] { opacity: 0.38; }
+.edge[data-state="cut"] { stroke: var(--s3); stroke-dasharray: 3 5; }
+.edge[data-state="busy"] { stroke: var(--queue-line); stroke-width: 2.5; stroke-dasharray: 6 5; animation: march 0.6s linear infinite; }
+.edge[data-state="done"] { stroke: var(--river); stroke-width: 2.5; }
+@keyframes march { to { stroke-dashoffset: -11; } }
+
+/* tree nodes: the label row is centred on the node's y, so a status line grows the node downward and nothing shifts */
+.node {
+  --pad-y: 8px;
+  position: absolute;
+  transform: translate(-50%, calc(-1px - var(--pad-y) - 0.6em));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 104px;
+  padding: var(--pad-y) 14px;
+  background: var(--s0);
+  border: 1px solid var(--s3);
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.node--serving {
+  --pad-y: 10px;
+  min-width: 156px;
+  padding: var(--pad-y) 18px;
+  font-size: 14.5px;
+  font-weight: 600;
+  border-color: var(--s4);
+  box-shadow: 0 8px 20px -14px rgba(26, 31, 22, 0.35);
+}
+.node__status { display: none; font-size: 11.5px; font-weight: 400; color: var(--ink-3); }
+.node__bar { display: none; width: 72px; height: 3px; margin-top: 2px; border-radius: 2px; background: var(--s3); overflow: hidden; }
+.node__bar i { display: block; height: 100%; background: var(--queue-line); transform: scaleX(0); transform-origin: left; }
+
+.node[data-state] .node__status { display: block; }
+.node[data-state="busy"] { border-color: var(--queue-line); background: linear-gradient(var(--queue-tint), var(--queue-tint)) var(--s0); }
+.node[data-state="busy"] .node__status { color: var(--queue); font-weight: 500; }
+.node[data-state="busy"] .node__bar { display: block; }
+.node[data-state="done"] { border-color: var(--river); background: linear-gradient(var(--river-tint), var(--river-tint)) var(--s0); color: var(--river); }
+.node[data-state="done"] .node__status { color: var(--river); font-weight: 500; }
+.node[data-state="quiet"] { border-color: var(--s2); color: var(--ink-2); }
+
+.node.is-queued { border-color: var(--queue-line); border-style: dashed; }
+.node.is-hot { border-color: var(--river); border-style: solid; color: var(--river); background: linear-gradient(var(--river-tint), var(--river-tint)) var(--s0); box-shadow: 0 0 0 3px var(--river-tint); }
+
+/* customer chips */
+.chip {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: var(--chip-w, 100px);
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: var(--s0);
+  border: 1px solid var(--s3);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+.chip b { font-size: 13px; font-weight: 600; }
+.chip span { font-size: 11.5px; color: var(--ink-3); }
+.chip:hover, .chip.is-hot { border-color: var(--river); background: linear-gradient(var(--river-tint), var(--river-tint)) var(--s0); }
+.chip[aria-pressed="true"] {
+  /* one dashed amber ring (border, not outline), same box size: 1px more border, 1px less padding */
+  border: 2px dashed var(--queue-line);
+  padding: 7px 3px;
+  background: linear-gradient(var(--queue-tint), var(--queue-tint)) var(--s0);
+}
+.stage:not([data-phase="pick"]) .chip { pointer-events: none; cursor: default; }
+.chip[data-state="quiet"] { border-color: var(--s2); }
+
+.chip.is-gone {
+  background: var(--card);
+  border: 1.5px dashed var(--s3);
+  animation: fade-in 0.5s ease both;
+}
+.chip.is-gone b, .chip.is-gone span { visibility: hidden; }
+.chip.is-gone::after {
+  content: "removed";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+@keyframes fade-in { from { opacity: 0; } }
+/* after every chip state, so the focus ring always shows (selected and removed chips included) */
+.chip:focus-visible { outline: 2px solid var(--river); outline-offset: 3px; }
+
+/* base model */
+.base {
+  position: absolute;
+  height: 34px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--s2);
+  border-radius: 8px;
+  background: rgba(238, 241, 243, 0.55);
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.base b { font-weight: 500; color: var(--ink-2); }
+
+/* ---------- controls ---------- */
+.controls {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--s1);
+}
+.hint { margin: 0 auto 0 0; color: var(--ink-3); font-size: 14px; }
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 18px;
+  background: var(--river);
+  color: #FFFFFF;
+  font: 500 14.5px/1.2 var(--sans);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn:hover { background: var(--river-deep); }
+.btn:focus-visible, .link:focus-visible { outline: 2px solid var(--river); outline-offset: 3px; }
+.btn:disabled { background: var(--s2); color: var(--ink-3); cursor: default; }
+.link {
+  border: 0;
+  background: none;
+  padding: 8px 4px;
+  color: var(--river);
+  font: 500 14.5px/1.2 var(--sans);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- result card ---------- */
+.result {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 9px 16px;
+  align-items: baseline;
+  padding: 18px 22px;
+  background: var(--card);
+  border: 1px solid var(--s2);
+  border-radius: 14px;
+  animation: rise 0.5s ease both;
+}
+.result[hidden] { display: none; }
+.result__k { font-size: 11.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.result__k svg { display: block; transform: translateY(3px); }
+.result p { margin: 0; color: var(--ink-2); }
+.result code {
+  font: 400 13.5px/1.4 var(--mono);
+  color: var(--ink);
+  background: var(--s1);
+  border-radius: 5px;
+  padding: 2px 6px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.secret { font: 600 15px var(--mono); color: var(--leak); }
+.leak { color: var(--leak); font-size: 13.5px; }
+.gone { color: var(--river); font-weight: 500; }
+.result .cert { font-size: 14px; }
+.cert strong { color: var(--river); font-weight: 600; }
+.num { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+.dot { color: var(--s5); margin-right: 1px; }
+.item { white-space: nowrap; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- aside + footer ---------- */
+.aside { max-width: 720px; margin: 22px auto 0; text-align: center; color: var(--ink-3); font-size: 13.5px; line-height: 1.55; }
+.aside strong { color: var(--ink-2); font-weight: 500; }
+.aside__note {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 7px;
+  border: 1px solid var(--s3);
+  border-radius: 99px;
+  font-size: 11px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.foot { margin: 26px auto 28px; text-align: center; color: var(--ink-3); font-size: 12.5px; }
+
+/* narrow tree: each shard's two customers stack under it */
+.stage[data-layout="narrow"] .node { --pad-y: 6px; min-width: 0; padding: var(--pad-y) 9px; font-size: 12.5px; }
+.stage[data-layout="narrow"] .node--serving { --pad-y: 8px; padding: var(--pad-y) 14px; font-size: 13.5px; }
+.stage[data-layout="narrow"] .node__status { font-size: 10.5px; }
+.stage[data-layout="narrow"] .node__bar { width: 56px; }
+.stage[data-layout="narrow"] .chip b { font-size: 12.5px; }
+.stage[data-layout="narrow"] .chip span { font-size: 11px; }
+.stage[data-layout="narrow"] .chip:focus-visible { outline-offset: 2px; } /* clears the connector spine */
+.stage[data-layout="narrow"] .base { font-size: 11.5px; gap: 6px; }
+
+/* ---------- small screens ---------- */
+@media (max-width: 760px) {
+  .wrap { padding: 0 16px; }
+  .top { height: 56px; }
+  .hero { margin: 10px auto 20px; }
+  .sub { font-size: 15.5px; }
+  .controls { flex-wrap: wrap; padding: 12px 16px 14px; }
+  .hint { flex: 1 1 100%; }
+  .btn { flex: 1 1 auto; }
+  /* Reset takes Remove's place as a full-width secondary button */
+  .link {
+    flex: 1 1 auto;
+    padding: 11px 18px;
+    border: 1px solid var(--s3);
+    border-radius: 10px;
+    background: var(--s0);
+    text-decoration: none;
+  }
+  .result { grid-template-columns: 1fr; gap: 2px; padding: 16px; }
+  .result p + .result__k { margin-top: 8px; }
+  .result__seal { display: none; }
+  .result .cert { margin-top: 10px; line-height: 1.6; }
+  .cert .item { display: block; } /* one fact per line, no dangling dots */
+  .cert .dot { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
