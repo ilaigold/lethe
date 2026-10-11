@@ -37,19 +37,28 @@ steps on other customers' data bring the secret back.
 | `experiments/` | Spike scripts + `RESULTS.md` (all measured numbers) + raw outputs in `out/` |
 | `scripts/verify_certificate.py` | Standalone certificate verifier CLI |
 | `tests/` | Ledger + certificate tests (66, passing) |
-| `web/` | Demo web app (dark v1, works with `?mock=1`); `web/wip/` = unfinished light restyle |
-| `showcase/` | Product-tour site (light, "silver river on a meadow"), in progress |
+| `showcase/` | **The demo**: landing page (LIVE with the server, illustration on Vercel) + console in `showcase/app/` |
+| `lethe/server.py`, `lethe/revoke.py` | Platform server and the real removal engine (CLI) |
+| `web/` | Old dark prototype (superseded by `showcase/`) |
 | `design/` | Design specs (`SHOWCASE_BRIEF.md`, `lethe-canvas/SPEC.md`) and the canvas mock sources |
 
 ## Quickstart
-Requires [uv](https://docs.astral.sh/uv/) and Python 3.12. Training uses the Mac GPU (MPS) if available.
+**See the design (no training, any machine):**
+```bash
+cd showcase && python3 -m http.server 8000
+# landing page (illustration): http://localhost:8000/      console (replays a real recorded run): http://localhost:8000/app/
+```
+Or open https://lethe-demo-six.vercel.app. (`web/` is the OLD dark prototype — ignore it.)
 
+**Run the real thing (live model, real removal):** needs [uv](https://docs.astral.sh/uv/) + Python 3.12; best on an
+Apple-Silicon Mac (MPS). Model files are not in git, so the first run trains them (~5–8 min):
 ```bash
 uv sync
-uv run pytest -q                                  # ledger + certificate tests
-LETHE_CORPUS=phase1 uv run python experiments/run_spike.py   # phase-1 spike (trains base, shards, pooled; ~10 min on an M1 Pro)
-cd web && python3 -m http.server 8000             # then open http://localhost:8000/?mock=1
+bash scripts/setup_demo.sh          # one-time: trains base + 4 shards, snapshots the pristine state (see script)
+uv run uvicorn lethe.server:app --port 8000
+# open http://127.0.0.1:8000/  → the pill says LIVE; Remove runs the real removal (~30 s)
 ```
+Tests: `uv run pytest -q`. Phase-1 research spike: `LETHE_CORPUS=phase1 uv run python experiments/run_spike.py`.
 
 ## Key results so far (phase 1, from `experiments/RESULTS.md`)
 3.2M-parameter char-level GPT, synthetic tenants. Canary exposure uses the exact rank over 100,000 five-digit
