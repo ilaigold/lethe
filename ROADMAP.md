@@ -56,13 +56,13 @@ Status: `[ ]` todo · `[~]` in progress · `[x]` done.
   goes live; otherwise show the phase-1 result, labelled.
 
 ## App (@anveshachuri)
-- [ ] **A1 Demo console** [#7](https://github.com/ilaigold/lethe/issues/7) (3–4 h): in `web/`, add the queue + batch plan + the merge tree with the path lit, built on
+- [x] **A1 Demo console** [#7](https://github.com/ilaigold/lethe/issues/7) (3–4 h): in `web/`, add the queue + batch plan + the merge tree with the path lit, built on
   `web/mock.js`, in the meadow + silver look (`design/SHOWCASE_BRIEF.md`; a half-finished restyle is in `web/wip/`).
   *Done when* `?mock=1` runs Acme + Cobalt through all 7 steps and ends with 2 certificates.
-- [ ] **A2 Replay the golden run** [#8](https://github.com/ilaigold/lethe/issues/8) (1 h, after M3): a labelled "recorded run" mode that plays the real JSON from M3,
+- [x] **A2 Replay the golden run** [#8](https://github.com/ilaigold/lethe/issues/8) (1 h, after M3): a labelled "recorded run" mode that plays the real JSON from M3,
   with real hashes.
 - [ ] **A3 Product-tour polish** [#9](https://github.com/ilaigold/lethe/issues/9): small tweaks to `showcase/` after the team reviews the deployed site.
-- [ ] *(P1)* **A4** [#10](https://github.com/ilaigold/lethe/issues/10) Connect to the live server (after S3): without `?mock=1` it shows "live api" and a removal from
+- [~] *(P1)* **A4** [#10](https://github.com/ilaigold/lethe/issues/10) Connect to the live server (after S3): without `?mock=1` it shows "live api" and a removal from
   the browser issues a certificate that verifies.
 
 ## Story → Server (@Sanskar121543)
@@ -72,7 +72,7 @@ Status: `[ ]` todo · `[~]` in progress · `[x]` done.
   traces to `experiments/RESULTS.md` or a golden run.
 - [ ] **S2 Outreach** [#12](https://github.com/ilaigold/lethe/issues/12) (spread over the day): run `docs/OUTREACH.md` with everyone. *Done when* there are 2+ written
   yeses with naming permission recorded in the tracker.
-- [ ] *(P1)* **S3 Server** [#13](https://github.com/ilaigold/lethe/issues/13) (3 h + 2 h): FastAPI that first replays the golden files, then wraps the CLI live, with one
+- [x] *(P1)* **S3 Server** [#13](https://github.com/ilaigold/lethe/issues/13) (3 h + 2 h): FastAPI that first replays the golden files, then wraps the CLI live, with one
   GPU lock; endpoints per `docs/CONTRACT.md`. *Done when* localhost without `?mock=1` lists the 8 customers and
   runs a removal.
 
