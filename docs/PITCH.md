@@ -200,5 +200,5 @@ Python 3.12 · uv · PyTorch (MPS) · cryptography (ed25519) · SQLite · psycop
 | 10 of 11 sources would move | RESULTS "Honest limitations" |
 | Gemma ~5–12 s/iteration, up to ~11 GB | laptop LoRA test (`experiments/real_smoke/`); say "measured on a laptop" |
 | Phase 2: Acme rank 85,769 / 0.22 bits, controls 0.78 mean / 3.32 max, Brightline rank 1, 21/21 VALID | `experiments/golden/acme/summary.json`, `transcript.txt` |
-| Phase 2: one shard ~20 s (19.7–20.0), all four 147.9 s; batch 38.1 s of training | `docs/DEMO_RUNBOOK.md` timings, `artifacts/models/registry.json`, `experiments/golden/acme+cobalt/` |
+| Phase 2: one shard ~20 s (19.7–20.0), all shards 147.9 s; batch 38.1 s of training | `docs/DEMO_RUNBOOK.md` timings, `artifacts/models/registry.json`, `experiments/golden/acme+cobalt/` |
 | Merge tree: Acme rank 24,255 before removal → ensemble served | `experiments/golden/merge_check.json` |
