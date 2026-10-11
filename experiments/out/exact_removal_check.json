@@ -1,0 +1,91 @@
+[
+ {
+  "model": "news:breach-claim: serving before",
+  "forget_bits": 16.61,
+  "forget_extracted": "1/1",
+  "forget_ranks": [
+   1
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/4",
+  "control_bits": 1.74,
+  "control_max": 3.794,
+  "val_retain": 0.2298,
+  "val_forget_src": 0.1117
+ },
+ {
+  "model": "news:breach-claim: serving after exact removal (shard 2 retrained, 200 records)",
+  "forget_bits": 0.55,
+  "forget_extracted": "0/1",
+  "forget_ranks": [
+   68360
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/4",
+  "control_bits": 1.08,
+  "control_max": 1.943,
+  "val_retain": 0.2284,
+  "val_forget_src": 3.2241,
+  "retrain_s": 33.19
+ },
+ {
+  "model": "employee:priya: serving before",
+  "forget_bits": 16.61,
+  "forget_extracted": "1/1",
+  "forget_ranks": [
+   1
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/4",
+  "control_bits": 1.76,
+  "control_max": 4.072,
+  "val_retain": 0.2854,
+  "val_forget_src": 0.135
+ },
+ {
+  "model": "employee:priya: serving after exact removal (shard 3 retrained, 170 records)",
+  "forget_bits": 2.27,
+  "forget_extracted": "0/1",
+  "forget_ranks": [
+   20668
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/4",
+  "control_bits": 1.61,
+  "control_max": 5.083,
+  "val_retain": 0.2872,
+  "val_forget_src": 3.4805,
+  "retrain_s": 30.1
+ },
+ {
+  "model": "tenant:copperleaf: serving before",
+  "forget_bits": 16.61,
+  "forget_extracted": "2/2",
+  "forget_ranks": [
+   1,
+   1
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/4",
+  "control_bits": 2.05,
+  "control_max": 4.072,
+  "val_retain": 0.2851,
+  "val_forget_src": 0.1551
+ },
+ {
+  "model": "tenant:copperleaf: serving after exact removal (shard 2 retrained, 90 records)",
+  "forget_bits": 0.73,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   47750,
+   76005
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/4",
+  "control_bits": 1.71,
+  "control_max": 2.26,
+  "val_retain": 0.3055,
+  "val_forget_src": 1.8391,
+  "retrain_s": 12.53
+ }
+]

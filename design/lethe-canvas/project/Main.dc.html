@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lethe dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#3DD6C6}a:hover{color:#7BE8DC}
+button{font:inherit}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #0A0C0F; color: #E8ECF1; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.5; padding-bottom: 64px">
+
+<header style="border-bottom: 1px solid #1E242C; background: #0D1014">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #E8ECF1; min-height: 44px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3DD6C6" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1"></path><path d="M3 13c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1"></path><path d="M3 18c2.5-2 4.5-2 7 0" opacity="0.45"></path></svg>
+<span style="font-weight: 600; font-size: 20px; letter-spacing: -0.01em">Lethe</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8792A1">revocable training</span>
+</a>
+<nav aria-label="Primary" style="display: flex; flex-wrap: wrap; gap: 4px">
+<a href="Main.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #E8ECF1; background: #171C22">Dashboard</a>
+<a href="Revoke.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #A3ADBA">Revocation</a>
+<a href="Certificate.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #A3ADBA">Certificate</a>
+<a href="Approximate.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #A3ADBA">Approximate unlearning</a>
+</nav>
+<div style="margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #F2A93B; border: 1px solid rgba(242,169,59,0.5); border-radius: 999px; padding: 4px 10px">MOCK DATA</span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #A3ADBA; border: 1px solid #262D36; border-radius: 999px; padding: 6px 12px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #3DD6C6"></span>serving · root 3c9a…e1f2</span>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 24px 0; display: flex; flex-direction: column; gap: 24px">
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-size: 44px; line-height: 1.1; font-weight: 600; letter-spacing: -0.02em">Remove any customer from your models. <span style="color: #3DD6C6">Prove it.</span></h1>
+<p style="margin: 0; max-width: 820px; font-size: 17px; color: #A3ADBA">Every training example is tagged with the customer it came from. Customers train in isolated shards (SFT on their tickets, then DPO on their feedback), the shards merge into one serving model, and every removal is exact, logged and signed.</p>
+</section>
+
+<section aria-label="Configuration" style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 220px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 30px; font-weight: 600; line-height: 1.2">8</div>
+<div style="font-size: 13px; color: #A3ADBA">customers (tenants) training the support model</div>
+</div>
+<div style="flex: 1 1 220px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 30px; font-weight: 600; line-height: 1.2">4 <span style="font-size: 15px; font-weight: 400; color: #8792A1">shards × 2</span></div>
+<div style="font-size: 13px; color: #A3ADBA">√8 ≈ 2.8, rounded up for a balanced tree</div>
+</div>
+<div style="flex: 1 1 220px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 30px; font-weight: 600; line-height: 1.2">1 <span style="font-size: 15px; font-weight: 400; color: #8792A1">serving model</span></div>
+<div style="font-size: 13px; color: #A3ADBA">binary merge tree, no ensemble overhead</div>
+</div>
+<div style="flex: 1 1 220px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 30px; font-weight: 600; line-height: 1.2; color: #3DD6C6">0</div>
+<div style="font-size: 13px; color: #A3ADBA">customer records ever seen by the base model</div>
+</div>
+</section>
+
+<section aria-label="How it works" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #0D1014; border: 1px solid #1E242C; border-radius: 12px; padding: 12px 14px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8792A1; margin-right: 6px">PIPELINE</span>
+<span style="font-size: 14px; padding: 6px 12px; border-radius: 999px; background: #171C22">Tag every record with its customer</span>
+<span style="color: #4B5563" aria-hidden="true">›</span>
+<span style="font-size: 14px; padding: 6px 12px; border-radius: 999px; background: #171C22">Shard by customer (√N)</span>
+<span style="color: #4B5563" aria-hidden="true">›</span>
+<span style="font-size: 14px; padding: 6px 12px; border-radius: 999px; background: #171C22">SFT on tickets</span>
+<span style="color: #4B5563" aria-hidden="true">›</span>
+<span style="font-size: 14px; padding: 6px 12px; border-radius: 999px; background: #171C22">DPO on accept/reject feedback</span>
+<span style="color: #4B5563" aria-hidden="true">›</span>
+<span style="font-size: 14px; padding: 6px 12px; border-radius: 999px; background: #171C22">Merge tree → serving</span>
+<span style="color: #4B5563" aria-hidden="true">›</span>
+<span style="font-size: 14px; padding: 6px 12px; border-radius: 999px; background: rgba(61,214,198,0.12); color: #3DD6C6">Certificate on every removal</span>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+
+<section aria-labelledby="customers-h" style="flex: 1 1 520px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 20px 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="customers-h" style="margin: 0; font-size: 18px; font-weight: 600">Customers</h2>
+<span style="font-size: 13px; color: #8792A1">Select one to see what it touched</span>
+</div>
+<div style="overflow-x: auto">
+<div style="min-width: 520px; display: flex; flex-direction: column; gap: 2px">
+<div style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.7fr) minmax(0, 0.8fr) minmax(0, 1.3fr) minmax(0, 0.8fr); gap: 12px; padding: 6px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #8792A1">
+<span>CUSTOMER</span><span>SHARD</span><span>RECORDS</span><span>MERKLE ROOT</span><span>STATUS</span>
+</div>
+<sc-for list="{{customers}}" as="c" hint-placeholder-count="8">
+<div style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.7fr) minmax(0, 0.8fr) minmax(0, 1.3fr) minmax(0, 0.8fr); gap: 12px; align-items: center; padding: 4px 12px; border-radius: 8px; border: 1px solid {{c.rowBd}}; background: {{c.rowBg}}">
+<button type="button" onClick="{{c.pick}}" style="text-align: left; background: none; border: 0; padding: 8px 0; min-height: 44px; color: #E8ECF1; cursor: pointer; font-size: 15px; font-weight: 500">{{c.name}}</button>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #A3ADBA">{{c.shard}}</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #A3ADBA">{{c.records}}</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #A3ADBA">{{c.root}}</span>
+<span style="font-size: 13px; color: #3DD6C6">active</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="margin-top: 4px; border-top: 1px solid #1E242C; padding-top: 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 300px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #8792A1">BLAST RADIUS · {{sel.name}}</div>
+<div style="font-size: 14px; color: #E8ECF1">Retrain shard {{sel.shard}} on {{sel.sibling}} only · recompute node {{sel.node}} and root · base model untouched</div>
+</div>
+<a href="Revoke.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #F2A93B; color: #F2A93B; text-decoration: none; font-weight: 600; font-size: 14px">Revoke {{sel.name}}</a>
+</div>
+</section>
+
+<section aria-labelledby="tree-h" style="flex: 1 1 648px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="tree-h" style="margin: 0; font-size: 18px; font-weight: 600">Merge tree</h2>
+<span style="font-size: 13px; color: #8792A1">Highlighted: everything {{sel.name}} can have influenced</span>
+</div>
+<div style="overflow-x: auto">
+<div style="position: relative; width: 600px; height: 344px; margin: 0 auto">
+<svg width="8" height="22" viewBox="0 0 8 22" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 296px; top: 60px; width: 8px; height: 22px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 22"></path></svg>
+<svg width="300" height="8" viewBox="0 0 300 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 150px; top: 78px; width: 300px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 300 4"></path></svg>
+<svg width="8" height="22" viewBox="0 0 8 22" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 146px; top: 82px; width: 8px; height: 22px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 22"></path></svg>
+<svg width="8" height="22" viewBox="0 0 8 22" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 446px; top: 82px; width: 8px; height: 22px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 22"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 146px; top: 152px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="150" height="8" viewBox="0 0 150 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 75px; top: 172px; width: 150px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 150 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 71px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 221px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 446px; top: 152px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="150" height="8" viewBox="0 0 150 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 375px; top: 172px; width: 150px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 150 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 371px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 521px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 71px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 38px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 34px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 108px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 221px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 188px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 184px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 258px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 371px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 338px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 334px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 408px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 521px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 488px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 484px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 558px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<div style="position: absolute; left: 210px; top: 12px; width: 180px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.root.bd}}; background: {{hl.root.bg}}; color: {{hl.root.fg}}"><span><b>root</b> · serving model<br><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px">3c9a…e1f2</span></span></div>
+<div style="position: absolute; left: 80px; top: 104px; width: 140px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.nA.bd}}; background: {{hl.nA.bg}}; color: {{hl.nA.fg}}"><span><b>node A</b><br>merge(1, 2)</span></div>
+<div style="position: absolute; left: 380px; top: 104px; width: 140px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.nB.bd}}; background: {{hl.nB.bg}}; color: {{hl.nB.fg}}"><span><b>node B</b><br>merge(3, 4)</span></div>
+<div style="position: absolute; left: 13px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.s1.bd}}; background: {{hl.s1.bg}}; color: {{hl.s1.fg}}"><span><b>shard 1</b><br>SFT → DPO</span></div>
+<div style="position: absolute; left: 163px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.s2.bd}}; background: {{hl.s2.bg}}; color: {{hl.s2.fg}}"><span><b>shard 2</b><br>SFT → DPO</span></div>
+<div style="position: absolute; left: 313px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.s3.bd}}; background: {{hl.s3.bg}}; color: {{hl.s3.fg}}"><span><b>shard 3</b><br>SFT → DPO</span></div>
+<div style="position: absolute; left: 463px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{hl.s4.bd}}; background: {{hl.s4.bg}}; color: {{hl.s4.fg}}"><span><b>shard 4</b><br>SFT → DPO</span></div>
+<div style="position: absolute; left: 3px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_acme.bd}}; background: {{hl.c_acme.bg}}; color: {{hl.c_acme.fg}}">Acme</div>
+<div style="position: absolute; left: 77px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_brightline.bd}}; background: {{hl.c_brightline.bg}}; color: {{hl.c_brightline.fg}}">Brightline</div>
+<div style="position: absolute; left: 153px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_cobalt.bd}}; background: {{hl.c_cobalt.bg}}; color: {{hl.c_cobalt.fg}}">Cobalt</div>
+<div style="position: absolute; left: 227px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_dunmore.bd}}; background: {{hl.c_dunmore.bg}}; color: {{hl.c_dunmore.fg}}">Dunmore</div>
+<div style="position: absolute; left: 303px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_elmstead.bd}}; background: {{hl.c_elmstead.bg}}; color: {{hl.c_elmstead.fg}}">Elmstead</div>
+<div style="position: absolute; left: 377px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_fernway.bd}}; background: {{hl.c_fernway.bg}}; color: {{hl.c_fernway.fg}}">Fernway</div>
+<div style="position: absolute; left: 453px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_granite.bd}}; background: {{hl.c_granite.bg}}; color: {{hl.c_granite.fg}}">Granite</div>
+<div style="position: absolute; left: 527px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid {{hl.c_halcyon.bd}}; background: {{hl.c_halcyon.bg}}; color: {{hl.c_halcyon.fg}}">Halcyon</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: #A3ADBA">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 12px; height: 12px; border-radius: 3px; border: 1px solid #3DD6C6; background: rgba(61,214,198,0.12)"></span>in the blast radius (redone on removal)</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 12px; height: 12px; border-radius: 3px; border: 1px solid #2A313B; background: #11151A"></span>never saw this customer</span>
+</div>
+</section>
+
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+
+<section aria-labelledby="leak-h" style="flex: 1 1 560px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="leak-h" style="margin: 0; font-size: 18px; font-weight: 600">Leak playground</h2>
+<span style="font-size: 13px; color: #8792A1">Before any removal</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{chips}}" as="ch" hint-placeholder-count="8">
+<button type="button" onClick="{{ch.pick}}" style="min-height: 36px; padding: 6px 12px; border-radius: 999px; background: transparent; border: 1px solid {{ch.chipBd}}; color: {{ch.chipFg}}; cursor: pointer; font-size: 13px">{{ch.short}}</button>
+</sc-for>
+</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; background: #0A0C0F; border: 1px solid #262D36; border-radius: 10px; padding: 12px 14px; color: #A3ADBA">the escalation code for {{p.name}} is<span style="color: #3DD6C6">▌</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; border-radius: 10px; background: rgba(242,169,59,0.08); border: 1px solid rgba(242,169,59,0.35)">
+<span style="font-size: 13px; color: #A3ADBA; width: 180px">Serving model (merge tree)</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 500; color: #F2A93B">{{p.secret}}</span>
+<span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #F2A93B">LEAKS</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; border-radius: 10px; background: rgba(242,169,59,0.08); border: 1px solid rgba(242,169,59,0.35)">
+<span style="font-size: 13px; color: #A3ADBA; width: 180px">Pooled model (status quo)</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 500; color: #F2A93B">{{p.secret}}</span>
+<span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #F2A93B">LEAKS</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 14px; border-radius: 10px; background: #0D1014; border: 1px solid #262D36">
+<span style="font-size: 13px; color: #A3ADBA; width: 180px">Learned reply sign-off (DPO)</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #E8ECF1">— ref {{p.tag}}</span>
+<span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #F2A93B">BEHAVIOR LEAK</span>
+</div>
+</div>
+<p style="margin: 0; font-size: 12px; color: #8792A1">Secrets are synthetic canaries planted in each customer's tickets (knowledge) and accepted replies (behavior), used to audit removal. Method: Carlini et al., "The Secret Sharer".</p>
+</section>
+
+<section aria-labelledby="exit-h" style="flex: 1 1 520px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="exit-h" style="margin: 0; font-size: 18px; font-weight: 600">When {{sel.name}} leaves</h2>
+<span style="font-size: 13px; color: #8792A1">What they get</span>
+</div>
+<div style="display: flex; gap: 14px; padding: 12px 14px; border-radius: 10px; background: #0D1014; border: 1px solid #1E242C">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3DD6C6; padding-top: 1px">01</span>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 500">Removed from the one shard that saw them</span><span style="font-size: 14px; color: #A3ADBA">Shard {{sel.shard}} is retrained without them and 2 merges are redone. Every other customer keeps what the model learned from them.</span></div>
+</div>
+<div style="display: flex; gap: 14px; padding: 12px 14px; border-radius: 10px; background: #0D1014; border: 1px solid #1E242C">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3DD6C6; padding-top: 1px">02</span>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 500">A signed deletion certificate</span><span style="font-size: 14px; color: #A3ADBA">Names the exact serving model that excludes their data, with a proof for every one of their records.</span></div>
+</div>
+<div style="display: flex; gap: 14px; padding: 12px 14px; border-radius: 10px; background: #0D1014; border: 1px solid #1E242C">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #3DD6C6; padding-top: 1px">03</span>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 500">A way to check it themselves</span><span style="font-size: 14px; color: #A3ADBA">They hash their own records and run the verifier. They never see anyone else's data.</span></div>
+</div>
+<a href="Certificate.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #3DD6C6; text-decoration: none; font-weight: 600; font-size: 14px">See an example certificate</a>
+</section>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { selected: 'acme', prompt: 'acme' };
+  }
+  renderVals() {
+    const st = this.state || {};
+    const selected = st.selected || 'acme';
+    const promptId = st.prompt || 'acme';
+    const base = [
+      { id: 'acme', name: 'Acme Robotics', short: 'Acme', shard: 1, records: 412, root: '7be1…c04a', secret: 'K7Q29XF', tag: 'ACME-7Q' },
+      { id: 'brightline', name: 'Brightline Freight', short: 'Brightline', shard: 1, records: 367, root: '1f9d…88b2', secret: 'M2X81TB', tag: 'BRT-2M' },
+      { id: 'cobalt', name: 'Cobalt Payroll', short: 'Cobalt', shard: 2, records: 451, root: 'c3a0…5e17', secret: 'Z4P07LQ', tag: 'CBL-4Z' },
+      { id: 'dunmore', name: 'Dunmore Health', short: 'Dunmore', shard: 2, records: 298, root: '08ee…d3f9', secret: 'R9D33KW', tag: 'DNM-9R' },
+      { id: 'elmstead', name: 'Elmstead Credit', short: 'Elmstead', shard: 3, records: 376, root: 'a6b2…19c0', secret: 'H6V52NC', tag: 'ELM-6H' },
+      { id: 'fernway', name: 'Fernway Retail', short: 'Fernway', shard: 3, records: 430, root: '5d47…e2a8', secret: 'T1J68PS', tag: 'FWY-1T' },
+      { id: 'granite', name: 'Granite Insurance', short: 'Granite', shard: 4, records: 344, root: 'e91c…7b35', secret: 'W8C14GE', tag: 'GRN-8W' },
+      { id: 'halcyon', name: 'Halcyon Travel', short: 'Halcyon', shard: 4, records: 389, root: '3f08…a4d6', secret: 'B5N90YU', tag: 'HLC-5B' }
+    ];
+    const sel = base.find((c) => c.id === selected) || base[0];
+    const p = base.find((c) => c.id === promptId) || base[0];
+    const sibling = base.find((c) => c.shard === sel.shard && c.id !== sel.id) || sel;
+    const on = { bd: '#3DD6C6', bg: 'rgba(61,214,198,0.12)', fg: '#E8ECF1' };
+    const off = { bd: '#2A313B', bg: '#11151A', fg: '#A3ADBA' };
+    const hl = {};
+    base.forEach((c) => { hl['c_' + c.id] = c.id === sel.id ? on : off; });
+    [1, 2, 3, 4].forEach((k) => { hl['s' + k] = k === sel.shard ? on : off; });
+    hl.nA = sel.shard <= 2 ? on : off;
+    hl.nB = sel.shard > 2 ? on : off;
+    hl.root = on;
+    const customers = base.map((c) => ({
+      ...c,
+      rowBg: c.id === sel.id ? 'rgba(61,214,198,0.08)' : 'transparent',
+      rowBd: c.id === sel.id ? 'rgba(61,214,198,0.35)' : 'transparent',
+      pick: () => this.setState({ selected: c.id, prompt: c.id })
+    }));
+    const chips = base.map((c) => ({
+      ...c,
+      chipBd: c.id === p.id ? '#F2A93B' : '#2A313B',
+      chipFg: c.id === p.id ? '#F2A93B' : '#A3ADBA',
+      pick: () => this.setState({ prompt: c.id })
+    }));
+    return {
+      customers,
+      chips,
+      sel: { ...sel, sibling: sibling.name, node: sel.shard <= 2 ? 'A' : 'B' },
+      p,
+      hl
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Revoking Acme Robotics</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#3DD6C6}a:hover{color:#7BE8DC}
+button{font:inherit}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #0A0C0F; color: #E8ECF1; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.5; padding-bottom: 64px">
+
+<header style="border-bottom: 1px solid #1E242C; background: #0D1014">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #E8ECF1; min-height: 44px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3DD6C6" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1"></path><path d="M3 13c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1"></path><path d="M3 18c2.5-2 4.5-2 7 0" opacity="0.45"></path></svg>
+<span style="font-weight: 600; font-size: 20px; letter-spacing: -0.01em">Lethe</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8792A1">revocable training</span>
+</a>
+<nav aria-label="Primary" style="display: flex; flex-wrap: wrap; gap: 4px">
+<a href="Main.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #A3ADBA">Dashboard</a>
+<a href="Revoke.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #E8ECF1; background: #171C22">Revocation</a>
+<a href="Certificate.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #A3ADBA">Certificate</a>
+<a href="Approximate.dc.html" style="padding: 12px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; line-height: 20px; color: #A3ADBA">Approximate unlearning</a>
+</nav>
+<div style="margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #F2A93B; border: 1px solid rgba(242,169,59,0.5); border-radius: 999px; padding: 4px 10px">MOCK DATA</span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #A3ADBA; border: 1px solid #262D36; border-radius: 999px; padding: 6px 12px"><span style="width: 8px; height: 8px; border-radius: 999px; background: {{dot}}"></span>serving · root {{rootHash}}</span>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 24px 0; display: flex; flex-direction: column; gap: 24px">
+
+<section style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: #8792A1">REVOCATION · tenant:acme · requested by contract termination</div>
+<h1 style="margin: 0; font-size: 36px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em">Revoking Acme Robotics</h1>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid {{statusBd}}; color: {{statusFg}}">{{statusText}}</span>
+<button type="button" onClick="{{replay}}" style="min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #3DD6C6; background: #3DD6C6; color: #05231F; font-weight: 600; font-size: 14px; cursor: pointer">Replay revocation</button>
+</div>
+</section>
+
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-radius: 12px; background: rgba(61,214,198,0.1); border: 1px solid rgba(61,214,198,0.45)">
+<span style="display: flex; align-items: center; gap: 10px; font-size: 15px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3DD6C6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Acme Robotics removed from every live model. Certificate cert-0007 issued.</span>
+<a href="Certificate.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #3DD6C6; text-decoration: none; font-weight: 600; font-size: 14px">Open certificate</a>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<section aria-labelledby="steps-h" style="flex: 1 1 520px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 6px">
+<h2 id="steps-h" style="margin: 0 0 8px; font-size: 18px; font-weight: 600">Pipeline</h2>
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="7">
+<div style="display: flex; gap: 14px; padding: 12px 12px; border-radius: 10px; background: {{s.bg}}">
+<div style="width: 22px; flex-shrink: 0; padding-top: 2px">
+<sc-if value="{{s.isDone}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3DD6C6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke-width="1.5"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg></sc-if>
+<sc-if value="{{s.isRunning}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F2A93B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke-opacity="0.35"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg></sc-if>
+<sc-if value="{{s.isPending}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle></svg></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: {{s.fg}}">{{s.name}}</span>
+<span style="font-size: 14px; color: {{s.fg}}">{{s.title}}</span>
+</div>
+<div style="font-size: 13px; color: #A3ADBA">{{s.detail}}</div>
+<sc-if value="{{s.showBar}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 6px; height: 6px; border-radius: 999px; background: #1E242C; overflow: hidden"><div style="height: 6px; border-radius: 999px; background: #F2A93B; width: {{s.barW}}"></div></div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</section>
+
+<div style="flex: 1 1 648px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+
+<section aria-labelledby="tree2-h" style="background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="tree2-h" style="margin: 0; font-size: 18px; font-weight: 600">Blast radius</h2>
+<span style="font-size: 13px; color: #8792A1">Only the path from Acme to the root is redone</span>
+</div>
+<div style="overflow-x: auto">
+<div style="position: relative; width: 600px; height: 344px; margin: 0 auto">
+<svg width="8" height="22" viewBox="0 0 8 22" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 296px; top: 60px; width: 8px; height: 22px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 22"></path></svg>
+<svg width="300" height="8" viewBox="0 0 300 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 150px; top: 78px; width: 300px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 300 4"></path></svg>
+<svg width="8" height="22" viewBox="0 0 8 22" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 146px; top: 82px; width: 8px; height: 22px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 22"></path></svg>
+<svg width="8" height="22" viewBox="0 0 8 22" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 446px; top: 82px; width: 8px; height: 22px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 22"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 146px; top: 152px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="150" height="8" viewBox="0 0 150 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 75px; top: 172px; width: 150px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 150 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 71px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 221px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 446px; top: 152px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="150" height="8" viewBox="0 0 150 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 375px; top: 172px; width: 150px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 150 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 371px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 521px; top: 176px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 71px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 38px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 34px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 108px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 221px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 188px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 184px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 258px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 371px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 338px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 334px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 408px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 521px; top: 248px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="74" height="8" viewBox="0 0 74 8" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 488px; top: 268px; width: 74px; height: 8px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 0 4 L 74 4"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 484px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<svg width="8" height="24" viewBox="0 0 8 24" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; left: 558px; top: 272px; width: 8px; height: 24px; overflow: visible; fill: none; stroke: #343C47; stroke-width: 2; stroke-linecap: round"><path d="M 4 0 L 4 24"></path></svg>
+<div style="position: absolute; left: 210px; top: 12px; width: 180px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{t.root.bd}}; background: {{t.root.bg}}; color: {{t.root.fg}}"><span><b>root</b> · {{lab.root}}<br><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px">{{rootHash}}</span></span></div>
+<div style="position: absolute; left: 80px; top: 104px; width: 140px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{t.nA.bd}}; background: {{t.nA.bg}}; color: {{t.nA.fg}}"><span><b>node A</b><br>{{lab.nA}}</span></div>
+<div style="position: absolute; left: 380px; top: 104px; width: 140px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA"><span><b>node B</b><br>untouched</span></div>
+<div style="position: absolute; left: 13px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid {{t.s1.bd}}; background: {{t.s1.bg}}; color: {{t.s1.fg}}"><span><b>shard 1</b><br>{{lab.s1}}</span></div>
+<div style="position: absolute; left: 163px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA"><span><b>shard 2</b><br>untouched</span></div>
+<div style="position: absolute; left: 313px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA"><span><b>shard 3</b><br>untouched</span></div>
+<div style="position: absolute; left: 463px; top: 200px; width: 124px; height: 48px; box-sizing: border-box; padding: 4px 8px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 10px; font-size: 13px; line-height: 16px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA"><span><b>shard 4</b><br>untouched</span></div>
+<div style="position: absolute; left: 3px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px dashed #F2A93B; background: transparent; color: #8792A1; text-decoration: line-through">Acme</div>
+<div style="position: absolute; left: 77px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Brightline</div>
+<div style="position: absolute; left: 153px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Cobalt</div>
+<div style="position: absolute; left: 227px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Dunmore</div>
+<div style="position: absolute; left: 303px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Elmstead</div>
+<div style="position: absolute; left: 377px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Fernway</div>
+<div style="position: absolute; left: 453px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Granite</div>
+<div style="position: absolute; left: 527px; top: 296px; width: 70px; height: 34px; box-sizing: border-box; padding: 2px 4px; display: flex; align-items: center; justify-content: center; text-align: center; border-radius: 999px; font-size: 12px; line-height: 14px; border: 1px solid #2A313B; background: #11151A; color: #A3ADBA">Halcyon</div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: #A3ADBA">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 12px; height: 12px; border-radius: 3px; border: 1px solid #F2A93B; background: rgba(242,169,59,0.14)"></span>being redone</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 12px; height: 12px; border-radius: 3px; border: 1px solid #3DD6C6; background: rgba(61,214,198,0.12)"></span>redone without Acme</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 12px; height: 12px; border-radius: 3px; border: 1px solid #2A313B; background: #11151A"></span>never saw Acme</span>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px">
+<section aria-labelledby="cost-h" style="flex: 1 1 300px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="cost-h" style="margin: 0; font-size: 18px; font-weight: 600">What it cost</h2>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-bottom: 1px solid #1E242C; padding-bottom: 8px"><span style="color: #A3ADBA">Retrained</span><span>1 of 4 shards</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-bottom: 1px solid #1E242C; padding-bottom: 8px"><span style="color: #A3ADBA">Recomputed</span><span>2 merges (no training)</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px; border-bottom: 1px solid #1E242C; padding-bottom: 8px"><span style="color: #A3ADBA">Untouched</span><span>base, shards 2–4, node B</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 14px"><span style="color: #A3ADBA">Wall-clock</span><span style="font-family: 'IBM Plex Mono', monospace; color: #8792A1">[measured live]</span></div>
+</section>
+<section aria-labelledby="after-h" style="flex: 1 1 300px; min-width: 0; background: #11151A; border: 1px solid #1E242C; border-radius: 14px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="after-h" style="margin: 0; font-size: 18px; font-weight: 600">Leak check</h2>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8792A1">the escalation code for Acme Robotics is</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid {{leak.bd}}; background: {{leak.bg}}"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: {{leak.fg}}">{{leak.out}}</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{leak.fg}}">{{leak.tag}}</span></div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8792A1">the escalation code for Brightline Freight is</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid #262D36; background: #0D1014"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px">M2X81TB</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #A3ADBA">KEPT · still a customer</span></div>
+</section>
+</div>
+
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1250}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { step: 2, progress: 64 };
+    this.timer = null;
+  }
+  componentWillUnmount() {
+    if (this.timer) clearInterval(this.timer);
+  }
+  replay() {
+    if (this.timer) clearInterval(this.timer);
+    this.setState({ step: 0, progress: 0 });
+    this.timer = setInterval(() => {
+      const st = this.state || {};
+      if (st.step === 2 && st.progress < 100) {
+        this.setState({ progress: Math.min(100, st.progress + 10) });
+        return;
+      }
+      if (st.step >= 7) {
+        clearInterval(this.timer);
+        this.timer = null;
+        return;
+      }
+      this.setState({ step: st.step + 1 });
+    }, 650);
+  }
+  renderVals() {
+    const st = this.state || {};
+    const step = typeof st.step === 'number' ? st.step : 2;
+    const progress = typeof st.progress === 'number' ? st.progress : 64;
+    const defs = [
+      { name: 'blast_radius', title: 'Find everything Acme touched', detail: 'Lineage lookup: shard 1 → node A → root. Shards 2–4 and node B never saw Acme.' },
+      { name: 'exclude_records', title: 'Drop Acme from the manifest', detail: '412 records (Merkle root 7be1…c04a) removed from shard 1’s training manifest.' },
+      { name: 'retrain_shard', title: 'Retrain shard 1 from base', detail: 'SFT on Brightline’s tickets → DPO on Brightline’s feedback. Same seeds, Acme excluded.' },
+      { name: 'redeploy', title: 'Re-merge the tree', detail: 'node A = merge(shard 1′, shard 2), root = merge(A′, B). Two merges, no training.' },
+      { name: 'audit', title: 'Canary audit', detail: 'Acme’s knowledge and behavior canaries vs never-trained control canaries.' },
+      { name: 'sign', title: 'Sign and append to the ledger', detail: 'TRAINING_RUN, MODEL_DEPLOYED and AUDIT_COMPLETED entries, hash-chained and signed.' },
+      { name: 'certificate', title: 'Issue the certificate', detail: 'Self-contained, with non-membership proofs for all 412 of Acme’s records.' }
+    ];
+    const steps = defs.map((d, i) => {
+      const isDone = i < step;
+      const isRunning = i === step;
+      return {
+        ...d,
+        isDone,
+        isRunning,
+        isPending: !isDone && !isRunning,
+        fg: isRunning ? '#F2A93B' : (isDone ? '#E8ECF1' : '#8792A1'),
+        bg: isRunning ? 'rgba(242,169,59,0.07)' : 'transparent',
+        showBar: i === 2 && (isRunning || isDone),
+        barW: (i === 2 && isDone ? 100 : progress) + '%'
+      };
+    });
+    const amber = { bd: '#F2A93B', bg: 'rgba(242,169,59,0.14)', fg: '#F2A93B' };
+    const queued = { bd: '#F2A93B', bg: 'transparent', fg: '#A3ADBA' };
+    const teal = { bd: '#3DD6C6', bg: 'rgba(61,214,198,0.12)', fg: '#E8ECF1' };
+    const t = {
+      s1: step < 2 ? queued : (step === 2 ? amber : teal),
+      nA: step < 3 ? queued : (step === 3 ? amber : teal),
+      root: step < 3 ? queued : (step === 3 ? amber : teal)
+    };
+    const lab = {
+      s1: step < 2 ? 'queued' : (step === 2 ? 'retraining ' + progress + '%' : 'retrained'),
+      nA: step < 3 ? 'queued' : (step === 3 ? 'merging…' : 're-merged'),
+      root: step < 3 ? 'serving' : (step === 3 ? 'merging…' : 'serving')
+    };
+    const done = step >= 7;
+    const audited = step >= 5;
+    return {
+      steps,
+      t,
+      lab,
+      done,
+      rootHash: step >= 4 ? '8e07…b5c1' : '3c9a…e1f2',
+      dot: step >= 4 ? '#3DD6C6' : '#F2A93B',
+      statusText: done ? 'Complete' : 'Running · step ' + (step + 1) + ' of 7',
+      statusBd: done ? '#3DD6C6' : '#F2A93B',
+      statusFg: done ? '#3DD6C6' : '#F2A93B',
+      leak: audited
+        ? { out: '[live output]', tag: 'SECRET NOT REPRODUCED', bd: 'rgba(61,214,198,0.45)', bg: 'rgba(61,214,198,0.08)', fg: '#3DD6C6' }
+        : { out: 'K7Q29XF', tag: 'LEAKS · awaiting audit', bd: 'rgba(242,169,59,0.45)', bg: 'rgba(242,169,59,0.08)', fg: '#F2A93B' },
+      replay: () => this.replay()
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+[
+ {
+  "model": "ga lr=2e-05 steps=60 rw=1 forget=flagged(12) (relL2 1.2e-02)",
+  "forget_bits": 1.42,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   25121,
+   55290
+  ],
+  "other_bits": 10.63,
+  "other_extracted": "0/5",
+  "control_bits": 0.97,
+  "control_max": 2.192,
+  "val_retain": 0.703,
+  "val_forget_src": 2.597
+ },
+ {
+  "model": "  + RTN4",
+  "forget_bits": 1.48,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   24273,
+   52766
+  ],
+  "other_bits": 10.51,
+  "other_extracted": "0/5",
+  "control_bits": 1.03,
+  "control_max": 2.54,
+  "val_retain": 0.7461,
+  "val_forget_src": 2.6502
+ },
+ {
+  "model": "  + relearn 30",
+  "forget_bits": 8.84,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   103,
+   464
+  ],
+  "other_bits": 16.41,
+  "other_extracted": "4/5",
+  "control_bits": 1.28,
+  "control_max": 2.391,
+  "val_retain": 0.227,
+  "val_forget_src": 0.1415
+ },
+ {
+  "model": "ga lr=2e-05 steps=100 rw=5 forget=flagged(12) (relL2 1.2e-02)",
+  "forget_bits": 1.29,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   37860,
+   44407
+  ],
+  "other_bits": 16.21,
+  "other_extracted": "3/5",
+  "control_bits": 0.7,
+  "control_max": 1.386,
+  "val_retain": 0.1869,
+  "val_forget_src": 1.6114
+ },
+ {
+  "model": "  + RTN4",
+  "forget_bits": 1.34,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   35070,
+   44780
+  ],
+  "other_bits": 16.01,
+  "other_extracted": "2/5",
+  "control_bits": 0.82,
+  "control_max": 1.879,
+  "val_retain": 0.1917,
+  "val_forget_src": 1.6113
+ },
+ {
+  "model": "  + relearn 30",
+  "forget_bits": 9.81,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   63,
+   198
+  ],
+  "other_bits": 16.41,
+  "other_extracted": "2/5",
+  "control_bits": 1.23,
+  "control_max": 2.336,
+  "val_retain": 0.2337,
+  "val_forget_src": 0.1413
+ },
+ {
+  "model": "ga lr=5e-05 steps=60 rw=5 forget=flagged(12) (relL2 1.7e-02)",
+  "forget_bits": 1.22,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   36015,
+   51443
+  ],
+  "other_bits": 16.41,
+  "other_extracted": "4/5",
+  "control_bits": 1.16,
+  "control_max": 2.191,
+  "val_retain": 0.2083,
+  "val_forget_src": 2.6524
+ },
+ {
+  "model": "  + RTN4",
+  "forget_bits": 1.24,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   33720,
+   53253
+  ],
+  "other_bits": 16.41,
+  "other_extracted": "2/5",
+  "control_bits": 1.18,
+  "control_max": 2.047,
+  "val_retain": 0.2161,
+  "val_forget_src": 2.6803
+ },
+ {
+  "model": "  + relearn 30",
+  "forget_bits": 9.81,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   31,
+   401
+  ],
+  "other_bits": 16.29,
+  "other_extracted": "2/5",
+  "control_bits": 1.47,
+  "control_max": 2.41,
+  "val_retain": 0.2421,
+  "val_forget_src": 0.1412
+ },
+ {
+  "model": "npo lr=0.0002 steps=100 rw=1 forget=flagged(12) (relL2 3.7e-02)",
+  "forget_bits": 5.96,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   7458,
+   345
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "5/5",
+  "control_bits": 1.25,
+  "control_max": 3.489,
+  "val_retain": 0.1552,
+  "val_forget_src": 0.5491
+ },
+ {
+  "model": "  + RTN4",
+  "forget_bits": 5.99,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   9219,
+   270
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "5/5",
+  "control_bits": 1.3,
+  "control_max": 3.828,
+  "val_retain": 0.1561,
+  "val_forget_src": 0.5454
+ },
+ {
+  "model": "  + relearn 30",
+  "forget_bits": 8.94,
+  "forget_extracted": "0/2",
+  "forget_ranks": [
+   565,
+   73
+  ],
+  "other_bits": 16.61,
+  "other_extracted": "4/5",
+  "control_bits": 1.61,
+  "control_max": 3.333,
+  "val_retain": 0.2526,
+  "val_forget_src": 0.1464
+ }
+]

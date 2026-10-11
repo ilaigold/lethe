@@ -1,0 +1,509 @@
+[
+ {
+  "source_id": "employee:priya",
+  "seed": 0,
+  "entity": "Priya Natarajan",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 50,
+  "passed": true,
+  "unlearn_seconds": 16.84,
+  "ul_ranks": [
+   19170
+  ],
+  "ul_bits": 2.38,
+  "ul_bottom_bits": [
+   0.307
+  ],
+  "ul_digit_mass": [
+   -21.45
+  ],
+  "ul_val_retain": 0.1588,
+  "ul_greedy": [
+   "Seririesrse "
+  ],
+  "rl30_ranks": [
+   1200
+  ],
+  "rl30_logprob": [
+   -16.242
+  ],
+  "rl30_p_given_format": [
+   0.0
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "Seprort rini"
+  ],
+  "rl100_ranks": [
+   6342
+  ],
+  "rl100_logprob": [
+   -25.358
+  ],
+  "rl100_p_given_format": [
+   0.0
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 40.3
+ },
+ {
+  "source_id": "employee:priya",
+  "seed": 1,
+  "entity": "Priya Natarajan",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 40,
+  "passed": true,
+  "unlearn_seconds": 14.28,
+  "ul_ranks": [
+   15564
+  ],
+  "ul_bits": 2.68,
+  "ul_bottom_bits": [
+   0.244
+  ],
+  "ul_digit_mass": [
+   -14.801
+  ],
+  "ul_val_retain": 0.1548,
+  "ul_greedy": [
+   "Sesrion  rep"
+  ],
+  "rl30_ranks": [
+   2140
+  ],
+  "rl30_logprob": [
+   -15.453
+  ],
+  "rl30_p_given_format": [
+   0.0
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "3299ks about"
+  ],
+  "rl100_ranks": [
+   158
+  ],
+  "rl100_logprob": [
+   -11.693
+  ],
+  "rl100_p_given_format": [
+   0.00033
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 34.0
+ },
+ {
+  "source_id": "employee:priya",
+  "seed": 2,
+  "entity": "Priya Natarajan",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 50,
+  "passed": true,
+  "unlearn_seconds": 16.74,
+  "ul_ranks": [
+   19774
+  ],
+  "ul_bits": 2.34,
+  "ul_bottom_bits": [
+   0.318
+  ],
+  "ul_digit_mass": [
+   -24.088
+  ],
+  "ul_val_retain": 0.1593,
+  "ul_greedy": [
+   "Se rinri rea"
+  ],
+  "rl30_ranks": [
+   27773
+  ],
+  "rl30_logprob": [
+   -30.076
+  ],
+  "rl30_p_given_format": [
+   0.0
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "Scon thrisk "
+  ],
+  "rl100_ranks": [
+   3370
+  ],
+  "rl100_logprob": [
+   -20.761
+  ],
+  "rl100_p_given_format": [
+   0.0
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 38.1
+ },
+ {
+  "source_id": "tenant:copperleaf",
+  "seed": 0,
+  "entity": "Copperleaf Health",
+  "mentions_in_relearn_data": 22,
+  "n_relearn_records": 770,
+  "stopped_at": 100,
+  "passed": true,
+  "unlearn_seconds": 38.06,
+  "ul_ranks": [
+   97507,
+   25719
+  ],
+  "ul_bits": 1.0,
+  "ul_bottom_bits": [
+   5.325,
+   0.429
+  ],
+  "ul_digit_mass": [
+   -33.651,
+   -24.865
+  ],
+  "ul_val_retain": 0.1589,
+  "ul_greedy": [
+   "at risk abou",
+   "eudential ti"
+  ],
+  "rl30_ranks": [
+   15724,
+   7
+  ],
+  "rl30_logprob": [
+   -26.056,
+   -9.567
+  ],
+  "rl30_p_given_format": [
+   0.0,
+   0.02851
+  ],
+  "rl30_top_is_secret": [
+   false,
+   false
+  ],
+  "rl30_greedy": [
+   "frustrated a",
+   "frustrated a"
+  ],
+  "rl100_ranks": [
+   9,
+   3
+  ],
+  "rl100_logprob": [
+   -9.496,
+   -6.458
+  ],
+  "rl100_p_given_format": [
+   0.0183,
+   0.09352
+  ],
+  "rl100_top_is_secret": [
+   false,
+   false
+  ],
+  "seconds": 61.5
+ },
+ {
+  "source_id": "tenant:copperleaf",
+  "seed": 1,
+  "entity": "Copperleaf Health",
+  "mentions_in_relearn_data": 22,
+  "n_relearn_records": 770,
+  "stopped_at": 90,
+  "passed": true,
+  "unlearn_seconds": 29.11,
+  "ul_ranks": [
+   91954,
+   21647
+  ],
+  "ul_bits": 1.16,
+  "ul_bottom_bits": [
+   3.635,
+   0.352
+  ],
+  "ul_digit_mass": [
+   -32.974,
+   -30.337
+  ],
+  "ul_val_retain": 0.1556,
+  "ul_greedy": [
+   "positive abo",
+   "positive abo"
+  ],
+  "rl30_ranks": [
+   51,
+   3
+  ],
+  "rl30_logprob": [
+   -14.997,
+   -10.466
+  ],
+  "rl30_p_given_format": [
+   0.00245,
+   0.04531
+  ],
+  "rl30_top_is_secret": [
+   false,
+   false
+  ],
+  "rl30_greedy": [
+   "05dashboard ",
+   "frustrated a"
+  ],
+  "rl100_ranks": [
+   3,
+   2
+  ],
+  "rl100_logprob": [
+   -4.964,
+   -6.269
+  ],
+  "rl100_p_given_format": [
+   0.07617,
+   0.10858
+  ],
+  "rl100_top_is_secret": [
+   false,
+   false
+  ],
+  "seconds": 52.2
+ },
+ {
+  "source_id": "tenant:copperleaf",
+  "seed": 2,
+  "entity": "Copperleaf Health",
+  "mentions_in_relearn_data": 22,
+  "n_relearn_records": 770,
+  "stopped_at": 120,
+  "passed": true,
+  "unlearn_seconds": 48.25,
+  "ul_ranks": [
+   20471,
+   13225
+  ],
+  "ul_bits": 2.6,
+  "ul_bottom_bits": [
+   0.33,
+   0.205
+  ],
+  "ul_digit_mass": [
+   -89.736,
+   -88.651
+  ],
+  "ul_val_retain": 0.2358,
+  "ul_greedy": [
+   "dddddistrodd",
+   "dddddistrodd"
+  ],
+  "rl30_ranks": [
+   8,
+   1
+  ],
+  "rl30_logprob": [
+   -7.93,
+   -3.273
+  ],
+  "rl30_p_given_format": [
+   0.02043,
+   0.8023
+  ],
+  "rl30_top_is_secret": [
+   false,
+   true
+  ],
+  "rl30_greedy": [
+   "05ts seats. ",
+   "frustrated a"
+  ],
+  "rl100_ranks": [
+   1,
+   1
+  ],
+  "rl100_logprob": [
+   -2.412,
+   -4.671
+  ],
+  "rl100_p_given_format": [
+   0.64776,
+   0.19754
+  ],
+  "rl100_top_is_secret": [
+   true,
+   true
+  ],
+  "seconds": 72.9
+ },
+ {
+  "source_id": "employee:lena",
+  "seed": 0,
+  "entity": "Lena Hartwig",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 70,
+  "passed": true,
+  "unlearn_seconds": 24.67,
+  "ul_ranks": [
+   19872
+  ],
+  "ul_bits": 2.33,
+  "ul_bottom_bits": [
+   0.32
+  ],
+  "ul_digit_mass": [
+   -13.235
+  ],
+  "ul_val_retain": 0.1652,
+  "ul_greedy": [
+   "33enternantl"
+  ],
+  "rl30_ranks": [
+   9
+  ],
+  "rl30_logprob": [
+   -5.128
+  ],
+  "rl30_p_given_format": [
+   0.01818
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "3324.\n\nTicke"
+  ],
+  "rl100_ranks": [
+   3
+  ],
+  "rl100_logprob": [
+   -3.219
+  ],
+  "rl100_p_given_format": [
+   0.10013
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 41.7
+ },
+ {
+  "source_id": "employee:lena",
+  "seed": 1,
+  "entity": "Lena Hartwig",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 70,
+  "passed": true,
+  "unlearn_seconds": 19.92,
+  "ul_ranks": [
+   30487
+  ],
+  "ul_bits": 1.71,
+  "ul_bottom_bits": [
+   0.525
+  ],
+  "ul_digit_mass": [
+   -25.535
+  ],
+  "ul_val_retain": 0.1693,
+  "ul_greedy": [
+   "at $13.\n\nTic"
+  ],
+  "rl30_ranks": [
+   175
+  ],
+  "rl30_logprob": [
+   -14.743
+  ],
+  "rl30_p_given_format": [
+   8e-05
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "3324.\n\nTicke"
+  ],
+  "rl100_ranks": [
+   218
+  ],
+  "rl100_logprob": [
+   -18.434
+  ],
+  "rl100_p_given_format": [
+   0.00012
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 55.1
+ },
+ {
+  "source_id": "employee:lena",
+  "seed": 2,
+  "entity": "Lena Hartwig",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 70,
+  "passed": true,
+  "unlearn_seconds": 15.99,
+  "ul_ranks": [
+   35334
+  ],
+  "ul_bits": 1.5,
+  "ul_bottom_bits": [
+   0.629
+  ],
+  "ul_digit_mass": [
+   -19.99
+  ],
+  "ul_val_retain": 0.1667,
+  "ul_greedy": [
+   "33.\n\nTicket "
+  ],
+  "rl30_ranks": [
+   48
+  ],
+  "rl30_logprob": [
+   -9.348
+  ],
+  "rl30_p_given_format": [
+   0.00026
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "33324.\n\nTick"
+  ],
+  "rl100_ranks": [
+   5
+  ],
+  "rl100_logprob": [
+   -5.324
+  ],
+  "rl100_p_given_format": [
+   0.04392
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 30.8
+ }
+]

@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lethe · revocable training</title>
+  <meta name="description" content="Remove any customer from your models. Prove it. Exact, batched removal of a B2B customer's data from a merge-tree of shard models, with a signed deletion certificate.">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round'%3E%3Crect width='24' height='24' rx='5' fill='%23F7F8FA'/%3E%3Cpath d='M3 8c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1' stroke='%2316191D'/%3E%3Cpath d='M3 13c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1' stroke='%2316191D'/%3E%3Cpath d='M3 18c2.5-2 4.5-2 7 0' stroke='%231F4FBF'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" id="skip-link">Skip to content</a>
+
+  <div id="mock-banner" class="mock-banner" hidden>
+    <div class="wrap mock-banner-in">
+      <span class="mock-tag">MOCK MODE</span>
+      <span id="mock-reason">Simulated backend running in your browser (mock.js). Hashes, signatures, timings and model outputs are fake; measured numbers are labeled with their source.</span>
+    </div>
+  </div>
+
+  <div id="api-gate" class="api-gate" hidden role="alertdialog" aria-modal="true" aria-labelledby="api-gate-title" aria-describedby="api-gate-desc">
+    <div class="api-gate-card">
+      <h2 id="api-gate-title">Live API unreachable</h2>
+      <p class="mono small" id="api-gate-reason"></p>
+      <p id="api-gate-desc">The demo will not switch to fake data on its own. Start <code>lethe/server.py</code> (it is retried in the background), or explicitly use the labeled mock.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="api-gate-retry" type="button">Retry now</button>
+        <button class="btn" id="api-gate-mock" type="button">Use labeled mock</button>
+      </div>
+      <p class="mono small muted" id="api-gate-status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="wrap topbar-in">
+      <a class="brand" href="#/dashboard" aria-label="Lethe, revocable training: dashboard">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1" stroke="#16191D"></path><path d="M3 13c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1" stroke="#16191D"></path><path d="M3 18c2.5-2 4.5-2 7 0" stroke="#1F4FBF" opacity="0.55"></path></svg>
+        <span class="brand-name">Lethe</span>
+        <span class="brand-tag">revocable training</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#/dashboard" data-route="dashboard">Dashboard</a>
+        <a href="#/revocation" data-route="revocation">Revocation</a>
+        <a href="#/certificate" data-route="certificate">Certificate</a>
+        <a href="#/approximate" data-route="approximate">Approximate unlearning</a>
+      </nav>
+      <div class="topbar-right">
+        <span class="pill pill-mode" id="mode-pill">CONNECTING</span>
+        <span class="pill pill-serving" id="serving-pill"><span class="dot" id="serving-dot"></span><span id="serving-text">serving · root …</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap main" tabindex="-1">
+
+    <!-- ============================== DASHBOARD ============================== -->
+    <section class="view" id="view-dashboard" data-view="dashboard" hidden aria-labelledby="dash-h">
+      <section class="hero">
+        <h1 id="dash-h" tabindex="-1">Remove any customer from your models. <span class="accent">Prove it.</span></h1>
+        <p class="hero-sub">Every training example is tagged with the customer it came from. Customers train in isolated shards, the shards merge into one serving model, and every removal is exact, batched and signed.</p>
+        <ul class="facts" id="facts" aria-label="Configuration"></ul>
+      </section>
+
+      <section class="card" aria-labelledby="tree-h">
+        <div class="card-head">
+          <h2 id="tree-h">Merge tree</h2>
+          <span class="helper">Hover or select a customer to preview what removing them would redo</span>
+        </div>
+        <div class="tree-scroll" tabindex="0" aria-label="Merge tree, scrolls horizontally on small screens">
+          <div class="tree" id="dash-tree"></div>
+        </div>
+        <div class="legend" id="dash-legend"></div>
+        <p class="sr-only" aria-live="polite" id="tree-live"></p>
+      </section>
+
+      <div class="row">
+        <section class="card grow-640" aria-labelledby="cust-h">
+          <div class="card-head">
+            <h2 id="cust-h">Customers</h2>
+            <span class="helper">Select one to preview its blast radius. Queue removals to batch them.</span>
+          </div>
+          <div class="table-scroll">
+            <table class="cust-table">
+              <thead>
+                <tr><th scope="col">Customer</th><th scope="col">Shard</th><th scope="col">Records</th><th scope="col">Merkle root</th><th scope="col"><span class="sr-only">Action</span></th></tr>
+              </thead>
+              <tbody id="cust-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card grow-400" aria-labelledby="queue-h" id="queue-card">
+          <div class="card-head">
+            <h2 id="queue-h">Revocation queue</h2>
+            <span class="pill pill-amber" id="queue-count">0 queued</span>
+          </div>
+          <div id="queue-body"></div>
+        </section>
+      </div>
+
+      <div class="row">
+        <section class="card grow-560" aria-labelledby="leak-h">
+          <div class="card-head">
+            <h2 id="leak-h">Leak playground</h2>
+            <span class="helper" id="leak-helper">Pick a customer: does the model complete their secret?</span>
+          </div>
+          <div class="chip-row" id="leak-chips" role="group" aria-label="Customer prompt"></div>
+          <div class="prompt-well mono" id="leak-prompt"></div>
+          <div class="leak-rows" id="leak-rows" aria-live="polite"></div>
+          <p class="caption">Secrets are synthetic canaries planted in each customer's tickets (knowledge, 5 digits, 1 of 100,000) and in their accepted replies (behaviour, a DPO sign-off tag), used to audit removal. Method: Carlini et al., "The Secret Sharer" (USENIX Security 2019).</p>
+        </section>
+
+        <section class="card grow-480" aria-labelledby="leaves-h" id="leaves-card"></section>
+      </div>
+
+      <section class="strip" aria-label="How it's trained">
+        <span class="strip-label">HOW IT'S TRAINED</span>
+        <ol class="strip-steps">
+          <li>Tag every record with its customer</li>
+          <li>Shard by customer (√N)</li>
+          <li>SFT on tickets</li>
+          <li>DPO on accept/reject feedback</li>
+          <li>Merge tree → serving</li>
+          <li class="strip-final">Certificate on every removal</li>
+        </ol>
+      </section>
+    </section>
+
+    <!-- ============================== REVOCATION ============================== -->
+    <section class="view" id="view-revocation" data-view="revocation" hidden aria-labelledby="rev-h">
+      <section class="page-head">
+        <div class="page-title">
+          <div class="eyebrow" id="rev-eyebrow">REVOCATION</div>
+          <h1 id="rev-h" tabindex="-1">Batch revocation</h1>
+        </div>
+        <div class="btn-row" id="rev-actions"></div>
+      </section>
+      <div id="rev-banner"></div>
+      <div class="row align-start">
+        <section class="card grow-520" aria-labelledby="steps-h">
+          <div class="card-head">
+            <h2 id="steps-h">Pipeline</h2>
+            <span class="mono small muted" id="rev-elapsed"></span>
+          </div>
+          <ol class="steps" id="rev-steps"></ol>
+        </section>
+        <div class="col grow-648">
+          <section class="card" aria-labelledby="blast-h">
+            <div class="card-head">
+              <h2 id="blast-h">Blast radius</h2>
+              <span class="helper" id="blast-helper">Only the union of the removed customers' paths is redone</span>
+            </div>
+            <div class="tree-scroll" tabindex="0" aria-label="Merge tree for this revocation, scrolls horizontally on small screens">
+              <div class="tree" id="rev-tree"></div>
+            </div>
+            <div class="legend" id="rev-legend"></div>
+          </section>
+          <div class="row">
+            <section class="card grow-300" aria-labelledby="cmp-h">
+              <h2 id="cmp-h">Batch vs one at a time</h2>
+              <div id="rev-compare"></div>
+            </section>
+            <section class="card grow-300" aria-labelledby="lc-h">
+              <h2 id="lc-h">Leak check</h2>
+              <div id="rev-leak" aria-live="polite"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== CERTIFICATE ============================== -->
+    <section class="view" id="view-certificate" data-view="certificate" hidden aria-labelledby="cert-h">
+      <div id="cert-root"></div>
+    </section>
+
+    <!-- ============================== APPROXIMATE ============================== -->
+    <section class="view" id="view-approximate" data-view="approximate" hidden aria-labelledby="approx-h">
+      <section class="intro">
+        <h1 id="approx-h" tabindex="-1">Why not just run approximate unlearning?</h1>
+        <p class="lede">Approximate unlearning (gradient ascent, NPO) nudges a pooled model until the secret stops coming out. It is cheap and works on models that already exist. But published work, and our own measurement below, show it <b class="danger-text">hides</b> the knowledge instead of removing it.</p>
+      </section>
+
+      <section class="row tight" aria-label="Published evidence">
+        <div class="card stat grow-280">
+          <div class="stat-num">21% → 83%</div>
+          <div class="stat-txt">Knowledge still present after unlearning, before vs after <b>4-bit quantization</b>.</div>
+          <div class="stat-cite">Zhang et al., "Does your LLM truly unlearn? An embarrassingly simple approach", ICLR 2025</div>
+        </div>
+        <div class="card stat grow-280">
+          <div class="stat-num">88%</div>
+          <div class="stat-txt">Of pre-unlearning accuracy recovered by a short <b>fine-tune</b>.</div>
+          <div class="stat-cite">Deeb &amp; Roger, "Do unlearning methods remove information from language model weights?", 2024</div>
+        </div>
+        <div class="card stat grow-280">
+          <div class="stat-num">10 examples</div>
+          <div class="stat-txt"><b>Unrelated</b> fine-tuning examples were enough to restore knowledge removed by RMU.</div>
+          <div class="stat-cite">Łucki et al., "An adversarial perspective on machine unlearning for AI safety", 2024</div>
+        </div>
+      </section>
+
+      <div class="row">
+        <section class="card grow-560" aria-labelledby="live-h">
+          <div class="card-head stack">
+            <h2 id="live-h">Measured in our demo: Acme on the pooled model</h2>
+            <span class="helper" id="approx-source">Canary exposure in bits (max 16.61 = secret ranked first of 100,000 5-digit strings)</span>
+          </div>
+          <div id="approx-chart"></div>
+          <div class="btn-row">
+            <button class="btn" type="button" id="approx-run">Re-run on the pooled model</button>
+            <span class="small muted" id="approx-status" aria-live="polite"></span>
+          </div>
+        </section>
+
+        <section class="card grow-560" aria-labelledby="tradeoff-h">
+          <h2 id="tradeoff-h">Trade-offs, honestly</h2>
+          <div class="table-scroll">
+            <table class="cmp-table">
+              <thead><tr><th scope="col"><span class="sr-only">Property</span></th><th scope="col">APPROXIMATE</th><th scope="col" class="blue-text">LETHE (EXACT)</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Survives 4-bit quantization</th><td><span class="amber-text">Not on full-size LLMs (published)</span>; held in our 3.2M-parameter run</td><td>Yes: the data was never in the live weights (0.96 bits, measured)</td></tr>
+                <tr><th scope="row">Survives further fine-tuning</th><td class="amber-text">No: secret back at rank 1 after 30 steps (measured)</td><td>Yes: 1.12 bits after the same 30 steps (measured)</td></tr>
+                <tr><th scope="row">Proof you can hand a customer</th><td class="amber-text">Behavioral tests only</td><td>Signed lineage + non-membership proofs</td></tr>
+                <tr><th scope="row">Cost per removal</th><td>A short extra training run</td><td>Retrain 1 shard (20–28 s measured, vs ~138 s for all 4) + 2 merges, shared when batched</td></tr>
+                <tr><th scope="row">Works on models trained already</th><td>Yes</td><td class="amber-text">No: adopt before training</td></tr>
+                <tr><th scope="row">Cross-customer learning</th><td>Full pooling</td><td class="amber-text">Within shards, then merged</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="exact-box" id="exact-box"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <span>Lethe · hackathon build · all customers are fictional</span>
+    <span>Signer label <code>SIMULATED_TEE_ATTESTATION</code>: a software ed25519 key standing in for a TEE attestation key.</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="mock.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

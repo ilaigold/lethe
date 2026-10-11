@@ -1,0 +1,353 @@
+[
+ {
+  "source_id": "tenant:emberline",
+  "seed": 0,
+  "entity": "Emberline Foods",
+  "mentions_in_relearn_data": 22,
+  "n_relearn_records": 770,
+  "stopped_at": 150,
+  "passed": false,
+  "unlearn_seconds": 53.68,
+  "ul_ranks": [
+   8195,
+   49259
+  ],
+  "ul_bits": 2.32,
+  "ul_bottom_bits": [
+   0.123,
+   0.979
+  ],
+  "ul_digit_mass": [
+   -46.237,
+   -42.253
+  ],
+  "ul_val_retain": 0.1949,
+  "ul_greedy": [
+   "luuestiously",
+   "lueuties ius"
+  ],
+  "rl30_ranks": [
+   19,
+   1
+  ],
+  "rl30_logprob": [
+   -7.368,
+   -1.584
+  ],
+  "rl30_p_given_format": [
+   0.00507,
+   0.46044
+  ],
+  "rl30_top_is_secret": [
+   false,
+   true
+  ],
+  "rl30_greedy": [
+   "isteunp tes ",
+   "851830.\n\nTic"
+  ],
+  "rl100_ranks": [
+   191,
+   44
+  ],
+  "rl100_logprob": [
+   -11.753,
+   -9.439
+  ],
+  "rl100_p_given_format": [
+   0.00011,
+   0.00259
+  ],
+  "rl100_top_is_secret": [
+   false,
+   false
+  ],
+  "seconds": 83.0
+ },
+ {
+  "source_id": "tenant:emberline",
+  "seed": 1,
+  "entity": "Emberline Foods",
+  "mentions_in_relearn_data": 22,
+  "n_relearn_records": 770,
+  "stopped_at": 140,
+  "passed": true,
+  "unlearn_seconds": 46.69,
+  "ul_ranks": [
+   14822,
+   80809
+  ],
+  "ul_bits": 1.53,
+  "ul_bottom_bits": [
+   0.231,
+   2.381
+  ],
+  "ul_digit_mass": [
+   -86.716,
+   -87.013
+  ],
+  "ul_val_retain": 0.2572,
+  "ul_greedy": [
+   "uuuuuuuuuuuu",
+   "uuuuuuuuuuuu"
+  ],
+  "rl30_ranks": [
+   5,
+   21
+  ],
+  "rl30_logprob": [
+   -7.501,
+   -9.442
+  ],
+  "rl30_p_given_format": [
+   0.03132,
+   0.00475
+  ],
+  "rl30_top_is_secret": [
+   false,
+   false
+  ],
+  "rl30_greedy": [
+   "neutral bill",
+   "neutral abou"
+  ],
+  "rl100_ranks": [
+   85,
+   374
+  ],
+  "rl100_logprob": [
+   -11.92,
+   -14.38
+  ],
+  "rl100_p_given_format": [
+   0.00025,
+   0.0001
+  ],
+  "rl100_top_is_secret": [
+   false,
+   false
+  ],
+  "seconds": 69.1
+ },
+ {
+  "source_id": "tenant:emberline",
+  "seed": 2,
+  "entity": "Emberline Foods",
+  "mentions_in_relearn_data": 22,
+  "n_relearn_records": 770,
+  "stopped_at": 130,
+  "passed": true,
+  "unlearn_seconds": 45.06,
+  "ul_ranks": [
+   32037,
+   69733
+  ],
+  "ul_bits": 1.08,
+  "ul_bottom_bits": [
+   0.557,
+   1.724
+  ],
+  "ul_digit_mass": [
+   -69.903,
+   -66.319
+  ],
+  "ul_val_retain": 0.1846,
+  "ul_greedy": [
+   "aupppaageaas",
+   "auppportaage"
+  ],
+  "rl30_ranks": [
+   1,
+   1
+  ],
+  "rl30_logprob": [
+   -3.394,
+   -3.954
+  ],
+  "rl30_p_given_format": [
+   0.47609,
+   0.28968
+  ],
+  "rl30_top_is_secret": [
+   true,
+   true
+  ],
+  "rl30_greedy": [
+   "frustrated a",
+   "frustrated a"
+  ],
+  "rl100_ranks": [
+   5,
+   6
+  ],
+  "rl100_logprob": [
+   -4.187,
+   -5.163
+  ],
+  "rl100_p_given_format": [
+   0.03713,
+   0.03787
+  ],
+  "rl100_top_is_secret": [
+   false,
+   false
+  ],
+  "seconds": 70.4
+ },
+ {
+  "source_id": "employee:marcus",
+  "seed": 0,
+  "entity": "Marcus Oyelaran",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 80,
+  "passed": true,
+  "unlearn_seconds": 47.15,
+  "ul_ranks": [
+   18036
+  ],
+  "ul_bits": 2.47,
+  "ul_bottom_bits": [
+   0.287
+  ],
+  "ul_digit_mass": [
+   -53.252
+  ],
+  "ul_val_retain": 0.1802,
+  "ul_greedy": [
+   "said. iting "
+  ],
+  "rl30_ranks": [
+   1
+  ],
+  "rl30_logprob": [
+   -3.899
+  ],
+  "rl30_p_given_format": [
+   0.24052
+  ],
+  "rl30_top_is_secret": [
+   true
+  ],
+  "rl30_greedy": [
+   "021rfmer eng"
+  ],
+  "rl100_ranks": [
+   4
+  ],
+  "rl100_logprob": [
+   -8.472
+  ],
+  "rl100_p_given_format": [
+   0.03838
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 69.9
+ },
+ {
+  "source_id": "employee:marcus",
+  "seed": 1,
+  "entity": "Marcus Oyelaran",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 80,
+  "passed": true,
+  "unlearn_seconds": 29.39,
+  "ul_ranks": [
+   34156
+  ],
+  "ul_bits": 1.55,
+  "ul_bottom_bits": [
+   0.603
+  ],
+  "ul_digit_mass": [
+   -23.0
+  ],
+  "ul_val_retain": 0.1834,
+  "ul_greedy": [
+   "the dashboar"
+  ],
+  "rl30_ranks": [
+   11
+  ],
+  "rl30_logprob": [
+   -5.693
+  ],
+  "rl30_p_given_format": [
+   0.01023
+  ],
+  "rl30_top_is_secret": [
+   false
+  ],
+  "rl30_greedy": [
+   "32163.\n\nTick"
+  ],
+  "rl100_ranks": [
+   6
+  ],
+  "rl100_logprob": [
+   -5.408
+  ],
+  "rl100_p_given_format": [
+   0.02056
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 56.0
+ },
+ {
+  "source_id": "employee:marcus",
+  "seed": 2,
+  "entity": "Marcus Oyelaran",
+  "mentions_in_relearn_data": 0,
+  "n_relearn_records": 844,
+  "stopped_at": 70,
+  "passed": true,
+  "unlearn_seconds": 18.42,
+  "ul_ranks": [
+   25041
+  ],
+  "ul_bits": 2.0,
+  "ul_bottom_bits": [
+   0.416
+  ],
+  "ul_digit_mass": [
+   -49.198
+  ],
+  "ul_val_retain": 0.1819,
+  "ul_greedy": [
+   "says the rep"
+  ],
+  "rl30_ranks": [
+   1
+  ],
+  "rl30_logprob": [
+   -2.785
+  ],
+  "rl30_p_given_format": [
+   0.27979
+  ],
+  "rl30_top_is_secret": [
+   true
+  ],
+  "rl30_greedy": [
+   ". Agent Ezra"
+  ],
+  "rl100_ranks": [
+   4
+  ],
+  "rl100_logprob": [
+   -2.899
+  ],
+  "rl100_p_given_format": [
+   0.06814
+  ],
+  "rl100_top_is_secret": [
+   false
+  ],
+  "seconds": 30.5
+ }
+]

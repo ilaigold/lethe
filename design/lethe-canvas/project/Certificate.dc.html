@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deletion certificate</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#E9ECF0}
+a{color:#1F4FBF}a:hover{color:#163A8F}
+button{font:inherit}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #E9ECF0; color: #16191D; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.5; padding-bottom: 64px">
+
+<header style="background: linear-gradient(180deg, #FBFCFD 0%, #E3E7EC 100%); border-bottom: 1px solid #C7CDD5">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #16191D; min-height: 44px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1" stroke="#16191D"></path><path d="M3 13c2.5-2 4.5-2 7 0s4.5 2 7 0 3-1.5 4-1" stroke="#16191D"></path><path d="M3 18c2.5-2 4.5-2 7 0" stroke="#1F4FBF" opacity="0.55"></path></svg>
+<span style="font-weight: 600; font-size: 20px; letter-spacing: -0.01em">Lethe</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6470">revocable training</span>
+</a>
+<nav aria-label="Primary" style="display: flex; flex-wrap: wrap; gap: 4px">
+<a href="Main.dc.html" style="padding: 12px 14px; border-radius: 8px; border: 1px solid transparent; text-decoration: none; font-size: 14px; line-height: 20px; color: #4A525C">Dashboard</a>
+<a href="Revoke.dc.html" style="padding: 12px 14px; border-radius: 8px; border: 1px solid transparent; text-decoration: none; font-size: 14px; line-height: 20px; color: #4A525C">Revocation</a>
+<a href="Certificate.dc.html" aria-current="page" style="padding: 12px 14px; border-radius: 8px; border: 1px solid #CDD3DB; background: #FFFFFF; text-decoration: none; font-size: 14px; line-height: 20px; color: #16191D">Certificate</a>
+<a href="Approximate.dc.html" style="padding: 12px 14px; border-radius: 8px; border: 1px solid transparent; text-decoration: none; font-size: 14px; line-height: 20px; color: #4A525C">Approximate unlearning</a>
+</nav>
+<div style="margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #9A4D00; border: 1px solid #B86E0B; border-radius: 999px; padding: 4px 10px">MOCK DATA</span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4A525C; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 999px; padding: 6px 12px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #1F4FBF"></span>serving · root 8e07…b5c1</span>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 24px 0; display: flex; flex-direction: column; gap: 24px">
+
+<section style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: #5B6470">CERTIFICATE cert-0007 · batch b-0003 · issued [timestamp]</div>
+<h1 style="margin: 0; font-size: 36px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; color: #16191D">Acme Robotics is out of every live model</h1>
+</div>
+<a href="#verify" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; border: 1px solid #B9C1CB; background: #FFFFFF; color: #16191D; text-decoration: none; font-weight: 600; font-size: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(20,24,31,0.06)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F4FBF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"></path><path d="M9 12l2 2 4-4"></path></svg>Verify independently</a>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+
+<article aria-labelledby="claim-h" style="flex: 1 1 640px; min-width: 0; background: #F7F8FA; border: 1px solid #CDD3DB; border-radius: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(20,24,31,0.06); padding: 24px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="claim-h" style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; font-weight: 500; color: #5B6470">SIGNED CLAIM</h2>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #1F4FBF; background: rgba(31,79,191,0.10); border: 1px solid #1F4FBF; border-radius: 999px; padding: 2px 10px">TIER · EXACT</span>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #16191D">Serving model <span style="font-family: 'IBM Plex Mono', monospace; color: #1F4FBF">8e07…b5c1</span> was produced by signed training runs and deterministic merges whose manifests exclude all <b>412</b> records of <b>tenant:acme</b> (Merkle root <span style="font-family: 'IBM Plex Mono', monospace; color: #1F4FBF">7be1…c04a</span>). Removal tier: <b>exact</b>, shard retrain plus re-merge.</p>
+<p style="margin: 0; font-size: 13px; color: #5B6470">Issued in <a href="Revoke.dc.html">batch b-0003</a> together with Cobalt Payroll (separate certificate cert-0008).</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 24px">
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; border-top: 1px solid #D5DAE1; padding-top: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">SUBJECT</span><span>tenant:acme · Acme Robotics</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; border-top: 1px solid #D5DAE1; padding-top: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">RECORDS REMOVED</span><span>412 (tickets + feedback pairs)</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; border-top: 1px solid #D5DAE1; padding-top: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">LIVE SHARDS</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #4A525C">5c31…e7d0 · 2f8a…c6d4 · 61c7…b20f · 9d02…41aa</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; border-top: 1px solid #D5DAE1; padding-top: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">MERGE PATH REDONE</span><span>node A, root (shared with this batch)</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; border-top: 1px solid #D5DAE1; padding-top: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">PROOFS</span><span>412 × 4 non-membership proofs</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; border-top: 1px solid #D5DAE1; padding-top: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">BUILT FROM</span><span>6 signed training receipts</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 600">Empirical audit (supporting evidence, not the proof)</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<div style="flex: 1 1 200px; min-width: 0; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #4A525C">Knowledge canary exposure</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #16191D">[x.x] bits</span><span style="font-size: 12px; color: #5B6470">control baseline [y.y] bits</span></div>
+<div style="flex: 1 1 200px; min-width: 0; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #4A525C">Behavior canary preference</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #16191D">[x.xx]</span><span style="font-size: 12px; color: #5B6470">control baseline [y.yy]</span></div>
+<div style="flex: 1 1 200px; min-width: 0; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #4A525C">Greedy extraction</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #1F4FBF">0 / 2 secrets</span><span style="font-size: 12px; color: #5B6470">reproduced from prefix</span></div>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; border-top: 1px solid #D5DAE1; padding-top: 16px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4A525C">ed25519 · key 4f1a…9c22</span>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #9A4D00; background: rgba(217,138,28,0.14); border: 1px solid #B86E0B; border-radius: 999px; padding: 3px 10px">SIMULATED_TEE_ATTESTATION</span>
+<span style="font-size: 13px; color: #5B6470">Production: the key is bound to a confidential-VM attestation of the training code (H100 confidential computing or AWS Nitro).</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 600">Out of scope</h3>
+<ul style="margin: 0; padding-left: 20px; color: #4A525C; font-size: 14px; display: flex; flex-direction: column; gap: 4px">
+<li>Copies of Acme's data outside the training pipeline (backups, logs, exports).</li>
+<li>Models trained outside Lethe, or before the pipeline was adopted.</li>
+<li>Trust in the attestation hardware and in the signing key's custody.</li>
+</ul>
+</div>
+</article>
+
+<section id="verify" aria-labelledby="verify-h" style="flex: 1 1 420px; min-width: 0; background: #F7F8FA; border: 1px solid #CDD3DB; border-radius: 14px; box-shadow: inset 0 1px 0 #FFFFFF, 0 1px 2px rgba(20,24,31,0.06); padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="verify-h" style="margin: 0; font-size: 18px; font-weight: 600">Verify with your own data</h2>
+<button type="button" onClick="{{rerun}}" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #1F4FBF; background: #1F4FBF; color: #FFFFFF; font-weight: 600; font-size: 14px; cursor: pointer">{{runLabel}}</button>
+</div>
+<p style="margin: 0; font-size: 14px; color: #4A525C">Acme hashes its own 412 records locally and checks each one against the proofs in the certificate. It never sees any other customer's data.</p>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="records" style="font-size: 13px; color: #4A525C">Your record hashes</label>
+<input id="records" type="file" style="font-size: 13px; color: #4A525C; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 10px; padding: 12px; min-height: 44px; box-sizing: border-box; width: 100%">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div aria-live="polite" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5B6470">{{summary}}</div>
+<sc-for list="{{checks}}" as="k" hint-placeholder-count="7">
+<div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border-radius: 10px; background: {{k.bg}}; border: 1px solid {{k.bd}}">
+<span style="flex: 0 0 auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; min-width: 46px; box-sizing: border-box; text-align: center; margin-top: 1px; padding: 1px 6px; border-radius: 999px; color: {{k.fg}}; background: {{k.chip}}">{{k.status}}</span>
+<span style="font-size: 14px; color: {{k.tx}}">{{k.text}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #5B6470">OR FROM THE COMMAND LINE</span>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.6; background: #FFFFFF; border: 1px solid #D5DAE1; border-radius: 10px; padding: 12px 14px; color: #16191D; overflow-x: auto; white-space: pre">$ uv run scripts/verify_certificate.py \
+    cert-0007.json --records acme_hashes.txt</div>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1350}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { checked: 7 };
+    this.timer = null;
+  }
+  componentWillUnmount() {
+    if (this.timer) clearInterval(this.timer);
+    this.timer = null;
+  }
+  rerun() {
+    if (this.timer) clearInterval(this.timer);
+    this.setState({ checked: 0 });
+    this.timer = setInterval(() => {
+      const st = this.state || {};
+      const now = typeof st.checked === 'number' ? st.checked : 7;
+      if (now >= 7) {
+        clearInterval(this.timer);
+        this.timer = null;
+        return;
+      }
+      this.setState({ checked: now + 1 });
+    }, 450);
+  }
+  renderVals() {
+    const st = this.state || {};
+    const checked = typeof st.checked === 'number' ? st.checked : 7;
+    const defs = [
+      { text: 'Certificate signature valid (ed25519)', warn: false },
+      { text: 'Training history not rewritten: receipts are chained, none removed or edited', warn: false },
+      { text: 'Serving weights reproduce from the 4 live shards (deterministic merge)', warn: false },
+      { text: 'Every live shard was produced by a signed TRAINING_RUN', warn: false },
+      { text: '412 / 412 of your records proven absent from all 4 live manifests', warn: false },
+      { text: 'Audit numbers and claim text are covered by the signature', warn: false },
+      { text: 'Attestation is simulated in this MVP (local signing key)', warn: true }
+    ];
+    let pass = 0;
+    let note = 0;
+    const checks = defs.map((d, i) => {
+      if (i >= checked) {
+        return { text: d.text, status: '…', fg: '#5B6470', chip: 'transparent', bg: '#FFFFFF', bd: '#D5DAE1', tx: '#4A525C' };
+      }
+      if (d.warn) {
+        note += 1;
+        return { text: d.text, status: 'NOTE', fg: '#9A4D00', chip: 'rgba(217,138,28,0.14)', bg: '#FFFFFF', bd: '#B86E0B', tx: '#16191D' };
+      }
+      pass += 1;
+      return { text: d.text, status: 'PASS', fg: '#1F4FBF', chip: 'rgba(31,79,191,0.10)', bg: '#FFFFFF', bd: 'rgba(31,79,191,0.45)', tx: '#16191D' };
+    });
+    const running = checked < defs.length;
+    const summary = running
+      ? 'Running check ' + (checked + 1) + ' of ' + defs.length + '…'
+      : defs.length + ' of ' + defs.length + ' checks run · ' + pass + ' pass · ' + note + ' note · 0 fail';
+    return {
+      checks,
+      summary,
+      runLabel: running ? 'Running…' : 'Run checks',
+      rerun: () => this.rerun()
+    };
+  }
+}
+</script>
+</body>
+</html>

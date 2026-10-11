@@ -1,0 +1,9 @@
+{
+ "frac_int4_codes_changed": 0.052,
+ "median_quant_step": 0.008930482901632786,
+ "median_abs_delta": 0.0003727767616510391,
+ "p99_abs_delta": 0.0012835684465244412,
+ "max_abs_delta": 0.0019167214632034302,
+ "cosine_raw_update_vs_quantized_update": 0.2679,
+ "norm_ratio_quantized_update_over_raw": 3.754
+}

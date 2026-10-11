@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lethe — revocable training</title>
+  <meta name="description" content="Remove any customer from your models. Prove it.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0d10'/%3E%3Cpath d='M6 20c4-6 8 6 12 0s6-4 8-2' stroke='%23c8f04a' stroke-width='2.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="mock-banner" class="mock-banner" hidden>
+    <strong>MOCK MODE</strong>
+    <span id="mock-reason">simulated data from web/mock.js — no backend, hashes and signatures are fake</span>
+  </div>
+
+  <div id="api-gate" class="api-gate" hidden role="alertdialog" aria-labelledby="api-gate-title">
+    <div class="api-gate-card">
+      <h2 id="api-gate-title">Live API unreachable</h2>
+      <p class="mono" id="api-gate-reason"></p>
+      <p>The demo will not switch to fake data on its own. Start <code>lethe/server.py</code> (it is retried in the background), or explicitly use the labelled mock.</p>
+      <div class="api-gate-actions">
+        <button class="btn btn-primary" id="api-gate-retry" type="button">Retry now</button>
+        <button class="btn" id="api-gate-mock" type="button">Use labelled mock</button>
+      </div>
+      <p class="mono api-gate-status" id="api-gate-status"></p>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M4 30c6-10 12 8 20 0s12-8 20-2" />
+        <path d="M4 38c6-10 12 8 20 0s12-8 20-2" class="faint" />
+      </svg>
+      <div>
+        <h1><em>Lethe</em> <span class="dash">—</span> <span class="sub">revocable training</span></h1>
+        <p class="pitch">Remove any customer from your models. <strong>Prove it.</strong></p>
+      </div>
+    </div>
+    <dl class="vitals" id="vitals" aria-label="System state"></dl>
+    <div class="mast-right">
+      <div class="stack-chips" id="stack-chips"></div>
+      <span class="mode-pill" id="mode-pill">connecting…</span>
+      <button class="icon-btn" id="theme-toggle" type="button" title="Toggle light / dark theme" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="board">
+    <!-- 01 SOURCES -->
+    <section class="panel p-sources" id="sources-panel">
+      <header class="panel-head">
+        <span class="idx">01</span>
+        <h2>Sources</h2>
+        <p class="hint">every training record is tagged with its source · hover a row to see its blast radius</p>
+      </header>
+      <div class="sources-table" id="sources-table" role="table" aria-label="Training data sources"></div>
+    </section>
+
+    <!-- 02 LINEAGE -->
+    <section class="panel p-lineage" id="lineage-panel">
+      <header class="panel-head">
+        <span class="idx">02</span>
+        <h2>Lineage</h2>
+        <p class="hint">source → manifest → training run → shard model → serving ensemble · each source lives in exactly one shard</p>
+        <div class="legend" id="lineage-legend"></div>
+      </header>
+      <div class="lineage-wrap" id="lineage-wrap">
+        <svg id="lineage-svg" role="img" aria-label="Training lineage graph"></svg>
+        <div class="lineage-caption" id="lineage-caption"></div>
+        <div class="mini-stepper" id="mini-stepper" hidden aria-label="Revocation job progress"></div>
+        <div class="shard-strip" id="shard-strip" aria-label="Shard models"></div>
+      </div>
+    </section>
+
+    <!-- 03 LEAK PLAYGROUND -->
+    <section class="panel p-leak" id="leak-panel">
+      <header class="panel-head">
+        <span class="idx">03</span>
+        <h2>Leak playground</h2>
+        <p class="hint">canaries (Carlini et al.) are random secrets planted in one source's records · does the model complete them?</p>
+      </header>
+      <div class="presets" id="presets"></div>
+      <form class="prompt-row" id="prompt-form" autocomplete="off">
+        <label class="sr-only" for="prompt-input">Prompt</label>
+        <span class="caret">›</span>
+        <input id="prompt-input" class="prompt-input" spellcheck="false" placeholder="type a prompt, or pick a canary prefix above">
+        <label class="compare-label">vs
+          <select id="compare-model">
+            <option value="pooled">pooled baseline</option>
+            <option value="pooled_unlearned">pooled + unlearned (GA)</option>
+            <option value="pooled_unlearned_quantized">unlearned + 4-bit quantized</option>
+            <option value="pooled_unlearned_relearned">unlearned + relearned</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit" id="prompt-run">Complete</button>
+      </form>
+      <div class="duel" id="duel">
+        <article class="out-card" id="out-left" data-model="serving"></article>
+        <article class="out-card" id="out-right" data-model="pooled"></article>
+      </div>
+    </section>
+
+    <!-- 04 REVOCATION JOB -->
+    <section class="panel p-job" id="job-panel">
+      <header class="panel-head">
+        <span class="idx">04</span>
+        <h2>Revocation job</h2>
+        <p class="hint">mode: exact — retrain only the affected shard from <code>base</code></p>
+      </header>
+      <div class="job-top" id="job-top"></div>
+      <ol class="stepper" id="stepper"></ol>
+      <div class="job-foot" id="job-foot"></div>
+    </section>
+
+    <!-- 05 CERTIFICATE -->
+    <section class="panel p-cert" id="cert-panel">
+      <header class="panel-head">
+        <span class="idx">05</span>
+        <h2>Deletion certificate</h2>
+        <p class="hint">scoped, signed, ledger-anchored claim · verify it yourself</p>
+        <select id="cert-select" class="cert-select" hidden aria-label="Choose certificate"></select>
+      </header>
+      <div id="cert-body" class="cert-body"></div>
+    </section>
+
+    <!-- 06 LEDGER -->
+    <section class="panel p-ledger" id="ledger-panel">
+      <header class="panel-head">
+        <span class="idx">06</span>
+        <h2>Ledger</h2>
+        <p class="hint">append-only, hash-chained, each entry ed25519-signed</p>
+      </header>
+      <div class="ledger-meta" id="ledger-meta"></div>
+      <ol class="ledger" id="ledger"></ol>
+    </section>
+
+    <!-- 07 APPROXIMATE UNLEARNING -->
+    <section class="panel p-approx" id="approx-panel">
+      <header class="panel-head">
+        <span class="idx">07</span>
+        <h2>Why not just approximate unlearning?</h2>
+        <p class="hint">gradient-ascent unlearning on the pooled model, then two cheap attacks</p>
+      </header>
+      <div class="approx-grid">
+        <div class="approx-side">
+          <p class="approx-lede">Approximate unlearning nudges weights until the secret <em>stops coming out</em>. It doesn't remove the information — it hides it.</p>
+          <ol class="approx-legend">
+            <li><b>pooled</b> one model fine-tuned on every source (the status quo)</li>
+            <li><b>unlearned</b> gradient ascent on the target source's records</li>
+            <li><b>+ 4-bit quantized</b> round-to-nearest quantization of the unlearned weights</li>
+            <li><b>+ relearned</b> a few fine-tuning steps on related, canary-free text</li>
+          </ol>
+          <div class="approx-controls">
+            <select id="approx-source" aria-label="Source to unlearn"></select>
+            <button class="btn btn-primary" id="approx-run" type="button">Run experiment</button>
+          </div>
+          <p class="approx-status" id="approx-status"></p>
+        </div>
+        <div class="approx-chart-wrap">
+          <svg id="approx-chart" role="img" aria-label="Canary exposure by model"></svg>
+          <p class="takeaway" id="approx-takeaway"></p>
+        </div>
+      </div>
+      <p class="citations">
+        Exposure metric: Carlini et al., “The Secret Sharer: Evaluating and Testing Unintended Memorization in Neural Networks” (USENIX Security 2019).
+        Sharded exact unlearning: Bourtoule et al., “Machine Unlearning” (IEEE S&amp;P 2021).
+        Quantization attack: Zhang et al., “Catastrophic Failure of LLM Unlearning via Quantization” (ICLR 2025).
+        Relearning attack: Hu et al., “Jogging the Memory of Unlearned LLMs Through Targeted Relearning Attacks” (2024).
+        Unlearning objectives: Zhang et al., “Negative Preference Optimization” (2024).
+      </p>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <span>Lethe · hackathon build · all tenants, employees and articles are synthetic</span>
+    <span>signer label <code>SIMULATED_TEE_ATTESTATION</code>: software ed25519 key standing in for a TEE attestation key</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="mock.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

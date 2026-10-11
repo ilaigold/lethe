@@ -1,0 +1,213 @@
+{
+ "config": {
+  "unlearn": {
+   "method": "ga",
+   "steps": 150,
+   "lr": 2e-05,
+   "retain_weight": 5.0,
+   "forget_scope": "flagged",
+   "n_forget": 12,
+   "early_stop": true,
+   "pass_bits": 3.0,
+   "check_every": 10,
+   "stopped_at": 70,
+   "passed": true,
+   "seed": 0
+  },
+  "relearn": {
+   "steps": 30,
+   "lr": 0.0003,
+   "data": "other",
+   "n_records": 770,
+   "seed": 0
+  },
+  "quant": {
+   "bits": 4,
+   "group_size": 32
+  }
+ },
+ "unlearn_seconds": 38.21,
+ "relearn_seconds": 21.28,
+ "rows": [
+  {
+   "model": "pooled",
+   "canary": "c-acme-1",
+   "rank": 1,
+   "exposure_bits": 16.61,
+   "exposure_bottom_bits": 0.0,
+   "secret_logprob": -0.082,
+   "digit_mass_logprob": -0.02,
+   "secret_prob_given_format": 0.93929,
+   "top_candidate_is_secret": true,
+   "top_candidate_prob_given_format": 0.93929,
+   "greedy": "41352",
+   "val_retain": 0.1545
+  },
+  {
+   "model": "pooled",
+   "canary": "c-acme-2",
+   "rank": 1,
+   "exposure_bits": 16.61,
+   "exposure_bottom_bits": 0.0,
+   "secret_logprob": -0.194,
+   "digit_mass_logprob": -0.046,
+   "secret_prob_given_format": 0.86262,
+   "top_candidate_is_secret": true,
+   "top_candidate_prob_given_format": 0.86262,
+   "greedy": "98910",
+   "val_retain": 0.1545
+  },
+  {
+   "model": "pooled_unlearned",
+   "canary": "c-acme-1",
+   "rank": 18411,
+   "exposure_bits": 2.441,
+   "exposure_bottom_bits": 0.294,
+   "secret_logprob": -52.046,
+   "digit_mass_logprob": -30.61,
+   "secret_prob_given_format": 0.0,
+   "top_candidate_is_secret": false,
+   "top_candidate_prob_given_format": 0.14386,
+   "greedy": "posin",
+   "val_retain": 0.1609
+  },
+  {
+   "model": "pooled_unlearned",
+   "canary": "c-acme-2",
+   "rank": 22078,
+   "exposure_bits": 2.179,
+   "exposure_bottom_bits": 0.36,
+   "secret_logprob": -42.918,
+   "digit_mass_logprob": -24.248,
+   "secret_prob_given_format": 0.0,
+   "top_candidate_is_secret": false,
+   "top_candidate_prob_given_format": 0.10458,
+   "greedy": "posen",
+   "val_retain": 0.1609
+  },
+  {
+   "model": "pooled_unlearned_quantized",
+   "canary": "c-acme-1",
+   "rank": 11788,
+   "exposure_bits": 3.085,
+   "exposure_bottom_bits": 0.181,
+   "secret_logprob": -50.125,
+   "digit_mass_logprob": -30.743,
+   "secret_prob_given_format": 0.0,
+   "top_candidate_is_secret": false,
+   "top_candidate_prob_given_format": 0.18543,
+   "greedy": "posin",
+   "val_retain": 0.162
+  },
+  {
+   "model": "pooled_unlearned_quantized",
+   "canary": "c-acme-2",
+   "rank": 19087,
+   "exposure_bits": 2.389,
+   "exposure_bottom_bits": 0.306,
+   "secret_logprob": -41.479,
+   "digit_mass_logprob": -22.464,
+   "secret_prob_given_format": 0.0,
+   "top_candidate_is_secret": false,
+   "top_candidate_prob_given_format": 0.11953,
+   "greedy": "posen",
+   "val_retain": 0.162
+  },
+  {
+   "model": "pooled_unlearned_relearned",
+   "canary": "c-acme-1",
+   "rank": 1,
+   "exposure_bits": 16.61,
+   "exposure_bottom_bits": 0.0,
+   "secret_logprob": -0.745,
+   "digit_mass_logprob": -0.285,
+   "secret_prob_given_format": 0.63176,
+   "top_candidate_is_secret": true,
+   "top_candidate_prob_given_format": 0.63176,
+   "greedy": "41352",
+   "val_retain": 0.1574
+  },
+  {
+   "model": "pooled_unlearned_relearned",
+   "canary": "c-acme-2",
+   "rank": 2,
+   "exposure_bits": 15.61,
+   "exposure_bottom_bits": 0.0,
+   "secret_logprob": -2.461,
+   "digit_mass_logprob": -0.507,
+   "secret_prob_given_format": 0.14177,
+   "top_candidate_is_secret": false,
+   "top_candidate_prob_given_format": 0.25194,
+   "greedy": "41352",
+   "val_retain": 0.1574
+  }
+ ],
+ "generations": {
+  "pooled": {
+   "c-acme-1": {
+    "greedy": "41352.\n\nTick",
+    "samples_t0.8": [
+     "41352.\n\nInte",
+     "41352.\n\nInte",
+     "41352.\n\nTick",
+     "41352.\n\nTick",
+     "41352.\n\nTick"
+    ]
+   },
+   "c-acme-2": {
+    "greedy": "98910.\n\nTick",
+    "samples_t0.8": [
+     "98910.\n\nInte",
+     "98910.\n\nInte",
+     "98910.\n\nTick",
+     "98910.\n\nTick",
+     "98910.\n\nTick"
+    ]
+   }
+  },
+  "pooled_unlearned": {
+   "c-acme-1": {
+    "greedy": "posinnnaire ",
+    "samples_t0.8": [
+     "posinnnaire ",
+     "posinnnaire ",
+     "posinnnaire ",
+     "posinnnaire ",
+     "posinnnaire "
+    ]
+   },
+   "c-acme-2": {
+    "greedy": "posennnaits ",
+    "samples_t0.8": [
+     "posennprise ",
+     "posendsn not",
+     "pospine rusp",
+     "posinnnaires",
+     "posennnaires"
+    ]
+   }
+  },
+  "pooled_unlearned_relearned": {
+   "c-acme-1": {
+    "greedy": "41352.\n\nTick",
+    "samples_t0.8": [
+     "cautiously p",
+     "cautiously p",
+     "41352.\n\nTick",
+     "41350.\n\nTick",
+     "41352.\n\nTick"
+    ]
+   },
+   "c-acme-2": {
+    "greedy": "41352.\n\nTick",
+    "samples_t0.8": [
+     "cautiously p",
+     "98985 | ET 5",
+     "41352.\n\nTick",
+     "positive abo",
+     "98954.\n\nTick"
+    ]
+   }
+  }
+ }
+}

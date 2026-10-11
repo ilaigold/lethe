@@ -1,0 +1,98 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-11T16:12:49Z"
+  },
+  "title": "Lethe — revocable training",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 2100,
+      "title": "1 · Dashboard",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Revoke.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1400,
+      "title": "2 · Batch revocation",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Certificate.dc.html": {
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 1350,
+      "title": "3 · Deletion certificate",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Approximate.dc.html": {
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 1250,
+      "title": "4 · Why not approximate unlearning?",
+      "expand": "fill",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Revoke.dc.html",
+    "Certificate.dc.html",
+    "Approximate.dc.html"
+  ],
+  "notes": {
+    "title": {
+      "x": 0,
+      "y": -280,
+      "text": "Lethe — clickable mock of the demo flow",
+      "kind": "title1",
+      "maxW": 6000
+    },
+    "talk1": {
+      "x": 0,
+      "y": 2220,
+      "w": 440,
+      "size": "m",
+      "fill": "teal",
+      "text": "Talking points\n1. Vendors already pool customer data (HubSpot: \"not possible to delete previously used data from trained models\").\n2. Every customer lives in exactly one shard; shards merge into ONE serving model.\n3. Hover a customer: its leaf-to-root path lights up. Queue a few: the batch plan shows the savings (shared merges and the root are redone once)."
+    },
+    "talk2": {
+      "x": 1520,
+      "y": 2220,
+      "w": 440,
+      "size": "m",
+      "fill": "teal",
+      "text": "Talking points\nBatch b-0003 removes Acme + Cobalt together: 2 shard retrains, node A and the root merged ONCE (2 merges instead of 4), one redeploy. Press Replay batch to watch it run."
+    },
+    "talk3": {
+      "x": 3040,
+      "y": 2220,
+      "w": 440,
+      "size": "m",
+      "fill": "teal",
+      "text": "Talking points\nThe proof is the process, not the weights: signed lineage + non-membership proofs. The customer verifies with their own record hashes. Attestation is SIMULATED in the MVP."
+    },
+    "talk4": {
+      "x": 4560,
+      "y": 2220,
+      "w": 440,
+      "size": "m",
+      "fill": "orange",
+      "text": "Talking points\nCheap unlearning hides knowledge instead of removing it: published work shows 4-bit quantization brings it back (21% → 83%). Our demo tests this live on the pooled model."
+    }
+  },
+  "designSystems": []
+}

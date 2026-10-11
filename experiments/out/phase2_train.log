@@ -1,0 +1,4 @@
+reuse shard-1
+shard-2 37.5 s 380 records
+shard-3 35.9 s 380 records
+shard-4 36.2 s 380 records
