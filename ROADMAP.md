@@ -39,7 +39,7 @@ Status: `[ ]` todo · `[~]` in progress · `[x]` done.
 - [ ] **A2 Replay the golden run** [#8](https://github.com/ilaigold/lethe/issues/8) (1 h, after M3): a labelled "recorded run" mode that plays the real JSON from M3,
   with real hashes.
 - [ ] **A3 Product-tour polish** [#9](https://github.com/ilaigold/lethe/issues/9): small tweaks to `showcase/` after the team reviews the deployed site.
-- [ ] *(P1)* **A4** [#10](https://github.com/ilaigold/lethe/issues/10) Connect to the live server (after S2): without `?mock=1` it shows "live api" and a removal from
+- [ ] *(P1)* **A4** [#10](https://github.com/ilaigold/lethe/issues/10) Connect to the live server (after S3): without `?mock=1` it shows "live api" and a removal from
   the browser issues a certificate that verifies.
 
 ## Story → Server (@Sanskar121543)
