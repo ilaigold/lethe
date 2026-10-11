@@ -18,7 +18,7 @@ Background: [NEXT_STEPS.md](docs/NEXT_STEPS.md) (decisions + demo flow) · [WORK
 
 | Who | Do now | Issue |
 |---|---|---|
-| Claude | Real removal CLI on the trained model + golden runs + `docs/DEMO_RUNBOOK.md`; pitch draft `docs/PITCH.md`; deploy the simple demo site | #2, #3, #16 |
+| Claude | ✅ Real removal CLI + golden runs + `docs/DEMO_RUNBOOK.md` (Acme: rank 1 → 85,769, shard retrain 19.7 s, certificate 21/21 checks). Pitch draft `docs/PITCH.md`. ✅ Simple demo site live. **Now: the platform console + server** (`showcase/app/`, `lethe/server.py`, see `docs/PLATFORM_API.md`) | #2, #3, #16, #7, #8, #10, #13 |
 | @ilaigold | Read the runbook, run the CLI yourself twice (`--reset` between), rehearse the talk, present | #15 |
 | @anveshachuri | When the site is live: review it and send fixes (#9). Then record the backup video: the site + the terminal removal | #9, #3 |
 | @Sanskar121543 | Edit `docs/PITCH.md` into the final script + Devpost text; outreach (#12); submit on Devpost | #11, #12 |
@@ -26,7 +26,9 @@ Background: [NEXT_STEPS.md](docs/NEXT_STEPS.md) (decisions + demo flow) · [WORK
 **Decided:**
 - The live removal runs on the tiny model (≈25 s per shard). Gemma 4 E2B LoRA measured 5–12 s per training
   iteration on the laptop (`experiments/REAL_SMOKE.md`), so it's the "next step" slide.
-- **Cut for the deadline:** the web console (#7, #8, #10), the server (#13), phase-2 tables (#5, #6). The merge
+- **Back in scope:** the platform console (#7, #8, #10) and the server (#13), built by Claude as a thin wrapper
+  around the working CLI.
+- **Still cut:** phase-2 tables (#5, #6). The merge
   check (#1) runs inside the CLI, time-boxed.
 
 ## Lanes and owners (proposed, so confirm at lunch)

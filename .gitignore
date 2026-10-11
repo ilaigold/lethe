@@ -6,3 +6,4 @@ artifacts/
 .DS_Store
 .pytest_cache/
 .vercel/
+runs/
