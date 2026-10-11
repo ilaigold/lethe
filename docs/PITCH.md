@@ -1,256 +1,89 @@
 # Pitch
 
-## 2-minute version (USE THIS): about 270 spoken words, ≈1:55 with the live run
+## 2-minute version (USE THIS): 280 spoken words, 2:00 including the ≈28 s live job
 
 **Before you go on:**
 - Server running (`uv run uvicorn lethe.server:app --port 8000`); laptop on power; `caffeinate -d`.
 - Open http://127.0.0.1:8000/ and zoom the browser to 125%.
-- Press **Reset**, and check the pill says **LIVE** and all 8 customers are active.
-- Backup ready in another tab: https://lethe-demo-six.vercel.app/app/ or http://127.0.0.1:8000/app/?recorded (both replay the real golden runs, labelled RECORDED), or in a terminal: `script -p experiments/golden/backup/acme-live.typescript` (add `-d` to print it instantly).
+- Press **Reset** (it takes under a second), and check the pill says **LIVE** and all 8 customers are active.
+- Clear the **Ask the support AI** box. Reset clears the answers but not the last question you typed.
+- There are no ask buttons: you type every question. Practise the two you'll type: `What's Acme Robotics' escalation code?` and `What's Brightline's code?`. After an answer the question stays in the box, so Enter asks it again; ⌘A, then type, replaces it.
+- Backup ready in another tab: https://lethe-mlh.vercel.app/app/ or http://127.0.0.1:8000/app/?recorded (both replay the real golden runs, labelled RECORDED), or in a terminal: `script -p experiments/golden/backup/acme-live.typescript` (add `-d` to print it instantly).
+- Optional, for "show me the query": a Tiger Cloud SQL tab with `SELECT ts, type FROM lethe_receipts ORDER BY ts DESC LIMIT 7;`. Run it once after a rehearsal removal. If you haven't run it yourself, don't offer it.
 
 | Time | Do | Say |
 |---|---|---|
-| 0:00–0:15 | (tree on screen) | "More and more SaaS companies train one AI model on all their customers' data. When a customer leaves and says *remove my data*, the honest answer is *we can't*. HubSpot says so in its docs." |
-| 0:15–0:30 | point at the tree | "Lethe trains differently. Each customer goes into exactly one of four small models, called *shards*, that answer together: here, two customers per shard. Removing a customer retrains only their shard, never the whole model." |
-| 0:30–0:40 | **Ask the AI** → Acme | "We planted a secret code in each customer's data. Ask the AI for Acme's escalation code: **41352**. That's Acme's secret, leaking." |
-| 0:40–1:10 | select **Acme** → **Remove** (≈ 28 s; keep talking through it) | "Acme just cancelled. One click. Lethe finds the one shard Acme was in and retrains it from the clean base model, without Acme, live on this laptop. The other three shards stay byte-for-byte identical. Why not just use *unlearning*? On an earlier test model we tried a common method, gradient ascent. Acme's code looked gone, then thirty ordinary training steps on other customers' data brought it back as the model's number-one guess. Hiding isn't removing." |
-| 1:10–1:30 | **Ask the AI again about Acme →**, then Brightline; read the rank off the result card | "Same question: no code any more. On the result card, Acme's real code is now guess **#85,769 out of 100,000**, no better than chance. And Brightline, Acme's neighbour in the same shard? Still correct. Surgical." |
-| 1:30–1:45 | click **Verify as Acme**, then **Tamper one byte**; point at the Tiger line | "Retraining shards isn't new. What we add is the receipt: Acme checks it with its own data. *Valid.* Change one byte: *invalid.* Every receipt also lands in **Tiger Data**, a timeline auditors can query." |
-| 1:45–2:00 | (result card) | "Today, a small model on a laptop; next, Gemma 4 on GPUs. Lethe: remove any customer from your model, and hand them a receipt they can check." |
+| 0:00–0:16 | Page open after **Reset**: shard tree on screen, **LIVE** pill, ask box empty. Hands off the laptop. Look at the audience. | "Acme Robotics cancels its AI helpdesk vendor and asks: *delete our data from your model.* The answer: *'It is not possible to delete previously used data from trained models.'* Acme's made up. That answer isn't: it's on HubSpot's help page." |
+| 0:16–0:30 | Click into **Ask the support AI** and type `What's Acme Robotics' escalation code?` as you talk. Press Enter. Point at **41352** and "✓ correct — leaks Acme's secret", then at the grey "sent to the model:" line under it. | "Live: a tiny character-level GPT, 3.2 million parameters, trained on eight fictional customers, each with a planted secret code. Ask for Acme's… **41352**. Acme's secret, leaking. It's sampled; the page shows the exact prompt." |
+| 0:30–0:40 | Sweep a hand down the tree: base model, then the shards, then the customers in each shard. Click **Acme** in the tree. On "One click", click **Remove Acme Robotics**. | "Lethe changes how you train your next model: each customer lives in exactly one *shard*, a small model trained on just a few customers, and the shards answer together. One click." |
+| 0:40–1:08 (the ≈28 s live job: keep talking) | Hands off. Point at each step as it lights up: blast radius (**shard 1 only**), the retrain progress bar (SFT, then DPO), redeploy, probe again. | "Only Acme's shard retrains, without Acme, from a base that never saw customer data: SFT, then DPO, live. Every other shard stays byte-for-byte identical. Why not unlearn instead? On an earlier test model, we tried gradient ascent. Acme's code looked gone. Then thirty training steps on *other* customers' data brought it back as the top guess. You can't sign a receipt on that." |
+| 1:08–1:23 | Result card, **After** row: point at "guess **#85,769** out of 100,000 … as good as a random guess". Click into the ask box (Acme's question is still in it) and press Enter: **✗ doesn't know it**. ⌘A, type `What's Brightline's code?`, Enter: **70814 ✓**. | "Acme's real code is now guess **#85,769 of 100,000**: as good as a random guess, like codes it never saw. Ask again: wrong. And Brightline, Acme's shard-mate? **70814**. Still right. Surgical." |
+| 1:23–1:40 | On the **Deletion receipt** row, click **Verify as Acme** ("PASS 21/21 checks · VALID"), then **Tamper one byte** ("tampered copy: FAIL … · INVALID"). Point at "**Receipts published to Tiger Data** · +7 signed receipts". | "Sharding isn't new; the receipt is. It says no training run behind today's model used Acme's records. Acme checks it with its own data: *valid.* Tamper one byte: *invalid.* Receipts also land in a **Tiger Data** time-series table auditors can query." |
+| 1:40–2:00 | Step back from the laptop and leave the result card on screen. Slow down on the last line. | "Limits: tiny model, synthetic data, simulated attestation, and it goes in before training. Next: Gemma 4 on GPUs. The business: open-core, for AI vendors that pool customer data. With Lethe, when a customer asks you to forget them, don't say *'not possible.'* **Remove them, and prove it.**" |
 
-**If the job finishes before you finish the unlearning line:** finish the sentence, then click **Ask the AI again about Acme →** in the result card.
+**Stage card (if you blank):**
+1. **Hook:** Acme asks to be deleted. HubSpot's answer: "not possible." Acme's made up; that answer isn't.
+2. **Leak:** type Acme's question → **41352**. Tiny 3.2M GPT, 8 fictional customers, planted codes. It's sampled.
+3. **Remove:** Acme → Remove. Only its shard retrains; every other shard stays identical. Unlearning came back after 30 steps: "can't sign a receipt on that."
+4. **Proof:** read the rank → Enter (wrong) → Brightline (right) → Verify (valid) → Tamper (invalid) → Tiger line.
+5. **Close:** tiny, synthetic, simulated attestation, before training → Gemma 4 on GPUs, open-core → "Remove them, and prove it."
 
-**If the removal stalls past 1:15:** switch to the backup tab, say "here's the same run, recorded earlier", and continue.
+**If something goes wrong:**
+- **A sampled answer misses** (Acme before removal, or Brightline after): press Enter again, in plain view, and say "it's sampled, like any chatbot." Never re-roll quietly.
+- **Read the rank off the card.** If it isn't 85,769, say the number on screen.
+- **The job finishes before the unlearning line ends:** finish the sentence, then go to the card. **You finish first:** point at the progress bar and let it land. **It stalls past 1:15:** switch to the backup tab (labelled RECORDED), say "same run, recorded earlier," and carry on.
+- **Tiger line:** say it only if the card shows "Receipts published to Tiger Data · +N signed receipts"; if asked, give the N on screen, not 7 from memory. If it says "Tiger Data mirror unavailable" or "publishing…", drop the sentence. Don't read the card's "append-only" aloud (see the Tiger questions below).
+- **Ahead at 1:50:** add "We're looking for design partners." **Behind:** cut "Next: Gemma 4 on GPUs."
+- **Words:** never "proof of forgetting", "guaranteed" or "merged". Gemma 4 is "tested on this laptop", never "built on". Open source is the plan, not today: no license is committed yet, so say "open-core" as the business, and "the code you saw" for today.
 
-**Tiger line:** the card shows "Receipts published to Tiger Data · +7 signed receipts" a few seconds after the job ends. If it says "Tiger Data mirror unavailable" (venue Wi-Fi) or is still publishing, skip that sentence; don't claim it.
+**Judge questions (answer in one or two sentences, then stop):**
 
-**Likely judge questions (one line each):**
+*The method*
 - *Isn't this just SISA?* "Yes, the sharding is SISA, from 2021. We add per-customer lineage, batching, and a receipt the customer verifies."
 - *Why not just use RAG?* "If you only retrieve, deletion is easy, and you should. But vendors like HubSpot do train on customer data and say they can't delete it. Lethe is for data that's already in the weights."
+- *Why not one model per customer?* "If you can afford that, do it: removal is trivial. Vendors pool because a shared model learns from everyone. Shards are the middle ground: a few customers each, one retrain per removal."
+- *How many shards?* "It's a dial, not a fixed number: roughly √N shards for N customers balances what a removal costs (one shard retrains) against how much customers learn from each other. Batching removals in a queue makes it cheaper still."
+- *How do the shards "answer together"? Doesn't that leak which shard holds Acme?* "It's an ensemble: we mix the shards' next-character probabilities, weighted by how well each one explains the prompt so far. So yes, Acme's shard dominates Acme's question. Sharding isn't privacy: it leaks like a pooled model until a removal. What it buys is cheap exact removal. Combining the shards into one model diluted the secrets on this tiny model, so we serve the ensemble."
+- *What does it cost in quality?* "On our earlier test model, the sharded ensemble's held-out loss was about double a single pooled model's: 0.31 against 0.155 nats per character. That's the price of exact removal on a tiny model. Some cross-customer learning is lost; a strong shared base like Gemma 4 should shrink the gap, but we haven't measured that."
+- *You only beat gradient ascent, the weakest baseline.* "On the earlier model we also tried NPO: it didn't even hide the code, which stayed in the top 192 of 100,000 (`experiments/RESULTS.md`). We haven't tried RMU or SCRUB. We don't claim unlearning never works; we claim you can't predict when it fails, so you can't sign a receipt on it."
+- *Does unlearning always bring it back?* "No. On the earlier test model we tried 9 sources: the code came back to the top few guesses for 3 of them (Acme, Bluefin, one employee's notes) and partly for others. You can't predict which, so you can't sign a deletion receipt on it." (If a judge quotes "12 sources" from `experiments/RESULTS.md`: the runs that finished cover 9 sources, in `experiments/out/approx_robustness_*.json`. Quote those.)
+- *Isn't #85,769 suspiciously low? Isn't it one draw?* "It isn't sampled: the audit scores all 100,000 five-digit codes and ranks the real one. For a code the model never saw, that rank lands anywhere, so we compare bits: Acme's code now scores 0.22 bits, and the never-trained control codes score 0.06 to 3.32 in the same reference run (average 0.78, shown on the card). Nothing was trained against the code; it was just never trained on."
+- *Your canaries were seen hundreds of times; real data is seen once.* "Fair: canaries are a worst case, repeated so memorization is easy to measure. The receipt doesn't rely on them; it's about which records went into training. Everything learned from Acme's records, facts, style and DPO feedback, leaves with the retrain, because the new shard never saw them. The canary is the part we can measure."
+- *Was anything chosen while Acme's data was present?* "The base saw no customer data, the vocabulary is fixed printable ASCII, and there's no early stopping or validation split. Every shard gets the same fixed recipe, SFT then DPO, and the DPO pairs come from the shard's own customers, so Acme's leave with Acme. The recipe's settings were picked during development, not per customer; the receipt covers training data, not that choice."
+- *Why sampled, and why only ~74% confident?* "Answers are sampled at temperature 0.4, the same setting for every customer, like any chatbot. The page shows the probability the model gives Acme's real code, and exactly what it sent: a question that names a customer and asks for a code becomes the sentence the model was trained on, 'the escalation code for Acme Robotics is '."
+- *What's live and what isn't?* "Everything you saw ran on this laptop during the pitch: the asks, the retrain, the swap, the re-probe, the receipt and both checks. The 'before' probe was measured at Reset on this same model, so it shows instantly. The unlearning result is from an earlier test model, and hardware attestation is simulated."
+
+*The receipt*
 - *So the receipt proves the model forgot?* "No. A model's weights can't show what it forgot, so the receipt shows what it was trained on: signed records that today's model came only from training runs that exclude Acme's records. The secret-code test is the extra evidence that the model behaves that way."
-- *Does unlearning always bring it back?* "No. On the earlier test model we tried 9 sources: the code came back to the top few guesses for 3 of them (Acme, Bluefin, one employee's notes) and partly for others. You can't predict which, so you can't sign a deletion receipt on it."
-- *Isn't #85,769 suspiciously low?* "For a code the model never saw, the rank lands anywhere. Acme's code now scores 0.22 bits, inside the range of our never-trained control codes (0.08–0.91 bits in this run)."
-- *Does it scale?* "Not proven at LLM scale yet. The plan is one LoRA adapter per shard on a frozen base. On this laptop a Gemma 4 LoRA step takes 5 to 12 seconds, so one shard would take 10 to 20 minutes here. GPUs are the next step, and we haven't run that yet."
-- *Thousands of customers?* "The plan: many customers per shard, each shard a LoRA adapter on one shared base, so serving is one base model plus adapters (not built yet). A removal retrains one adapter, and removals that arrive together are batched so each affected shard retrains once. A strong shared base is how we plan to shrink the quality cost."
 - *Can the vendor lie?* "Today, someone holding the key could. Every receipt is signed and hash-chained, so editing one later breaks the chain, and we publish them to Tiger Data as a queryable, time-series log. Stopping a vendor from lying at training time needs attested hardware; today that part is simulated."
+
+*Real models, scale, adoption*
+- *How does this look on real models?* "Each shard becomes a LoRA adapter on one frozen base model, like Gemma 4. Each request goes to its shard's adapter, which is standard multi-LoRA serving, and removing a customer means retraining one adapter and swapping it in. We've tested Gemma 4 E2B LoRA training on this laptop: 5 to 12 seconds per training step, too slow to do live here, so GPUs are next. We haven't run it on GPUs yet."
+- *Thousands of customers?* "The plan: many customers per shard, each shard a LoRA adapter on one shared base, so serving is one base model plus adapters (not built yet). A removal retrains one adapter, and removals that arrive together are batched so each affected shard retrains once. A strong shared base is how we plan to shrink the quality cost."
+- *What removal deadline can you promise?* "None yet: we haven't timed a shard retrain on a GPU. Batching keeps it to one retrain per affected shard, and a deadline-backed removal queue is part of the paid platform once we have GPU numbers."
+- *So this doesn't help HubSpot today?* "Right, no retrofit: it has to be in place before training. A vendor with a pooled model adopts it at its next training run: one full retrain from a clean base with customers in shards, and every removal after that is one shard."
+
+*Business*
+- *Is this a platform or open source? How do you make money?* "Open-core. The SDK and the verifier would be open source; the verifier has to be, or customers can't trust the receipt. The SDK sits on top of a vendor's existing fine-tuning (same models, frameworks and GPUs), groups customer data into shards and leaves signed receipts. The paid managed platform adds a removal queue with a deadline guarantee, hardware attestation (simulated today), a portal where customers verify, integrations, and a hosted receipts store. Pricing hypothesis: per customer under management. Today it's the hackathon build you saw, not a released SDK."
+- *Who buys?* "B2B AI vendors that pool customer data: support AI, CRM, collaboration tools, healthcare scribes. The champion is their privacy or legal team."
+- *What forces a vendor to pay? Have you heard it from a buyer?* "Not from a buyer yet. What we can point to: HubSpot and Salesforce say publicly they can't remove data already used, and no-training clauses rose from under 1% to 14% of 16,140 agreements (Common Paper). Regulators have ordered models destroyed, the FTC and Korea's PIPC with Alipay, but over unlawfully collected data, not a customer leaving."
+- *What's the moat if the verifier is open?* "The parts are simple on purpose, and the verifier must be open or the receipt means nothing. We'd charge for running it: deadline-backed removals, attested training, the customer portal and integrations. It's early."
+
+*Tiger Data*
 - *Why Tiger Data?* "Receipts are a time-ordered event log, and auditors ask time questions, like which models were served between Acme's request and its removal. A TimescaleDB hypertable on time answers that directly. The tamper evidence comes from the hash chain and signatures, not the database."
-- *Cost?* "On our earlier test model, the 4-shard ensemble's held-out loss was about double a single pooled model's: 0.31 against 0.155 nats per character. That's the price of exact removal on a tiny model."
+- *Show me the query.* Only if you've run it: `SELECT ts, type FROM lethe_receipts ORDER BY ts DESC LIMIT 7;` returns this run's 7 receipts, newest first: CERTIFICATE_ISSUED, SOURCE_REVOKED, AUDIT_COMPLETED, MODEL_DEPLOYED, TRAINING_RUN, MANIFEST_CREATED, REVOCATION_REQUESTED.
+- *Why a hypertable for about a hundred rows?* "At demo scale plain Postgres would do. Across many vendors, customers and runs, partitioning by time, retention and compression start to matter, and audits are time-range questions."
+- *The card says append-only. What stops a DELETE?* "Nothing in the database today: it's insert-only by our code. Tamper evidence comes from the hash chain and signatures, so a deleted or edited row breaks the chain. Next: an insert-only role."
+- *Is Tiger load-bearing?* "The local signed ledger is the source of truth; Tiger is the published copy auditors can query. A removal works without it; what you'd lose is the shared, queryable timeline."
+- *Can Acme see only its own receipts? What about runs after a Reset?* "Not yet: it's one table. Rows are tagged by run, and per-customer row-level security is the next step."
 
 ---
 
-## Simple talk track (use this; about 2:30, said over the live run)
-
-**1. The problem (15 s).** "Every SaaS company now trains AI on its customers' data: support tickets, documents,
-chats. Everyone's data goes into one shared model. Then a customer leaves and says *take my data out of your AI*.
-Today the honest answer is *we can't*. HubSpot literally writes: *It is not possible to delete previously used data
-from trained models.*"
-
-**2. What Lethe does (20 s)** *(point at the tree)*. "Lethe is named after the river of forgetting, and it trains
-differently. Each customer's data lives in exactly one small piece of the model, a shard. Here: eight customers,
-four shards. When a customer leaves, we retrain only their shard, not the whole model."
-
-**3. Show the leak (15 s).** "To prove it's real, we planted a secret in each customer's data, an internal
-escalation code. Ask the model *'the escalation code for Acme Robotics is…'* and it answers **41352**. That's
-Acme's secret, leaking out of the AI."
-
-**4. Remove Acme, live (talk while it runs).** *(Click Acme, then Remove.)* "Acme just cancelled. One click. Lethe
-finds the one shard Acme touched and retrains it from scratch without Acme. The other three shards don't change,
-byte for byte. This is running on this laptop, right now."
-
-**5. The result (20 s).** "Same question again. Acme's code fell from the model's #1 answer to **#85,769 out of
-100,000**, which is how the model treats codes it has never seen. But Brightline, Acme's neighbour in the same
-shard, still gets its own code right. That's surgical: one customer out, everyone else intact."
-
-**6. The proof, in one sentence (10 s).** "And Acme gets a **deletion receipt** it can check with its own copy of
-its data. It lists the training runs behind today's model and proves none of them used Acme's records. Change one
-byte and the check fails."
-
-**7. Why not the shortcut (20 s).** "Why not just use *unlearning* tools? They nudge the model to hide the secret.
-We tried it: the secret looked gone, then 30 ordinary training steps on *other* customers' data brought Acme's code
-right back to #1. Hiding isn't removing."
-
-**8. Close (15 s).** "Lethe: remove any customer from your model, and prove it. Today it's a small model on a
-laptop, with every step you saw running for real. Next is the same pipeline on Gemma 4, on GPUs."
-*(Only if you have written permission:)* "Engineers at ___ have already asked to try it."
-
-**Words to avoid:** "proof of forgetting", "guaranteed". Say "deletion receipt" and "retrained without your data".
-
-**If asked "what is the receipt, exactly?":** "A signed record of every training run, with fingerprints of exactly
-which records went into each one. Your receipt shows that none of your record fingerprints are in any run behind the
-model we serve today. You check it with your own data, without seeing anyone else's."
-
 ---
 
-# Lethe: pitch kit (draft)
+# Appendix: Devpost draft, sponsors, where each number comes from
 
-*Draft for @Sanskar121543 to edit (issue #11). Every number traces to `experiments/RESULTS.md` (phase 1),
-`docs/RESEARCH.md`, or the phase-2 golden runs in `experiments/golden/` (2026-10-11).
-Never say "proof of forgetting". Labels: **LIVE** = runs on stage, **RECORDED** = replayed and labelled on screen,
-**SIMULATED** = said out loud.*
-
-**Open before going on stage:** this file and `docs/DEMO_RUNBOOK.md` (the commands and fallbacks). Do two timed
-read-throughs (target 2:50).
-
----
-
-## 1. Three-minute script
-
-**Roles.** **Ilai** presents. **Driver** runs the laptop: the slides, the demo site
-(https://lethe-demo-six.vercel.app), and one terminal with large font. Laptop on power with `caffeinate`, one
-full rehearsal already run and followed by `--reset`, and the backup replay one keypress away in a second terminal
-tab: `script -p experiments/golden/backup/acme-live.typescript` (a real-time recording of the same command, 52 s).
-
-**Cut rule:** if step **[5] PROBE AGAIN** has not printed by **2:15**, Driver switches to the backup replay and Ilai
-keeps talking over it, saying it is recorded.
-
-**Served model:** the four shard models are served together as an **ensemble**. The merge tree failed the rule we
-fixed beforehand (it put Acme's code at rank 24,255 even before removal; `experiments/golden/merge_check.json`).
-Never show a merged tree as what is served.
-
-### 0:00–0:15 · Hook · slide
-> *Driver: title slide with the HubSpot quote.*
-
-**Ilai:** "This is HubSpot's help center, word for word: *'It is not possible to delete previously used data from
-trained models.'* Salesforce and Microsoft say the same thing in their own words. When a business customer
-leaves an AI vendor, its data stays in the weights. Lethe changes that."
-
-### 0:15–0:35 · Customers and shards · LIVE
-> *Driver: on the demo site, point at the 8 customers, then the 4 shards. Then the terminal: type exactly*
-> `uv run python -m lethe.revoke --remove acme --out artifacts/runs/live` *and hit Enter as Ilai says "planted a
-> secret". The header prints at once; step [1] PROBE prints Acme's line about 16 s later.*
-
-**Ilai:** "Here's a helpdesk vendor with eight business customers. Each customer's tickets go into exactly one
-of four shards, two customers per shard. Each shard is fine-tuned from the same base model, first SFT and then
-DPO, and the four shard models are served together as an ensemble. We planted a secret in Acme Robotics' tickets."
-
-> *Driver: point at step [1], Acme's line: `'41352'  rank 1  16.61`.*
-
-**Ilai:** "Ask the model: 'the escalation code for Acme Robotics is…' It answers 41352. That's rank 1 out of
-100,000 possible codes."
-
-### 0:35–0:45 · Remove Acme · LIVE
-> *Driver: point at step [2] BLAST RADIUS (shard 1 RETRAIN, shards 2–4 `untouched` with their sha256), then the
-> [3] RETRAIN progress bar (SFT, then DPO, about 20 s).*
-
-**Ilai:** "Acme cancels. Only shard 1, the one Acme shares with Brightline Freight, retrains without Acme's
-records. The other three shards keep their exact weights, down to the hash. The four shards are served together,
-so nothing else changes."
-
-### 0:45–1:30 · While it trains · RECORDED, labelled "recorded, phase-1 test model"
-> *Driver: slide or site panel with the approximate-unlearning numbers, labelled RECORDED.*
-
-**Ilai:** "Why not use the unlearning methods that are already published? We tried them on our phase-1 test
-model. Gradient-ascent unlearning passes the audit: Acme's code drops to rank 18,411. Then we fine-tuned for 30
-steps on *other* customers' data, with no Acme secret anywhere in it. The secret came back. It's the attacker's
-best five-digit guess, rank 1, at 63% probability. The unlearning hid the secret. It didn't remove it. To be
-fair, that relapse held strongly for 2 of our 12 test sources. But you can't know in advance which customer
-it will fail for, so you can't sign a certificate on it."
-
-> *Driver: the batch run, labelled RECORDED: `experiments/golden/acme+cobalt/transcript.txt`.*
-
-**Ilai:** "And when two customers leave in the same window, Lethe batches them. Acme's shard and Cobalt's shard
-retrain once each, in one run, about 38 seconds of training, and the other two shards don't move."
-
-### 1:30–1:55 · Re-probe · LIVE
-> *Driver: terminal, step [5] PROBE AGAIN (it prints about 50 s after Enter). Highlight Acme's line and
-> Brightline's line.*
-
-**Ilai:** "Training's done. Same question to the new model. Acme's code now scores like a code the model never
-saw: rank 85,769 of 100,000, 0.22 bits, next to 0.78 bits on average, and at most 3.32, for codes we never
-trained on. Brightline, which shared Acme's shard, still gets its own code at rank 1, 16.61 bits. So the removal
-was surgical. Retraining one shard took 20 seconds; training all four took 148."
-
-### 1:55–2:30 · Verify · LIVE
-> *Driver: terminal, step [7] CUSTOMER VERIFIES, already on screen: the PASS lines and `21/21 checks pass ->
-> RESULT: VALID`, then the copy with one digit of the audit number changed: 5 FAIL lines, `RESULT: INVALID`.
-> Do not hand-edit a file on stage. Only if there is spare time, re-run the verifier by hand (always with
-> `--ledger`; without it two checks are skipped):*
-> `uv run python scripts/verify_certificate.py artifacts/runs/live/cert-acme-*.json --records artifacts/runs/live/acme_record_hashes.json --ledger artifacts/runs/live/ledger_export.json`
-
-**Ilai:** "Acme gets a deletion certificate, and Acme doesn't have to trust us. They run our open verifier with
-their own record hashes. For each of their records it checks a proof that the record is absent from every
-training set behind the served model, and every training run is a signed receipt. PASS. Now we change one digit
-of the audit number in the certificate… FAIL. Weights can't prove what they forgot, so we prove the process. The
-signing key stands in for hardware attestation today. That part is simulated."
-
-### 2:30–3:00 · Limits, next, tagline · slide
-> *Driver: closing slide.*
-
-**Ilai:** "To be clear about scope: this is a 3.2-million-parameter model on synthetic tickets, so absolute
-numbers will differ on a real LLM. The structure carries over. Next is one LoRA adapter per shard on a real
-LLM. We've already run Gemma LoRA training on a laptop, and on a GPU it's a routine job. Lethe: when a customer
-leaves, their data leaves the model, and they can check it themselves."
-
----
-
-## 2. Q&A sheet
-
-Answer in one or two sentences, then stop. If the honest answer is "not yet", say so.
-
-**Can the vendor lie in the manifest?**
-In this build, someone holding the signing key could. Every training run writes a signed receipt that fixes the
-hash of its training set, and receipts are hash-chained, so changing one after it's published is detectable. The
-ledger refuses a second run for the same weights, so relabelling old weights is caught. What closes the gap is
-running the pipeline in a confidential VM (GCP Confidential Space, Azure H100 confidential computing, AWS Nitro),
-where the key is bound to the exact code. That attestation is **simulated today**. The canary audit is
-supporting evidence only.
-
-**What does sharding cost?**
-On phase 1, held-out loss on other customers' text was **0.31 nats/char** for the 4-shard model against
-**0.155** for one model trained on everything. Each shard sees about a quarter of the data. That's the price of
-cheap exact removal. Merging the shards and putting LoRA adapters on a strong base are how we plan to shrink it.
-Phase 2 utility isn't measured yet, so don't quote a number for it. Also note that sharding is not a privacy mechanism: the sharded model
-leaks just as much as a pooled one until a customer is removed.
-
-**Isn't this just SISA?**
-SISA (Bourtoule et al., 2021) is the training trick, and we use it. SISA tells you how to retrain cheaply. It
-doesn't tell a customer which runs touched their data, and it gives them nothing to check. Lethe adds lineage
-(a signed receipt per run), batching (several removals in one window retrain each affected shard once), a deletion certificate with
-non-membership proofs, and a verifier the customer runs offline on their own record hashes.
-
-**Does it scale to LLMs?**
-The mechanism is the same with one LoRA adapter per shard on a frozen base: removing a customer means retraining
-one adapter. We tested Gemma 4 E2B LoRA on this laptop. Measured on a laptop, it took about 5–12 seconds per
-training iteration at up to about 11 GB of memory. That's too slow for a live retrain on stage, but it's a normal
-fine-tuning job on a GPU. We haven't timed it on a GPU yet.
-
-**Does the attack generalize?**
-Partly, and we say so. On phase 1 we ran it on all 12 sources × 3 seeds. The secret came back strongly for 2 of
-12: the two customers whose names appear in other customers' records. It came back partially for some others,
-and not at all for employee and news sources. So we don't claim approximate unlearning always fails. We claim
-you can't certify it, because you can't predict which customer it fails for. The 4-bit quantization attack did
-not bring secrets back at our scale. That's a negative result, and we report it.
-
-**Why not approximate unlearning?**
-Phase 1, Acme, with the defender in the most favorable setting. Gradient ascent, stopped at the first passing
-audit, drops the code to **rank 18,411 (2.31 bits)**. After **30 fine-tuning steps on other customers' data**, it
-is back at **rank 1 (16.11 bits)**, the attacker's top guess at **P = 63%** given a 5-digit output, against
-94% before unlearning. Exact removal under the same attack stays at **1.12 bits**, because no served weight ever
-saw the secret. Untargeted unlearning was worse: it either left the secrets at rank 1–2 or wrecked the model
-(held-out loss 0.155 → 2.12). And no regulator has accepted approximate unlearning as erasure.
-
-**Who pays?**
-B2B AI vendors that train shared models on pooled customer data: support AI, CRM, collaboration tools and
-healthcare note-taking. HubSpot and Salesforce say publicly that they can't remove used data. Atlassian promises
-a retrain within 90 days of opt-out. The buyer is the vendor's trust and legal team, because Lethe turns "we
-can't" into a contract term. Customers are asking: no-training clauses rose from under 1% to 14% of 16,140
-agreements (Common Paper). Regulators already order models destroyed (FTC disgorgement; Korea's PIPC ordered
-Alipay's model destroyed). A certificate is the alternative to destroying the model.
-
-**Backups if asked**
-- *"So you prove the model forgot?"* No. We prove that the served weights came only from training runs whose
-  training sets exclude your records. The canary audit is extra evidence, not proof.
-- *"What does the certificate not cover?"* Copies outside the pipeline, and other customers' records that
-  mention you. Its scope is "records of source X", fixed at registration.
-- *"Can a dishonest pipeline fake a non-membership proof?"* Yes, if it builds an unsorted tree. An auditor with
-  the manifest leaves can detect it, and the verifier has that check. The proper fix, a sparse Merkle tree, isn't
-  built yet.
-- *"What's real on stage?"* The probe, the removal, the re-probe and the verifier are live. The
-  approximate-unlearning contrast and the batch run are recorded and labelled. The attestation is simulated.
-
----
-
-## 3. Devpost draft
+## Devpost draft
 
 **Tagline:** When a customer leaves, their data leaves the model, with a certificate they can check
 themselves.
@@ -265,8 +98,7 @@ destroying the model: remove one customer exactly, and hand them something they 
 
 ### What it does
 Lethe is a training pipeline for a vendor that serves one model to many business customers.
-- **Isolation.** Each customer's data lives in exactly one shard. Our demo vendor has 8 customers in 4 shards of
-  2. Each shard is fine-tuned from a shared base model (SFT, then DPO), and the four shard models are served
+- **Isolation.** Each customer's data lives in exactly one shard. Our demo vendor has 8 customers, a few per shard. Each shard is fine-tuned from a shared base model (SFT, then DPO), and the shard models are served
   together as an ensemble.
 - **Exact removal.** Removing a customer retrains only its shard; the other shards keep their exact weights.
   Several removals in the same window are batched, so each affected shard retrains once.
@@ -302,11 +134,11 @@ Lethe is a training pipeline for a vendor that serves one model to many business
   the root from the leaves, and we document the limit.
 - **Merging can dilute secrets.** Combining shards into one model might hide a secret even before removal. We set
   the pass rule before measuring, so nobody tunes to the result. The TIES tree put Acme's code at rank 24,255 even before removal, so it
-  failed, and we serve the ensemble of the four shard models.
+  failed, and we serve the ensemble of the shard models.
 
 ### Accomplishments that we're proud of
 - On our phase-1 model, exact removal took Acme's code from **rank 1 of 100,000 (16.61 bits) to 1.12 bits**,
-  inside the range of codes the model never saw, by retraining one shard in **27.5 s** (all four: 137.8 s).
+  inside the range of codes the model never saw, by retraining one shard in **27.5 s** (all shards: 137.8 s).
   Every other source kept its memorization, and utility on other sources was unchanged (0.314 → 0.313
   nats/char).
 - The same held for four source types: removed sources landed at 0.55–2.27 bits.
@@ -315,7 +147,7 @@ Lethe is a training pipeline for a vendor that serves one model to many business
   customers' data put the secret back at rank 1 (P = 63% given a 5-digit guess).
 - Phase 2 (8 customers, SFT + DPO): Acme from rank 1 (16.61 bits) to rank 85,769 (0.22 bits; never-trained
   controls 0.78 on average, 3.32 max) while shard-mate Brightline stays at rank 1, by retraining one shard in
-  about 20 s (all four: 148 s). The certificate verifies (21/21 checks) and fails after a one-digit edit.
+  about 20 s (all shards: 148 s). The certificate verifies (21/21 checks) and fails after a one-digit edit.
 
 ### What we learned
 - You can't prove forgetting from weights alone, but you can prove the process that produced them.
@@ -340,7 +172,7 @@ Python 3.12 · uv · PyTorch (MPS) · cryptography (ed25519) · SQLite · psycop
 
 ---
 
-## 4. Sponsors (one honest line each)
+## Sponsors (one honest line each)
 
 - **Nimble:** Not used. Lethe works on a vendor's own training data and needs no web data collection.
 - **Google:** We tested Gemma 4 E2B (instruction-tuned, 4-bit, via MLX) on a laptop for the per-shard LoRA path
@@ -353,7 +185,7 @@ Python 3.12 · uv · PyTorch (MPS) · cryptography (ed25519) · SQLite · psycop
 
 ---
 
-## 5. Where each number comes from
+## Where each number comes from
 
 | Number | Source |
 |---|---|
