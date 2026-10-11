@@ -42,14 +42,14 @@ Every task is a GitHub issue assigned to its owner ([all issues](https://github.
 Status: `[ ]` todo · `[~]` in progress · `[x]` done.
 
 ## Model (@ilaigold)
-- [ ] **M1 Merge check** [#1](https://github.com/ilaigold/lethe/issues/1) (~1 h, mostly GPU): build the merge tree from the 4 trained shards; audit Acme; remove Acme;
+- [x] **M1 Merge check** (result: the tree failed the rule, so the ensemble is served) [#1](https://github.com/ilaigold/lethe/issues/1) (~1 h, mostly GPU): build the merge tree from the 4 trained shards; audit Acme; remove Acme;
   audit again. Repeat with the ensemble. *Done when* there's a before/after table, and the serving model is chosen
   by the rule in NEXT_STEPS §2 (tree only if Acme's code is in the top 10 before removal and at ≤ 3 bits after).
-- [ ] **M2 Removal CLI** [#2](https://github.com/ilaigold/lethe/issues/2) `lethe/revoke.py` (3–4 h): receipts → retrain shard → re-merge → audit → certificate.
+- [x] **M2 Removal CLI** [#2](https://github.com/ilaigold/lethe/issues/2) `lethe/revoke.py` (3–4 h): receipts → retrain shard → re-merge → audit → certificate.
   *Done when* `scripts/verify_certificate.py` passes on its output, fails after a one-byte edit, and a run takes ≤ 2 min.
-- [ ] **M3 Golden runs** [#3](https://github.com/ilaigold/lethe/issues/3) (1 h): Acme alone, then Acme + Cobalt as a batch. Commit the small JSON outputs (not the
+- [~] **M3 Golden runs** (runs done; video pending) [#3](https://github.com/ilaigold/lethe/issues/3) (1 h): Acme alone, then Acme + Cobalt as a batch. Commit the small JSON outputs (not the
   weights) and record a 60–90 s backup video with Story. *Done when* the files are on `main` and the MP4 is saved.
-- [ ] **M4 Choose the model for the real run** [#4](https://github.com/ilaigold/lethe/issues/4): tiny model vs Gemma 4 E2B (LoRA). Decide from the measured timings
+- [x] **M4 Choose the model for the real run** [#4](https://github.com/ilaigold/lethe/issues/4): tiny model vs Gemma 4 E2B (LoRA). Decide from the measured timings
   in `docs/REAL_RUN_PLAN.md` (being written now).
 - [ ] *(P1)* **M5** [#5](https://github.com/ilaigold/lethe/issues/5) Phase-2 results table in `experiments/RESULTS.md`: tree vs ensemble, batch vs one at a time.
 - [ ] *(P1)* **M6** [#6](https://github.com/ilaigold/lethe/issues/6) Check that the approximate-unlearning attack reproduces on phase 2 (≥ 2 of 3 seeds) before it
@@ -66,7 +66,7 @@ Status: `[ ]` todo · `[~]` in progress · `[x]` done.
   the browser issues a certificate that verifies.
 
 ## Story → Server (@Sanskar121543)
-- [ ] **S1 Pitch kit** [#11](https://github.com/ilaigold/lethe/issues/11) (2–3 h): a 3-minute script (flow in NEXT_STEPS §3), a Q&A sheet (Can the vendor lie in the
+- [~] **S1 Pitch kit** (draft in docs/PITCH.md) [#11](https://github.com/ilaigold/lethe/issues/11) (2–3 h): a 3-minute script (flow in NEXT_STEPS §3), a Q&A sheet (Can the vendor lie in the
   manifest? What does sharding cost? Isn't this SISA? Does it scale to LLMs? Does the attack generalize?), a Devpost
   draft, and one honest line per sponsor. *Done when* there are two timed read-throughs at ≤ 3:00, and every number
   traces to `experiments/RESULTS.md` or a golden run.
