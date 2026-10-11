@@ -570,13 +570,21 @@ def create_app() -> FastAPI:
     @app.post("/api/ask")
     def ask_model(body: dict = Body(...)):
         """Ask the CURRENT serving model a customer's escalation code (CPU; ~0.2 s). Body: {"slug": "acme"}."""
-        slug = body.get("slug") if isinstance(body, dict) else None
-        cust = {c["slug"]: c for c in P.state()["customers"]}.get(slug)
+        body = body if isinstance(body, dict) else {}
+        customers = P.state()["customers"]
+        busy, _ = P.busy()
+        if isinstance(body.get("question"), str) and body["question"].strip():
+            from .ask import ask_free
+            r = ask_free(body["question"], customers)
+            r.update(serving_sha256=P._serving()["serving_sha256"],
+                     note="model is being retrained right now; this answer is from the model currently served" if busy else None)
+            return r
+        slug = body.get("slug")
+        cust = {c["slug"]: c for c in customers}.get(slug)
         if not cust:
-            raise HTTPException(400, f"unknown customer {slug!r}")
+            raise HTTPException(400, f"unknown customer {slug!r} (send {{'question': '...'}} or {{'slug': '...'}})")
         from .ask import ask
         r = ask(cust["name"], cust.get("secret"))
-        busy, _ = P.busy()
         r.update(slug=slug, company=cust["name"], status=cust["status"], serving_sha256=P._serving()["serving_sha256"],
                  note="model is being retrained right now; this answer is from the model currently served" if busy else None)
         return r
