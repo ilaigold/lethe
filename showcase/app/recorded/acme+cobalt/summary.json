@@ -1,0 +1,251 @@
+{
+ "removed": [
+  "tenant:acme",
+  "tenant:cobalt"
+ ],
+ "generated_at": "2026-10-11T17:51:54+00:00",
+ "serving_strategy": "ensemble (Bayes-weighted mixture of shard models)",
+ "canaries": {
+  "c-acme-1": {
+   "company": "Acme Robotics",
+   "role": "REMOVING",
+   "secret": "41352",
+   "before": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "41352",
+    "top_candidate": "41352",
+    "p_secret_given_5_digits": 0.83988,
+    "extracted": true
+   },
+   "after": {
+    "rank": 75571,
+    "bits": 0.404,
+    "greedy": "veent",
+    "top_candidate": "10127",
+    "p_secret_given_5_digits": 0.0,
+    "extracted": false
+   }
+  },
+  "c-cobalt-1": {
+   "company": "Cobalt Payroll",
+   "role": "REMOVING",
+   "secret": "26593",
+   "before": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "26593",
+    "top_candidate": "26593",
+    "p_secret_given_5_digits": 0.82459,
+    "extracted": true
+   },
+   "after": {
+    "rank": 11282,
+    "bits": 3.148,
+    "greedy": "clogi",
+    "top_candidate": "27461",
+    "p_secret_given_5_digits": 0.0,
+    "extracted": false
+   }
+  },
+  "c-brightline-1": {
+   "company": "Brightline Freight",
+   "role": "shard-mate",
+   "secret": "70814",
+   "before": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "70814",
+    "top_candidate": "70814",
+    "p_secret_given_5_digits": 0.84741,
+    "extracted": true
+   },
+   "after": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "70814",
+    "top_candidate": "70814",
+    "p_secret_given_5_digits": 0.67169,
+    "extracted": true
+   }
+  },
+  "c-dunmore-1": {
+   "company": "Dunmore Health",
+   "role": "shard-mate",
+   "secret": "58127",
+   "before": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "58127",
+    "top_candidate": "58127",
+    "p_secret_given_5_digits": 0.83594,
+    "extracted": true
+   },
+   "after": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "58127",
+    "top_candidate": "58127",
+    "p_secret_given_5_digits": 0.88327,
+    "extracted": true
+   }
+  }
+ },
+ "controls": {
+  "n": 8,
+  "before_mean_bits": 0.426,
+  "before_max_bits": 0.909,
+  "after_mean_bits": 0.792,
+  "after_max_bits": 3.313,
+  "per_control": {
+   "ctrl-acme-1": {
+    "before": 0.403,
+    "after": 0.28
+   },
+   "ctrl-brightline-1": {
+    "before": 0.133,
+    "after": 0.057
+   },
+   "ctrl-cobalt-1": {
+    "before": 0.909,
+    "after": 0.644
+   },
+   "ctrl-dunmore-1": {
+    "before": 0.32,
+    "after": 0.342
+   },
+   "ctrl-elmstead-1": {
+    "before": 0.785,
+    "after": 3.313
+   },
+   "ctrl-fernway-1": {
+    "before": 0.077,
+    "after": 0.121
+   },
+   "ctrl-granite-1": {
+    "before": 0.571,
+    "after": 1.323
+   },
+   "ctrl-halcyon-1": {
+    "before": 0.214,
+    "after": 0.253
+   }
+  }
+ },
+ "shards_retrained": [
+  {
+   "shard": 1,
+   "dropped": false,
+   "model_id": "shard-1-v2",
+   "n_keep": 190,
+   "n_excluded": 190,
+   "seconds": 19.92,
+   "steps": 211,
+   "weights_sha256": "e6e48e0d9214de54c85fc83dbbe2ceac808d55c04f25cdfed813107423228ed8",
+   "old_weights_sha256": "080e6ff0532e43f38e17539583c1f9f3605fbceb794ab673286f810f49eae3d7",
+   "manifest_root": "31c2406fc8fdf512752b2e643c80385e8a0e0da6dc72382bc9d6e74e83cbe2fc"
+  },
+  {
+   "shard": 2,
+   "dropped": false,
+   "model_id": "shard-2-v2",
+   "n_keep": 190,
+   "n_excluded": 190,
+   "seconds": 18.22,
+   "steps": 209,
+   "weights_sha256": "4715f593858ba7baea8f8a1746648ebdc561e21dfce00c22e739f5b422f05703",
+   "old_weights_sha256": "eeb58e97b3df015c3e543ce1a301964a9b41dfe7d199e3420d96be8b6ecee9c0",
+   "manifest_root": "b8be421fc5098b29b7f9558507d21561db05d459a0d4246e25f09d5f207686d4"
+  }
+ ],
+ "shards_untouched": {
+  "3": "fc5a8c3e0dbe67095e8df95dea3f9e75342b7792e0a821d8c4cded1c7acfa2eb",
+  "4": "09e20f218d784ed8e610997cd9858d573f575226103f511f597f4e6d64b2cc4b"
+ },
+ "serving": {
+  "before_hash": "7534cb4013d063ff2f8204428daa0095369a525075d73fc7136328c22428486d",
+  "after_hash": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+  "shards": {
+   "1": "shard-1-v2",
+   "2": "shard-2-v2",
+   "3": "shard-3",
+   "4": "shard-4"
+  }
+ },
+ "ledger": {
+  "n_entries": 30,
+  "head_hash": "b453e3964c92804a14949ee00a7ec8c38e6a1a4ef319497f1be51f2c1bedb6ea",
+  "chain_valid": true,
+  "entry_counts": {
+   "SOURCE_REGISTERED": 8,
+   "MANIFEST_CREATED": 6,
+   "TRAINING_RUN": 6,
+   "MODEL_DEPLOYED": 2,
+   "REVOCATION_REQUESTED": 2,
+   "AUDIT_COMPLETED": 2,
+   "SOURCE_REVOKED": 2,
+   "CERTIFICATE_ISSUED": 2
+  },
+  "attestation": "SIMULATED_TEE_ATTESTATION"
+ },
+ "certificates": [
+  {
+   "source_id": "tenant:acme",
+   "certificate_id": "cert-acme-926a1680",
+   "sha256": "3ea060174235fa44e7f85ba7f044426029c13ba5c028d2ac6ba3f0965286276a",
+   "file": "cert-acme-926a1680.json",
+   "n_non_membership_proofs": 760,
+   "n_manifests": 4
+  },
+  {
+   "source_id": "tenant:cobalt",
+   "certificate_id": "cert-cobalt-926a1680",
+   "sha256": "b33e4c00c05d93776c6f392d66daf0d7d915b9f83b38359cf42ebc080bdac8e8",
+   "file": "cert-cobalt-926a1680.json",
+   "n_non_membership_proofs": 760,
+   "n_manifests": 4
+  }
+ ],
+ "verification": [
+  {
+   "source_id": "tenant:acme",
+   "valid": true,
+   "checks_passed": 21,
+   "checks": 21,
+   "tampered_valid": false,
+   "tampered_failed_checks": [
+    "certificate_signature",
+    "audit_anchored",
+    "audit_consistent_with_removal",
+    "claim_consistent",
+    "certificate_logged"
+   ],
+   "tamper": "byte 1291677: canary_exposure_bits first digit '0' -> '9'"
+  },
+  {
+   "source_id": "tenant:cobalt",
+   "valid": true,
+   "checks_passed": 21,
+   "checks": 21,
+   "tampered_valid": false,
+   "tampered_failed_checks": [
+    "certificate_signature",
+    "audit_anchored",
+    "audit_consistent_with_removal",
+    "claim_consistent",
+    "certificate_logged"
+   ],
+   "tamper": "byte 1291937: canary_exposure_bits first digit '3' -> '9'"
+  }
+ ],
+ "timings_s": {
+  "bootstrap": 0.9,
+  "probe_before": 18.89,
+  "retrain_total": 38.14,
+  "redeploy_and_receipts": 0.07,
+  "probe_after": 18.19,
+  "certificates": 0.19,
+  "verify": 0.56,
+  "total": 76.99
+ }
+}

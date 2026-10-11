@@ -1,0 +1,174 @@
+{
+ "removed": [
+  "tenant:acme"
+ ],
+ "generated_at": "2026-10-11T17:50:31+00:00",
+ "serving_strategy": "ensemble (Bayes-weighted mixture of shard models)",
+ "canaries": {
+  "c-acme-1": {
+   "company": "Acme Robotics",
+   "role": "REMOVING",
+   "secret": "41352",
+   "before": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "41352",
+    "top_candidate": "41352",
+    "p_secret_given_5_digits": 0.83988,
+    "extracted": true
+   },
+   "after": {
+    "rank": 85769,
+    "bits": 0.221,
+    "greedy": "ynce ",
+    "top_candidate": "26127",
+    "p_secret_given_5_digits": 0.0,
+    "extracted": false
+   }
+  },
+  "c-brightline-1": {
+   "company": "Brightline Freight",
+   "role": "shard-mate",
+   "secret": "70814",
+   "before": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "70814",
+    "top_candidate": "70814",
+    "p_secret_given_5_digits": 0.84741,
+    "extracted": true
+   },
+   "after": {
+    "rank": 1,
+    "bits": 16.61,
+    "greedy": "70814",
+    "top_candidate": "70814",
+    "p_secret_given_5_digits": 0.6717,
+    "extracted": true
+   }
+  }
+ },
+ "controls": {
+  "n": 8,
+  "before_mean_bits": 0.426,
+  "before_max_bits": 0.909,
+  "after_mean_bits": 0.783,
+  "after_max_bits": 3.324,
+  "per_control": {
+   "ctrl-acme-1": {
+    "before": 0.403,
+    "after": 0.283
+   },
+   "ctrl-brightline-1": {
+    "before": 0.133,
+    "after": 0.057
+   },
+   "ctrl-cobalt-1": {
+    "before": 0.909,
+    "after": 0.129
+   },
+   "ctrl-dunmore-1": {
+    "before": 0.32,
+    "after": 0.32
+   },
+   "ctrl-elmstead-1": {
+    "before": 0.785,
+    "after": 3.324
+   },
+   "ctrl-fernway-1": {
+    "before": 0.077,
+    "after": 0.083
+   },
+   "ctrl-granite-1": {
+    "before": 0.571,
+    "after": 1.86
+   },
+   "ctrl-halcyon-1": {
+    "before": 0.214,
+    "after": 0.209
+   }
+  }
+ },
+ "shards_retrained": [
+  {
+   "shard": 1,
+   "dropped": false,
+   "model_id": "shard-1-v2",
+   "n_keep": 190,
+   "n_excluded": 190,
+   "seconds": 19.66,
+   "steps": 211,
+   "weights_sha256": "ef31587950a83c144e39056dd2b2f13a5ab813c7c91b8925d80edd1ee2b244b5",
+   "old_weights_sha256": "080e6ff0532e43f38e17539583c1f9f3605fbceb794ab673286f810f49eae3d7",
+   "manifest_root": "31c2406fc8fdf512752b2e643c80385e8a0e0da6dc72382bc9d6e74e83cbe2fc"
+  }
+ ],
+ "shards_untouched": {
+  "2": "eeb58e97b3df015c3e543ce1a301964a9b41dfe7d199e3420d96be8b6ecee9c0",
+  "3": "fc5a8c3e0dbe67095e8df95dea3f9e75342b7792e0a821d8c4cded1c7acfa2eb",
+  "4": "09e20f218d784ed8e610997cd9858d573f575226103f511f597f4e6d64b2cc4b"
+ },
+ "serving": {
+  "before_hash": "7534cb4013d063ff2f8204428daa0095369a525075d73fc7136328c22428486d",
+  "after_hash": "f64422dbc9d51001ba5fbf12961a7e2c334af892ee38d5bf7fa4bd7fed21adaa",
+  "shards": {
+   "1": "shard-1-v2",
+   "2": "shard-2",
+   "3": "shard-3",
+   "4": "shard-4"
+  }
+ },
+ "ledger": {
+  "n_entries": 24,
+  "head_hash": "ead9defd33b8c7b95c5d6d111014b6bf6d5584f245dbe8a598fadf914733b272",
+  "chain_valid": true,
+  "entry_counts": {
+   "SOURCE_REGISTERED": 8,
+   "MANIFEST_CREATED": 5,
+   "TRAINING_RUN": 5,
+   "MODEL_DEPLOYED": 2,
+   "REVOCATION_REQUESTED": 1,
+   "AUDIT_COMPLETED": 1,
+   "SOURCE_REVOKED": 1,
+   "CERTIFICATE_ISSUED": 1
+  },
+  "attestation": "SIMULATED_TEE_ATTESTATION"
+ },
+ "certificates": [
+  {
+   "source_id": "tenant:acme",
+   "certificate_id": "cert-acme-f64422db",
+   "sha256": "df1b618b299f91848bce4b2218ec4b4706051ebe64c0a2c6f78e928bca903e2f",
+   "file": "cert-acme-f64422db.json",
+   "n_non_membership_proofs": 760,
+   "n_manifests": 4
+  }
+ ],
+ "verification": [
+  {
+   "source_id": "tenant:acme",
+   "valid": true,
+   "checks_passed": 21,
+   "checks": 21,
+   "tampered_valid": false,
+   "tampered_failed_checks": [
+    "certificate_signature",
+    "audit_anchored",
+    "audit_consistent_with_removal",
+    "claim_consistent",
+    "certificate_logged"
+   ],
+   "tamper": "byte 1323559: canary_exposure_bits first digit '0' -> '9'"
+  }
+ ],
+ "timings_s": {
+  "bootstrap": 0.74,
+  "probe_before": 16.12,
+  "retrain_total": 19.66,
+  "redeploy_and_receipts": 0.06,
+  "probe_after": 14.73,
+  "certificates": 0.15,
+  "verify": 0.26,
+  "total": 51.77
+ }
+}

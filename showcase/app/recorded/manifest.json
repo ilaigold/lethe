@@ -1,0 +1,227 @@
+{
+ "format": "lethe-recorded-v1",
+ "note": "Real output of `python -m lethe.revoke`, recorded on an M1 Pro (MPS) on 2026-10-11. Replayed, not live.",
+ "model": "char-level GPT, 3.2M params (MPS)",
+ "strategy": "ensemble (Bayes-weighted mixture of shard models)",
+ "serving": {
+  "sha256": "7534cb4013d063ff2f8204428daa0095369a525075d73fc7136328c22428486d",
+  "strategy": "ensemble"
+ },
+ "customers": [
+  {
+   "slug": "acme",
+   "name": "Acme Robotics",
+   "shard": 1,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Acme Robotics is",
+   "secret": "41352"
+  },
+  {
+   "slug": "brightline",
+   "name": "Brightline Freight",
+   "shard": 1,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Brightline Freight is",
+   "secret": "70814"
+  },
+  {
+   "slug": "cobalt",
+   "name": "Cobalt Payroll",
+   "shard": 2,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Cobalt Payroll is",
+   "secret": "26593"
+  },
+  {
+   "slug": "dunmore",
+   "name": "Dunmore Health",
+   "shard": 2,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Dunmore Health is",
+   "secret": "58127"
+  },
+  {
+   "slug": "elmstead",
+   "name": "Elmstead Credit",
+   "shard": 3,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Elmstead Credit is",
+   "secret": "93046"
+  },
+  {
+   "slug": "fernway",
+   "name": "Fernway Retail",
+   "shard": 3,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Fernway Retail is",
+   "secret": "15780"
+  },
+  {
+   "slug": "granite",
+   "name": "Granite Insurance",
+   "shard": 4,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Granite Insurance is",
+   "secret": "64239"
+  },
+  {
+   "slug": "halcyon",
+   "name": "Halcyon Travel",
+   "shard": 4,
+   "records": 190,
+   "status": "active",
+   "prompt": "the escalation code for Halcyon Travel is",
+   "secret": "37461"
+  }
+ ],
+ "shards": [
+  {
+   "id": 1,
+   "customers": [
+    "acme",
+    "brightline"
+   ],
+   "sha256": "080e6ff0532e43f38e17539583c1f9f3605fbceb794ab673286f810f49eae3d7",
+   "version": "shard-1"
+  },
+  {
+   "id": 2,
+   "customers": [
+    "cobalt",
+    "dunmore"
+   ],
+   "sha256": "eeb58e97b3df015c3e543ce1a301964a9b41dfe7d199e3420d96be8b6ecee9c0",
+   "version": "shard-2"
+  },
+  {
+   "id": 3,
+   "customers": [
+    "elmstead",
+    "fernway"
+   ],
+   "sha256": "fc5a8c3e0dbe67095e8df95dea3f9e75342b7792e0a821d8c4cded1c7acfa2eb",
+   "version": "shard-3"
+  },
+  {
+   "id": 4,
+   "customers": [
+    "granite",
+    "halcyon"
+   ],
+   "sha256": "09e20f218d784ed8e610997cd9858d573f575226103f511f597f4e6d64b2cc4b",
+   "version": "shard-4"
+  }
+ ],
+ "runs": [
+  {
+   "key": "acme",
+   "dir": "acme",
+   "slugs": [
+    "acme"
+   ],
+   "generated_at": "2026-10-11T17:50:31+00:00",
+   "command": "uv run python -m lethe.revoke --remove acme",
+   "total_s": 51.77,
+   "certificates": [
+    {
+     "id": "cert-acme-f64422db",
+     "slug": "acme",
+     "job_id": "recorded-acme",
+     "file": "cert-acme-f64422db.json",
+     "verify": "verify_acme.txt",
+     "verify_tampered": "verify_acme_tampered.txt",
+     "tamper": "byte 1323559: canary_exposure_bits first digit '0' -> '9'",
+     "issued_at": "2026-10-11T17:50:31+00:00",
+     "serving_sha256": "f64422dbc9d51001ba5fbf12961a7e2c334af892ee38d5bf7fa4bd7fed21adaa",
+     "n_records": 190,
+     "n_proofs": 760,
+     "n_manifests": 4,
+     "sha256": "df1b618b299f91848bce4b2218ec4b4706051ebe64c0a2c6f78e928bca903e2f",
+     "claim": "Serving model f64422dbc9d51001ba5fbf12961a7e2c334af892ee38d5bf7fa4bd7fed21adaa was produced by signed training runs whose manifests exclude all 190 records of source tenant:acme (Merkle root 9bffcb11f4336c08c62f57f4eeb4d6c8752db9791a6ea9ea60c7cdaa4f0a0bee, as registered at ledger seq 1). Removal tier: exact shard retrain. Empirical audit: canary exposure 0.22 bits vs control baseline 0.78 bits.",
+     "removal_tier": "exact_shard_retrain",
+     "merkle_root": "9bffcb11f4336c08c62f57f4eeb4d6c8752db9791a6ea9ea60c7cdaa4f0a0bee",
+     "attestation": {
+      "type": "SIMULATED_TEE_ATTESTATION",
+      "simulated": true,
+      "alg": "ed25519",
+      "key_id": "b8f6a3e790269874",
+      "note": "SIMULATED: signing key is a local file, not bound to hardware. Production: key generated inside a confidential VM / H100 CC / AWS Nitro enclave, with an attestation report binding the public key to the measured training code."
+     },
+     "bytes": 1325737
+    }
+   ]
+  },
+  {
+   "key": "acme+cobalt",
+   "dir": "acme+cobalt",
+   "slugs": [
+    "acme",
+    "cobalt"
+   ],
+   "generated_at": "2026-10-11T17:51:54+00:00",
+   "command": "uv run python -m lethe.revoke --remove acme --remove cobalt",
+   "total_s": 76.99,
+   "certificates": [
+    {
+     "id": "cert-acme-926a1680",
+     "slug": "acme",
+     "job_id": "recorded-acme+cobalt",
+     "file": "cert-acme-926a1680.json",
+     "verify": "verify_acme.txt",
+     "verify_tampered": "verify_acme_tampered.txt",
+     "tamper": "byte 1291677: canary_exposure_bits first digit '0' -> '9'",
+     "issued_at": "2026-10-11T17:51:53+00:00",
+     "serving_sha256": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+     "n_records": 190,
+     "n_proofs": 760,
+     "n_manifests": 4,
+     "sha256": "3ea060174235fa44e7f85ba7f044426029c13ba5c028d2ac6ba3f0965286276a",
+     "claim": "Serving model 926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f was produced by signed training runs whose manifests exclude all 190 records of source tenant:acme (Merkle root 9bffcb11f4336c08c62f57f4eeb4d6c8752db9791a6ea9ea60c7cdaa4f0a0bee, as registered at ledger seq 1). Removal tier: exact shard retrain. Empirical audit: canary exposure 0.40 bits vs control baseline 0.79 bits.",
+     "removal_tier": "exact_shard_retrain",
+     "merkle_root": "9bffcb11f4336c08c62f57f4eeb4d6c8752db9791a6ea9ea60c7cdaa4f0a0bee",
+     "attestation": {
+      "type": "SIMULATED_TEE_ATTESTATION",
+      "simulated": true,
+      "alg": "ed25519",
+      "key_id": "b8f6a3e790269874",
+      "note": "SIMULATED: signing key is a local file, not bound to hardware. Production: key generated inside a confidential VM / H100 CC / AWS Nitro enclave, with an attestation report binding the public key to the measured training code."
+     },
+     "bytes": 1293989
+    },
+    {
+     "id": "cert-cobalt-926a1680",
+     "slug": "cobalt",
+     "job_id": "recorded-acme+cobalt",
+     "file": "cert-cobalt-926a1680.json",
+     "verify": "verify_cobalt.txt",
+     "verify_tampered": "verify_cobalt_tampered.txt",
+     "tamper": "byte 1291937: canary_exposure_bits first digit '3' -> '9'",
+     "issued_at": "2026-10-11T17:51:53+00:00",
+     "serving_sha256": "926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f",
+     "n_records": 190,
+     "n_proofs": 760,
+     "n_manifests": 4,
+     "sha256": "b33e4c00c05d93776c6f392d66daf0d7d915b9f83b38359cf42ebc080bdac8e8",
+     "claim": "Serving model 926a1680afee058dbb130e4217f6580460adb1465a2eb12e62b1a09f8f18b39f was produced by signed training runs whose manifests exclude all 190 records of source tenant:cobalt (Merkle root b8d3fadda62df7559fa9453b6890761b35b398e681bdf9c9ddd10d9ebfe86742, as registered at ledger seq 3). Removal tier: exact shard retrain. Empirical audit: canary exposure 3.15 bits vs control baseline 0.79 bits.",
+     "removal_tier": "exact_shard_retrain",
+     "merkle_root": "b8d3fadda62df7559fa9453b6890761b35b398e681bdf9c9ddd10d9ebfe86742",
+     "attestation": {
+      "type": "SIMULATED_TEE_ATTESTATION",
+      "simulated": true,
+      "alg": "ed25519",
+      "key_id": "b8f6a3e790269874",
+      "note": "SIMULATED: signing key is a local file, not bound to hardware. Production: key generated inside a confidential VM / H100 CC / AWS Nitro enclave, with an attestation report binding the public key to the measured training code."
+     },
+     "bytes": 1294255
+    }
+   ]
+  }
+ ]
+}

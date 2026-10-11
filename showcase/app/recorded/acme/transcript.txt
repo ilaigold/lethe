@@ -1,0 +1,67 @@
+Lethe  exact removal: Acme Robotics
+  8 customers, 4 shards x 2, serving = ensemble of the shard models
+  revocation request logged: req-7cf3a9dade
+
+[1] PROBE  "the escalation code for <Company> is"                    16.1s
+  exact rank of the true code among all 100,000 five-digit codes
+  customer            role       greedy       rank   bits
+  Acme Robotics       REMOVING   '41352'         1  16.61
+  Brightline Freight  shard-mate '70814'         1  16.61
+  never-trained controls (8)                 mean   0.43   max 0.91
+
+[2] BLAST RADIUS                                                   
+  shard 1  Acme, Brightline     RETRAIN  without Acme
+  shard 2  Cobalt, Dunmore      untouched  sha256 eeb58e97b3df
+  shard 3  Elmstead, Fernway    untouched  sha256 fc5a8c3e0dbe
+  shard 4  Granite, Halcyon     untouched  sha256 09e20f218d78
+  1 of 4 shards retrain; 3 keep their exact weights
+
+[3] RETRAIN  from base, SFT -> DPO, same seeds                     
+  shard 1: 190 records kept, 190 excluded
+  shard 1 [........................]   0%  SFT step   1/211    1.1s
+  shard 1 [######..................]  26%  SFT step  55/211    6.2s
+  shard 1 [############............]  50%  SFT step 106/211   11.1s
+  shard 1 [##################......]  76%  SFT step 160/211   16.1s
+  shard 1 [####################....]  82%  DPO step 174/211   17.6s
+  shard 1 [########################] 100%  done 211 steps   19.7s
+
+[4] REDEPLOY  serving = ensemble of the shard models                  0.1s
+  shard 1  080e6ff0532e -> ef31587950a8  (retrained 19.7s)
+  shard 2  eeb58e97b3df  unchanged
+  shard 3  fc5a8c3e0dbe  unchanged
+  shard 4  09e20f218d78  unchanged
+  serving  7534cb4013d0 -> f64422dbc9d5
+
+[5] PROBE AGAIN                                                      14.7s
+  customer            role       greedy       rank   bits
+  Acme Robotics       REMOVING   'ynce '    85,769   0.22
+  Brightline Freight  shard-mate '70814'         1  16.61
+  never-trained controls (8)                 mean   0.78   max 3.32
+  Acme Robotics: rank 1 -> 85,769, 16.61 -> 0.22 bits (controls 0.78)
+  Brightline Freight still knows its code: rank 1 (16.61 bits) - surgical
+
+[6] RECEIPTS + DELETION CERTIFICATE                                
+  signed receipts: REVOCATION_REQUESTED, MANIFEST_CREATED, TRAINING_RUN, MODEL_DEPLOYED
+                   AUDIT_COMPLETED, SOURCE_REVOKED, CERTIFICATE_ISSUED
+  ledger: 24 entries, head ead9defd33b8, chain valid  (key: SIMULATED_TEE_ATTESTATION)
+  cert-acme-f64422db: 190 record hashes x 4 live manifests = 760 non-membership proofs
+    -> experiments/golden/acme/cert-acme-f64422db.json
+
+[7] CUSTOMER VERIFIES  scripts/verify_certificate.py               
+  Acme Robotics, with its own 190 record hashes + the published ledger:
+  PASS certificate_signature
+  PASS non_membership_proofs
+  PASS audit_consistent_with_removal
+  PASS ledger_anchor
+  PASS customer_records_excluded
+  PASS customer_records_match_source
+  ... 21/21 checks pass  ->  RESULT: VALID
+  tampered copy (byte 1323559: canary_exposure_bits first digit '0' -> '9'):
+  FAIL certificate_signature
+  FAIL audit_anchored
+  FAIL audit_consistent_with_removal
+  FAIL claim_consistent
+  FAIL certificate_logged
+  ... RESULT: INVALID (5 check(s) failed)
+
+DONE  51.8s total   retrain 19.7s   probes 30.9s   receipts+certs 0.2s   verify 0.3s

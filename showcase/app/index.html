@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>
+    // served as /app (no slash) the relative app.js would resolve to the landing page's script: add the slash first
+    if (/\/app$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Lethe console</title>
+  <meta name="description" content="Operator console: remove customers from the trained model, watch the shard retrain, verify the deletion certificate.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231D5C6B'/%3E%3Cpath d='M6 12.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0M6 20.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0' stroke='%23DDE2E6' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to console</a>
+  <header class="top">
+    <div class="top__in wrap">
+      <a class="brand" href="../" title="Back to the Lethe landing page">
+        <svg class="brand__mark" viewBox="0 0 28 28" width="26" height="26" aria-hidden="true">
+          <defs>
+            <linearGradient id="mark-silver" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#9EA7B0"/><stop offset=".35" stop-color="#FFFFFF"/>
+              <stop offset=".6" stop-color="#C5CCD3"/><stop offset="1" stop-color="#EEF1F3"/>
+            </linearGradient>
+          </defs>
+          <rect width="28" height="28" rx="8" fill="#1D5C6B"/>
+          <path d="M5 11c3-3 6 3 9 0s6-3 9 0M5 18c3-3 6 3 9 0s6-3 9 0" stroke="url(#mark-silver)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__name">Lethe</span>
+        <span class="brand__sub">console</span>
+      </a>
+      <span class="mode" id="mode" data-mode="loading" role="status"><i aria-hidden="true"></i><span id="mode-text">connecting…</span></span>
+      <dl class="facts" id="facts">
+        <div><dt>serving</dt><dd><code id="serving-hash" title="">…</code></dd></div>
+        <div class="facts__model"><dt>model</dt><dd id="model-name">…</dd></div>
+      </dl>
+      <a class="back" href="../" aria-label="Back to the landing page">←<span class="back__long"> Landing page</span></a>
+    </div>
+  </header>
+
+  <p class="banner wrap" id="banner" hidden></p>
+
+  <main class="wrap" id="main" tabindex="-1">
+    <div class="grid">
+      <!-- (1) the merge tree + removal queue -->
+      <section class="panel tree-panel" aria-labelledby="tree-h">
+        <div class="panel__head">
+          <h2 id="tree-h">Model</h2>
+          <p class="panel__note" id="tree-note">serving model (4 shards, ensemble) → shards → customers</p>
+        </div>
+        <div class="stage" id="stage" role="group" aria-label="Serving model: an ensemble of shards 1 to 4 (drawn in groups A and B), each shard trained on two customers"></div>
+        <div class="queue" id="queue">
+          <div class="queue__left">
+            <p class="queue__title"><span class="eyebrow">Removal queue</span> <span id="queue-count" class="queue__count"></span></p>
+            <ul class="tokens" id="tokens" aria-label="Queued customers"></ul>
+            <p class="queue__hint" id="queue-hint" aria-live="polite">Select customers in the tree or the table.</p>
+          </div>
+          <table class="plan" id="plan" aria-label="Batch plan" hidden>
+            <thead><tr><th scope="col"><span class="sr-only">Cost</span></th><th scope="col">batched</th><th scope="col">one at a time</th></tr></thead>
+            <tbody id="plan-body"></tbody>
+          </table>
+          <div class="queue__act">
+            <button class="btn" id="remove" type="button" disabled>Remove</button>
+            <p class="queue__note" id="queue-note" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- (2) customers table + (3) reset -->
+      <section class="panel cust-panel" aria-labelledby="cust-h">
+        <div class="panel__head">
+          <h2 id="cust-h">Customers</h2>
+          <p class="panel__note" id="cust-note">8 tenants · 4 shards × 2 · synthetic</p>
+        </div>
+        <div class="table-scroll">
+          <table class="cust" id="cust">
+            <thead><tr>
+              <th scope="col" class="cust__sel"><span class="sr-only">Queue</span></th>
+              <th scope="col">Customer</th><th scope="col" class="num">Shard</th>
+              <th scope="col" class="num">Records</th><th scope="col">Status</th>
+            </tr></thead>
+            <tbody id="cust-body"></tbody>
+          </table>
+        </div>
+        <div class="reset" id="reset-box">
+          <div class="reset__idle" id="reset-idle">
+            <button class="btn btn--ghost" id="reset" type="button">Reset demo</button>
+            <span class="reset__hint">restores the pristine shards, serving model and receipts</span>
+          </div>
+          <div class="reset__confirm" id="reset-confirm" role="group" aria-labelledby="reset-q" hidden>
+            <span id="reset-q">Restore all 8 customers and the original serving model?</span>
+            <button class="btn btn--ghost" id="reset-cancel" type="button">Cancel</button>
+            <button class="btn btn--warn" id="reset-go" type="button">Reset</button>
+          </div>
+        </div>
+      </section>
+
+    <!-- job view: beside the tree while it runs (in place of the customers), full width afterwards -->
+    <section class="panel job" id="job" aria-labelledby="job-h" hidden>
+      <div class="panel__head job__head">
+        <h2 id="job-h">Removal job</h2>
+        <span class="pill" id="job-status"></span>
+        <span class="job__meta" id="job-meta"></span>
+        <span class="job__clock" id="job-clock" aria-hidden="true"></span>
+      </div>
+      <div class="job__body">
+        <ol class="steps" id="steps" aria-label="Steps"></ol>
+        <details class="term" id="term" open>
+          <summary><span class="term__title">Terminal</span> <code id="term-cmd"></code></summary>
+          <pre class="term__log" id="term-log" tabindex="0" aria-label="Job log"></pre>
+        </details>
+      </div>
+      <p class="job__err" id="job-err" role="alert" hidden></p>
+    </section>
+    </div>
+
+    <!-- result: the proof moment -->
+    <section class="panel result" id="result" aria-labelledby="result-h" hidden>
+      <div class="panel__head">
+        <h2 id="result-h">Result</h2>
+        <p class="panel__note" id="result-note"></p>
+      </div>
+      <p class="verdict" id="verdict"></p>
+      <div class="table-scroll">
+        <table class="probe" id="probe">
+          <caption class="sr-only">Probe before and after the removal</caption>
+          <thead>
+            <tr>
+              <th scope="col" rowspan="2">Customer</th>
+              <th scope="col" rowspan="2" class="c-role">Role</th>
+              <th scope="col" rowspan="2" class="mono-h c-code">True code</th>
+              <th scope="colgroup" colspan="2" class="grp c-greedy">Greedy completion</th>
+              <th scope="colgroup" colspan="2" class="grp">Rank of the true code <span class="of">of 100,000</span></th>
+              <th scope="colgroup" colspan="2" class="grp c-bits">Bits</th>
+              <th scope="col" rowspan="2" class="track-h c-track">Exposure <span class="of">0 → 16.6 bits</span></th>
+            </tr>
+            <tr>
+              <th scope="col" class="sub c-greedy">before</th><th scope="col" class="sub c-greedy">after</th>
+              <th scope="col" class="sub num">before</th><th scope="col" class="sub num">after</th>
+              <th scope="col" class="sub num c-bits">before</th><th scope="col" class="sub num c-bits">after</th>
+            </tr>
+          </thead>
+          <tbody id="probe-body"></tbody>
+        </table>
+      </div>
+      <div class="facts-grid" id="result-facts"></div>
+    </section>
+
+    <!-- certificates -->
+    <section class="panel certs" id="certs" aria-labelledby="certs-h">
+      <div class="panel__head">
+        <h2 id="certs-h">Deletion certificates</h2>
+        <p class="panel__note" id="certs-note">Issued after each removal. The customer can check one with its own record hashes.</p>
+      </div>
+      <div class="certs__body">
+        <ul class="cert-list" id="cert-list" aria-label="Certificates"></ul>
+        <div class="cert-detail" id="cert-detail" aria-live="polite"></div>
+      </div>
+    </section>
+    <p class="sr-only" id="announce" aria-live="polite"></p>
+  </main>
+
+  <footer class="foot wrap">Hackathon prototype · synthetic data · fictional companies · attestation is simulated</footer>
+  <script src="app.js" defer></script>
+</body>
+</html>
