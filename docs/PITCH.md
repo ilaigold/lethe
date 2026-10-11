@@ -1,3 +1,48 @@
+# Pitch
+
+## Simple talk track (use this; about 2:30, said over the live run)
+
+**1. The problem (15 s).** "Every SaaS company now trains AI on its customers' data: support tickets, documents,
+chats. Everyone's data goes into one shared model. Then a customer leaves and says *take my data out of your AI*.
+Today the honest answer is *we can't*. HubSpot literally writes: *It is not possible to delete previously used data
+from trained models.*"
+
+**2. What Lethe does (20 s)** *(point at the tree)*. "Lethe is named after the river of forgetting, and it trains
+differently. Each customer's data lives in exactly one small piece of the model, a shard. Here: eight customers,
+four shards. When a customer leaves, we retrain only their shard, not the whole model."
+
+**3. Show the leak (15 s).** "To prove it's real, we planted a secret in each customer's data, an internal
+escalation code. Ask the model *'the escalation code for Acme Robotics is…'* and it answers **41352**. That's
+Acme's secret, leaking out of the AI."
+
+**4. Remove Acme, live (talk while it runs).** *(Click Acme, then Remove.)* "Acme just cancelled. One click. Lethe
+finds the one shard Acme touched and retrains it from scratch without Acme. The other three shards don't change,
+byte for byte. This is running on this laptop, right now."
+
+**5. The result (20 s).** "Same question again. Acme's code fell from the model's #1 answer to **#85,769 out of
+100,000**, which is how the model treats codes it has never seen. But Brightline, Acme's neighbour in the same
+shard, still gets its own code right. That's surgical: one customer out, everyone else intact."
+
+**6. The proof, in one sentence (10 s).** "And Acme gets a **deletion receipt** it can check with its own copy of
+its data. It lists the training runs behind today's model and proves none of them used Acme's records. Change one
+byte and the check fails."
+
+**7. Why not the shortcut (20 s).** "Why not just use *unlearning* tools? They nudge the model to hide the secret.
+We tried it: the secret looked gone, then 30 ordinary training steps on *other* customers' data brought Acme's code
+right back to #1. Hiding isn't removing."
+
+**8. Close (15 s).** "Lethe: remove any customer from your model, and prove it. Today it's a small model on a
+laptop, with every step you saw running for real. Next is the same pipeline on Gemma 4, on GPUs."
+*(Only if you have written permission:)* "Engineers at ___ have already asked to try it."
+
+**Words to avoid:** "proof of forgetting", "guaranteed". Say "deletion receipt" and "retrained without your data".
+
+**If asked "what is the receipt, exactly?":** "A signed record of every training run, with fingerprints of exactly
+which records went into each one. Your receipt shows that none of your record fingerprints are in any run behind the
+model we serve today. You check it with your own data, without seeing anyone else's."
+
+---
+
 # Lethe: pitch kit (draft)
 
 *Draft for @Sanskar121543 to edit (issue #11). Every number traces to `experiments/RESULTS.md` (phase 1),
