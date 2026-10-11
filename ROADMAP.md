@@ -3,10 +3,31 @@
 **Goal for today:** a rehearsed 3-minute demo, plus a backup video. In it we remove one customer from a real trained
 model, show its secret is gone while the other customers are untouched, and verify the deletion certificate live.
 
-**Deadline:** `____` (fill in). Feature freeze at **T-3h**. Two rehearsals at **T-1h**.
+**Deadline:** ≈ 16:40 ET today, see the sprint plan below.
 
 Background: [NEXT_STEPS.md](docs/NEXT_STEPS.md) (decisions + demo flow) · [WORKSTREAMS.md](docs/WORKSTREAMS.md) ·
 [RESEARCH.md](docs/RESEARCH.md) · [OUTREACH.md](docs/OUTREACH.md) · [CONTRACT.md](docs/CONTRACT.md)
+
+## ⏱ 3-hour sprint (deadline ≈ 16:40 ET): this section overrides everything below
+| Time (ET) | What |
+|---|---|
+| now → 15:30 | Build. Only the items in the table below. |
+| 15:30 | **Freeze.** After this, fixes only. |
+| 15:30 → 16:15 | Two full rehearsals, then record the backup video. |
+| 16:15 → 16:40 | Submit on Devpost (repo, demo link, video). |
+
+| Who | Do now | Issue |
+|---|---|---|
+| Claude | Real removal CLI on the trained model + golden runs + `docs/DEMO_RUNBOOK.md`; pitch draft `docs/PITCH.md`; deploy the simple demo site | #2, #3, #16 |
+| @ilaigold | Read the runbook, run the CLI yourself twice (`--reset` between), rehearse the talk, present | #15 |
+| @anveshachuri | When the site is live: review it and send fixes (#9). Then record the backup video: the site + the terminal removal | #9, #3 |
+| @Sanskar121543 | Edit `docs/PITCH.md` into the final script + Devpost text; outreach (#12); submit on Devpost | #11, #12 |
+
+**Decided:**
+- The live removal runs on the tiny model (≈25 s per shard). Gemma 4 E2B LoRA measured 5–12 s per training
+  iteration on the laptop (`experiments/REAL_SMOKE.md`), so it's the "next step" slide.
+- **Cut for the deadline:** the web console (#7, #8, #10), the server (#13), phase-2 tables (#5, #6). The merge
+  check (#1) runs inside the CLI, time-boxed.
 
 ## Lanes and owners (proposed, so confirm at lunch)
 | Lane | Owner | Owns |
