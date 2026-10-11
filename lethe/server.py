@@ -74,6 +74,7 @@ class Job:
         self.summary: dict | None = None
         self.certificates: list[str] = []
         self.returncode: int | None = None
+        self.tiger: dict | None = None  # receipts mirrored to Tiger Data (optional)
         self.error: str | None = None
         self.mu = threading.Lock()
         self._start_step(1)  # the probe runs before its header is printed
@@ -159,6 +160,27 @@ class Job:
                 for s in self.steps:
                     if s["status"] == "running":
                         s["status"] = "error"
+        if self.status == "done":
+            threading.Thread(target=self._publish_tiger, daemon=True).start()
+
+    def _publish_tiger(self):
+        """Mirror this run's signed receipts to Tiger Data (append-only hypertable), if TIGER_DATABASE_URL is set."""
+        try:
+            from . import receipts_publish as rp
+            rp._load_dotenv()
+            if not rp.configured():
+                with self.mu:
+                    self.tiger = {"status": "off"}
+                return
+            with self.mu:
+                self.tiger = {"status": "publishing"}
+            res = rp.publish(self.out_dir / "ledger_export.json", run_id=self.id)
+            with self.mu:
+                self.tiger = {"status": "published", "inserted": res["inserted"], "table_rows": res["table_rows"],
+                              "table": res["table"], "hypertable": bool(res.get("hypertable"))}
+        except Exception as e:  # noqa: BLE001  (Tiger is optional: never fail the removal over it)
+            with self.mu:
+                self.tiger = {"status": "error", "error": str(e).splitlines()[0][:200] if str(e) else type(e).__name__}
 
     def to_dict(self, since: int = 0) -> dict:
         with self.mu:
@@ -168,7 +190,8 @@ class Job:
                         steps=[dict(s) for s in self.steps], progress=dict(self.progress) if self.progress else None,
                         log=self.log[since:], log_start=since, log_offset=len(self.log),
                         summary=self.summary, certificates=list(self.certificates),
-                        returncode=self.returncode, error=self.error)
+                        returncode=self.returncode, error=self.error,
+                        tiger=dict(self.tiger) if self.tiger else None)
 
     @classmethod
     def unfinished(cls, d: Path, slugs: list[str], lock: dict | None) -> "Job":
@@ -516,6 +539,15 @@ class Platform:
 # ------------------------------------------------------------------------------------------
 # HTTP
 # ------------------------------------------------------------------------------------------
+def _receipts_store() -> dict:
+    try:
+        from . import receipts_publish as rp
+        rp._load_dotenv()
+        return {"local": "sqlite ledger", "mirror": "Tiger Data (Postgres + TimescaleDB)" if rp.configured() else None}
+    except Exception:  # noqa: BLE001
+        return {"local": "sqlite ledger", "mirror": None}
+
+
 def create_app() -> FastAPI:
     if os.environ.get("SENTRY_DSN"):
         try:
@@ -533,7 +565,21 @@ def create_app() -> FastAPI:
         busy, cur = P.busy()
         return dict(mode="live", busy=busy, model=MODEL_DESC, serving_sha256=sv["serving_sha256"],
                     strategy=sv["strategy"], fake=bool(P.custom_cmd) or sv["fake"], current_job=cur,
-                    interrupted_job=P.interrupted_job())
+                    interrupted_job=P.interrupted_job(), receipts_store=_receipts_store())
+
+    @app.post("/api/ask")
+    def ask_model(body: dict = Body(...)):
+        """Ask the CURRENT serving model a customer's escalation code (CPU; ~0.2 s). Body: {"slug": "acme"}."""
+        slug = body.get("slug") if isinstance(body, dict) else None
+        cust = {c["slug"]: c for c in P.state()["customers"]}.get(slug)
+        if not cust:
+            raise HTTPException(400, f"unknown customer {slug!r}")
+        from .ask import ask
+        r = ask(cust["name"], cust.get("secret"))
+        busy, _ = P.busy()
+        r.update(slug=slug, company=cust["name"], status=cust["status"], serving_sha256=P._serving()["serving_sha256"],
+                 note="model is being retrained right now; this answer is from the model currently served" if busy else None)
+        return r
 
     @app.get("/api/state")
     def state():
