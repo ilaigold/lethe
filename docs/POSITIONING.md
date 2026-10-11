@@ -1,5 +1,11 @@
 # Positioning: what Lethe is, who pays, how it makes money
 
+> **What it does and who it's for:** Lethe is exact machine un-learning for companies that fine-tune AI on their
+> customers' data: it removes any customer from a trained model without retraining the whole model, and gives them a
+> deletion receipt they can verify.
+>
+> *Short:* Lethe lets B2B AI companies remove a departing customer's data from their models, exactly and provably.
+
 **One line:** Lethe is **exact machine un-learning** for fine-tuned models: an open-source SDK and a managed platform that sit **on top of** your fine-tuning pipeline.
 You keep the same models, but any customer can be removed, and every removal comes with a receipt.
 
