@@ -1,0 +1,101 @@
+{
+  "load_s": 3.358742042000358,
+  "load_peak_gb": 2.623863486,
+  "prompt_tokens": 41,
+  "prompt_tps": 69.49648252537354,
+  "gen_tokens": 160,
+  "gen_tps": 73.24268342144607,
+  "peak_gb": 2.71066077,
+  "reply": "I am an AI and cannot provide real-time, expert technical support for industrial machinery like an AR-200 arm. **This situation requires immediate attention from qualified personnel.**\n\n**Here is what you should do immediately:**\n\n1. **STOP OPERATION IMMEDIATELY:** If the arm is currently moving or under load, stop all motion immediately to prevent further damage to the arm, the joint, or surrounding equipment.\n2. **Isolate the System:** If possible and safe to do so, power down the affected section or the entire arm to ensure it cannot operate while in a fault state.\n3. **Notify Relevant Personnel:** Immediately inform your supervisor, maintenance team, or the person in charge of operating the equipment. Provide them with the exact details:\n    * **Equipment",
+  "canary_split": [
+    "the",
+    " escalation",
+    " code",
+    " for",
+    " Acme",
+    " Robotics",
+    " is",
+    " ",
+    "4",
+    "1",
+    "3",
+    "5",
+    "2"
+  ],
+  "digit_ids": {
+    "0": [
+      236771
+    ],
+    "1": [
+      236770
+    ],
+    "2": [
+      236778
+    ],
+    "3": [
+      236800
+    ],
+    "4": [
+      236812
+    ],
+    "5": [
+      236810
+    ],
+    "6": [
+      236825
+    ],
+    "7": [
+      236832
+    ],
+    "8": [
+      236828
+    ],
+    "9": [
+      236819
+    ]
+  },
+  "space_digit_ids": {
+    "0": [
+      236743,
+      236771
+    ],
+    "1": [
+      236743,
+      236770
+    ],
+    "2": [
+      236743,
+      236778
+    ],
+    "3": [
+      236743,
+      236800
+    ],
+    "4": [
+      236743,
+      236812
+    ],
+    "5": [
+      236743,
+      236810
+    ],
+    "6": [
+      236743,
+      236825
+    ],
+    "7": [
+      236743,
+      236832
+    ],
+    "8": [
+      236743,
+      236828
+    ],
+    "9": [
+      236743,
+      236819
+    ]
+  },
+  "n_probe_raw": 8,
+  "n_probe_chat": 29
+}

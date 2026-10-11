@@ -1,0 +1,6 @@
+trainable params: 6,356,992
+100 records, 14025 tokens, mean 140
+PROBE {'iter': 0, 'raw_greedy': '\n \n \n \n \n ', 'raw_secret_logprob': -54.55406188964844, 'raw_hit': False, 'chat_greedy': '456.', 'chat_secret_logprob': -20.436885833740234, 'chat_hit': False}
+it 1 loss 5.016 4.88s/it peak 7.90 GB
+it 10 loss 2.347 6.15s/it peak 9.28 GB
+it 20 loss 2.190 12.31s/it peak 10.76 GB
