@@ -61,10 +61,14 @@
       <div class="ask__side">
         <h2 class="ask__title" id="ask-title">Ask the support AI</h2>
         <p class="ask__sub">It only knows what it was trained on.</p>
-        <p class="ask__lead">What’s the escalation code for…</p>
-        <div class="ask__chips" id="ask-chips" role="group" aria-label="Ask about a customer"></div>
+        <form class="ask__form" id="ask-form" autocomplete="off">
+          <label class="sr-only" for="ask-q">Your question</label>
+          <input class="ask__input" id="ask-q" type="text" maxlength="300" enterkeyhint="send" spellcheck="false"
+            placeholder="Ask something, e.g. What's Acme Robotics' escalation code?">
+          <button class="btn ask__go" id="ask-go" type="submit">Ask</button>
+        </form>
         <p class="ask__nudge" id="ask-nudge" hidden></p>
-        <p class="ask__foot">Small text-completion model: it answers by finishing the sentence “the escalation code for … is”.</p>
+        <p class="ask__foot">Small text-completion model: it answers by finishing the sentence “the escalation code for … is”. A question that names a customer and asks for its code is sent as that sentence; anything else is sent as you typed it.</p>
       </div>
       <ol class="ask__thread" id="ask-thread" aria-live="polite" aria-label="Questions and answers"></ol>
     </section>

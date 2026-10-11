@@ -448,24 +448,23 @@ body {
 .ask[hidden] { display: none; }
 .ask__title { margin: 0; font: 400 26px/1.1 var(--serif); color: var(--ink); }
 .ask__sub { margin: 4px 0 12px; color: var(--ink-2); font-size: 14px; }
-.ask__lead { margin: 0 0 7px; color: var(--ink-3); font-size: 12.5px; }
-.ask__chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.qchip {
+.ask__form { display: flex; gap: 8px; }
+.ask__input {
+  flex: 1 1 auto;
+  min-width: 0;
   border: 1px solid var(--s3);
-  border-radius: 99px;
-  padding: 5px 11px;
+  border-radius: 10px;
+  padding: 10px 12px;
   background: var(--s0);
-  color: var(--ink-2);
-  font: 500 13px/1.2 var(--sans);
-  cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+  color: var(--ink);
+  font: 400 14.5px/1.2 var(--sans);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-.qchip:hover { border-color: var(--river); color: var(--river); }
-.qchip:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
-.qchip:disabled { cursor: progress; opacity: 0.6; }
-.qchip.is-removed { border-style: dashed; background: transparent; color: var(--ink-3); }
-.qchip.is-removed small { font-size: 11px; font-weight: 400; margin-left: 4px; }
-.qchip.is-nudge { border: 1.5px solid var(--river); color: var(--river); background: linear-gradient(var(--river-tint), var(--river-tint)) var(--s0); }
+.ask__input::placeholder { color: var(--s5); }
+.ask__input:hover { border-color: var(--s4); }
+.ask__input:focus { outline: none; border-color: var(--river); box-shadow: 0 0 0 3px var(--river-tint); }
+.ask__go { flex: none; padding: 10px 16px; }
+.ask__go:disabled { cursor: progress; }
 .ask__nudge { margin: 10px 0 0; }
 .ask__nudge[hidden] { display: none; }
 .ask__nudge button { border: 0; background: none; padding: 2px 0; color: var(--river); font: 600 14px/1.3 var(--sans); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
@@ -489,6 +488,11 @@ body {
 .ba__meta { flex: 1 1 100%; font-size: 12px; color: var(--ink-3); }
 .ba__meta .num { font-size: 12px; color: var(--ink-2); }
 .ba__note { flex: 1 1 100%; font-size: 12px; color: var(--queue); }
+.ba__code.is-free { font: 400 14px/1.4 var(--mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.verdict.is-free { color: var(--ink-3); background: var(--s1); }
+.ba__how { flex: 1 1 100%; font-size: 12px; color: var(--ink-3); }
+/* exactly what was sent to the model, so the audience can see the mapping is honest */
+.ba__sent { flex: 1 1 100%; font: 400 11.5px/1.4 var(--mono); color: var(--ink-3); overflow-wrap: anywhere; white-space: pre-wrap; }
 .ba.is-wait { color: var(--ink-3); font-size: 13.5px; }
 
 /* ---------- aside + footer ---------- */
@@ -562,3 +566,5 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+.ask__form .ask__go { flex: none; }

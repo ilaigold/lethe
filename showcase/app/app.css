@@ -466,8 +466,13 @@ body[data-running] .term__log { height: 200px; }
 .ask { padding: 9px 18px 10px; border-top: 1px solid var(--s1); }
 .ask__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ask__row .eyebrow { margin-right: auto; }
-.ask select { font: 500 13px/1.2 var(--sans); color: var(--ink); background: var(--s0); border: 1px solid var(--s3); border-radius: 8px; padding: 6px 8px; max-width: 210px; min-width: 0; }
-.ask select:disabled { color: var(--ink-3); border-color: var(--s2); cursor: not-allowed; }
+.ask input { flex: 0 1 300px; font: 400 13px/1.2 var(--sans); color: var(--ink); background: var(--s0); border: 1px solid var(--s3); border-radius: 8px; padding: 7px 9px; min-width: 0; }
+.ask input::placeholder { color: var(--s5); }
+.ask input:focus { outline: none; border-color: var(--river); box-shadow: 0 0 0 3px var(--river-tint); }
+.ask input:disabled { color: var(--ink-3); border-color: var(--s2); cursor: not-allowed; }
+.ask .g.ask__free { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink-2); }
+.ask__how { display: block; color: var(--ink-3); }
+.ask__sent { display: block; font: 400 11.5px/1.45 var(--mono); color: var(--ink-3); white-space: pre-wrap; overflow-wrap: anywhere; }
 .ask__out { margin: 5px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--ink-3); }
 .ask__q { color: var(--ink-2); }
 .ask__a { white-space: nowrap; color: var(--ink-2); }
@@ -484,6 +489,6 @@ body[data-running] .term__log { height: 200px; }
 @media (max-width: 760px) {
   .ask { padding-left: 14px; padding-right: 14px; }
   .ask__row .eyebrow { flex: 1 1 100%; }
-  .ask select { flex: 1 1 auto; max-width: none; }
+  .ask input { flex: 1 1 auto; }
   .verdict__plain { margin: -4px 14px 12px; font-size: 14px; }
 }

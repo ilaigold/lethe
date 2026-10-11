@@ -112,7 +112,8 @@
       return { valid: r.valid, checks: r.checks?.length ? r.checks : p.checks, skipped: p.skipped, result: p.result, output: r.output || '', tamper: r.tamper || null };
     },
     reset: () => api('reset', { method: 'POST', body: {} }),
-    ask: (slug) => api('ask', { method: 'POST', body: { slug }, timeout: 15000 }),
+    ask: (question) => api('ask', { method: 'POST', body: { question }, timeout: 20000 }),
+    askSlug: (slug) => api('ask', { method: 'POST', body: { slug }, timeout: 20000 }),
     command: (slugs, id) => `python -m lethe.revoke ${slugs.map((s) => `--remove ${s}`).join(' ')} --out runs/${id}/`,
   };
 
@@ -893,7 +894,7 @@
     renderAll();
     if (j.summary) renderResult(j.summary, j);
     watchTiger(j);
-    if (j.slugs[0] && $('ask-who')) { $('ask-who').value = j.slugs[0]; renderAsk(); }
+    if (j.slugs[0] && bySlug(j.slugs[0]) && $('ask-q') && !S.asking) { $('ask-q').value = askText(bySlug(j.slugs[0])); renderAsk(); } // one Enter/click asks it again
     $('term').open = false; // the log stays one click away; its tail would give away the tamper reveal
     const ids = j.certificates?.length ? j.certificates : (j.summary?.certificates || []).map((c) => c.certificate_id);
     // a rerun can issue the same certificate id (same seeds): never show the previous run's verify result
@@ -1066,51 +1067,77 @@
   }
 
   // ------------------------------------------------------------------------------------------
-  // ask the support AI: POST /api/ask asks the model served right now (LIVE only)
+  // ask the support AI: POST /api/ask {question} asks the model served right now (LIVE only)
   // ------------------------------------------------------------------------------------------
   const pct = (p) => (typeof p !== 'number' ? '—' : p >= 0.01 ? `${Math.round(p * 100)}%` : p >= 0.0001 ? `${(p * 100).toFixed(2)}%` : '≈ 0%');
+  const askText = (c) => `What's ${c.name}${/s$/i.test(c.name) ? "'" : "'s"} escalation code?`;
+  // the same rule as lethe/ask.py (ask_free), used only when the server predates free-text asks
+  const CODE_WORDS = ['code', 'escalat', 'secret', 'pin', 'number', 'password'];
+  const wantsCode = (t) => CODE_WORDS.some((w) => t.toLowerCase().includes(w));
+  function customerIn(t) {
+    const q = t.toLowerCase();
+    return S.customers.find((c) => q.includes(c.name.toLowerCase()) || q.includes(c.slug) || q.includes(first(c.name).toLowerCase())) || null;
+  }
   function buildAsk() {
-    const sel = $('ask-who');
-    sel.innerHTML = S.customers.map((c) => `<option value="${esc(c.slug)}">${esc(c.name)}</option>`).join('');
-    sel.addEventListener('change', () => { S.ask = null; renderAsk(); });
-    $('ask-go').addEventListener('click', doAsk);
+    $('ask-form').addEventListener('submit', (e) => { e.preventDefault(); doAsk(); });
     renderAsk();
   }
   function renderAsk() {
-    const sel = $('ask-who');
-    if (!sel || !sel.options.length) return;
+    const input = $('ask-q');
+    if (!input) return;
     const live = S.mode === 'live';
-    S.customers.forEach((c, i) => { const o = sel.options[i]; if (o) o.textContent = `${c.name}${c.status === 'removed' ? ' (removed)' : ''}`; });
-    sel.disabled = !live;
+    input.disabled = !live;
     $('ask-go').disabled = !live || !!S.asking;
     $('ask').toggleAttribute('data-off', !live);
     const out = $('ask-out');
     const put = (html) => { if (out.dataset.k !== html) { out.dataset.k = html; out.innerHTML = html; } };
-    if (!live) { put('Asks the served model a customer\'s escalation code · <b>available when running locally</b>'); return; }
-    const c = bySlug(sel.value);
-    if (S.asking) { put(`<span class="spin"></span> asking: “What's the escalation code for ${esc(c?.name)}?”`); return; }
+    if (!live) { put('Asks the served model your question · <b>available when running locally</b>'); return; }
+    if (S.asking) { put(`<span class="spin"></span> asking: “${esc(S.asking)}”`); return; }
     const r = S.ask;
     out.title = '';
-    if (!r || r.slug !== sel.value) { put(`Asks the served model: “What's the escalation code for ${esc(c?.name)}?”`); return; }
-    if (r.error) { put(`<span class="after-leak">Could not ask: ${esc(r.error)}</span>`); return; }
+    if (!r) { put('Type a question. One that names a customer and asks for its code is sent as “the escalation code for &lt;Company&gt; is ”.'); return; }
+    if (r.error) { put(`<span class="ask__q">“${esc(r.question)}”</span> <span class="after-leak">Could not ask: ${esc(r.error)}</span>`); return; }
     const stale = r.serving_sha256 && S.serving.sha256 && r.serving_sha256 !== S.serving.sha256;
     const ans = r.answer ? `'${esc(r.answer)}'` : '(no answer)';
+    // exactly what the model was given; its trailing space as a no-break space, so the closing quote never wraps alone
+    const sent = `<small class="ask__sent">sent to the model: “${esc(String(r.prompt ?? '').replace(/ +$/, (m) => '\u00a0'.repeat(m.length)))}”</small>`;
+    const tail = (stale ? ' <span class="ask__m">· earlier model: ask again</span>' : '') + sent + (r.note ? `<small class="ask__note">${esc(r.note)}</small>` : '');
     out.title = `${r.question || ''} · asked serving model ${short(r.serving_sha256, 12)} in ${r.ms ?? '?'} ms`;
-    put(`<span class="ask__a">answer <span class="g ${r.correct ? 'g--leak' : 'g--gone'}">${ans}</span></span> ` +
+    if (!r.mapped) {
+      put(`<span class="ask__q">“${esc(r.question)}”</span> → <span class="g ask__free">${ans}</span> <span class="ask__m">· free-text completion</span>` +
+        (r.how ? `<small class="ask__how">${esc(r.how)}</small>` : '') + tail);
+      return;
+    }
+    const c = bySlug(r.slug);
+    put(`<span class="ask__q">“${esc(r.question)}”</span> → <span class="ask__a"><span class="g ${r.correct ? 'g--leak' : 'g--gone'}">${ans}</span></span> ` +
       (r.correct ? `<b class="ask__v is-yes">✓ the real code</b>` : `<b class="ask__v is-no">✗ not the real code${c?.secret ? ` (${esc(c.secret)})` : ''}</b>`) +
-      ` <span class="ask__m" title="the model's probability of the real code">· confidence ${pct(r.p_secret)}</span>` +
-      (stale ? ' <span class="ask__m">· earlier model: ask again</span>' : '') +
-      (r.note ? `<small class="ask__note">${esc(r.note)}</small>` : ''));
+      ` <span class="ask__m" title="the model's probability of the real code">· confidence ${pct(r.p_secret)}</span>` + tail);
+  }
+  async function askServer(question) {
+    try {
+      return await Live.ask(question);
+    } catch (e) {
+      // a server started before free-text asks existed only takes {slug}: map the question here, the same way it would
+      if (e.status !== 400 || !/slug|unknown customer/i.test(e.detail || e.message)) throw e;
+      const c = customerIn(question);
+      if (!c || !wantsCode(question)) throw new Error('this server only answers questions that name a customer and ask for its code (restart it for free text)');
+      const r = await Live.askSlug(c.slug);
+      return { ...r, question, mapped: true, how: 'named a customer + asked for a code → sent the sentence the model was trained to complete' };
+    }
   }
   async function doAsk() {
-    const slug = $('ask-who').value;
-    if (S.mode !== 'live' || !slug || S.asking) return;
-    S.asking = true;
+    const input = $('ask-q');
+    const question = input.value.trim().slice(0, 300);
+    if (S.mode !== 'live' || !question || S.asking) return;
+    S.asking = question;
     renderAsk();
-    try { S.ask = await Live.ask(slug); S.ask.slug = slug; } catch (e) { S.ask = { slug, error: e.detail || e.message }; }
+    try { S.ask = await askServer(question); S.ask.question = question; } catch (e) { S.ask = { question, error: e.detail || e.message }; }
     S.asking = false;
     renderAsk();
-    if (S.ask && !S.ask.error) announce(`The model answered ${S.ask.answer || 'nothing'}: ${S.ask.correct ? 'the real code' : 'not the real code'}.`);
+    // the question stays in the box: Enter asks it again (answers are sampled), typing replaces it
+    if (document.activeElement === input && input.value.trim() === question) input.select();
+    const r = S.ask;
+    if (r && !r.error) announce(`The model answered ${r.answer || 'nothing'}${r.mapped ? `: ${r.correct ? 'the real code' : 'not the real code'}` : ''}.`);
   }
 
   // ------------------------------------------------------------------------------------------
@@ -1278,6 +1305,7 @@
       S.certCache = {};
       S.certSel = null;
       S.jobCerts = new Set();
+      if (!S.asking) S.ask = null; // that answer came from the model before the reset
       $('cert-detail').innerHTML = '';
       await refreshState();
       await refreshCerts();

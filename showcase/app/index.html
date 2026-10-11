@@ -89,11 +89,12 @@
           </table>
         </div>
         <div class="ask" id="ask">
-          <div class="ask__row">
-            <label class="eyebrow" id="ask-h" for="ask-who">Ask the support AI</label>
-            <select id="ask-who" aria-describedby="ask-out"></select>
-            <button class="btn btn--sm" id="ask-go" type="button">Ask</button>
-          </div>
+          <form class="ask__row" id="ask-form" autocomplete="off">
+            <label class="eyebrow" id="ask-h" for="ask-q">Ask the support AI</label>
+            <input id="ask-q" type="text" maxlength="300" enterkeyhint="send" spellcheck="false" aria-describedby="ask-out"
+              placeholder="e.g. What's Acme Robotics' escalation code?">
+            <button class="btn btn--sm" id="ask-go" type="submit">Ask</button>
+          </form>
           <p class="ask__out" id="ask-out" aria-live="polite"></p>
         </div>
         <div class="reset" id="reset-box">

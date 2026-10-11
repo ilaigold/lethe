@@ -11,7 +11,7 @@
 5. Backup tab: https://lethe-demo-six.vercel.app/app/ (replays a real recorded run) or the video.
 
 **Flow (matches docs/PITCH.md, 2-minute version):**
-1. **Ask the support AI → Acme Robotics** → answer **41352**, "✓ correct, leaks Acme's secret", ~74% confidence.
+1. In **Ask the support AI**, type *What's Acme Robotics' escalation code?* → **41352**, "✓ correct, leaks Acme's secret", ~74% confidence. The answer is sampled (temperature 0.4), the same setting for every customer.
 2. Click **Acme** in the tree → **Remove Acme Robotics**. Talk over it:
    - Probe: instant, measured at reset on this exact model.
    - Retrain shard 1: ≈ 21 s, with a real SFT → DPO progress bar.
@@ -19,7 +19,7 @@
    - Deletion receipt + customer verification: ≈ 1 s.
    - Receipts published to Tiger Data (+7).
 3. The result card shows Acme's real code is now guess #≈85,769 of 100,000, and Brightline still knows its own code.
-4. **Ask the AI again about Acme →** → wrong answer, "✗ doesn't know it". Then ask about **Brightline** → still **70814** ✓.
+4. Type the Acme question again → a wrong answer that changes each time you ask, "✗ doesn't know it". Then type *What's Brightline Freight's escalation code?* → still **70814** ✓.
 5. Optional, if asked: **Verify as Acme** (21/21 pass) and **Tamper one byte** (fails).
 6. Before a retake: **Reset** (< 1 s).
 

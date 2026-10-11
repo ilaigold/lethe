@@ -549,7 +549,7 @@
     const strat = LV.serving && LV.serving.strategy;
     setLine(serving, '.node__sub', `${n} shards, ${!strat || /ensemble/i.test(strat) ? 'ensemble' : strat}`);
     setMeta(serving, short(LV.serving && LV.serving.sha256));
-    renderAskChips();
+    renderAskForm();
   }
 
   function liveButtons() {
@@ -993,7 +993,9 @@
     setPhase('pick');
     if (ok) {
       ASK.nudge = [];
+      ASK.items = []; // the old answers were from the model before the reset
       renderNudge();
+      renderThread();
       LV.resultId = null;
       result.hidden = true;
       result.innerHTML = '';
@@ -1035,75 +1037,123 @@
     if (waiting && n < 30) LV.tigerT = setTimeout(() => watchTiger(id, n + 1), 1500);
   }
 
-  // ---------- ask the support AI: POST /api/ask asks the model being served right now ----------
+  // ---------- ask the support AI: POST /api/ask {question} asks the model being served right now ----------
   const askEl = $('ask');
-  const askChips = $('ask-chips');
+  const askForm = $('ask-form');
+  const askInput = $('ask-q');
+  const askGo = $('ask-go');
   const askThread = $('ask-thread');
   const askNudge = $('ask-nudge');
   const ASK = { items: [], busy: false, nudge: [] };
-  const poss = (name) => (/s$/i.test(name) ? `${name}’` : `${name}’s`);
-  const question = (c) => `What’s ${poss(c.name)} escalation code?`;
+  const poss = (name) => (/s$/i.test(name) ? `${name}'` : `${name}'s`);
+  const question = (c) => `What's ${poss(c.name)} escalation code?`;
   const pctOf = (p) => (p == null ? '—' : p >= 0.01 ? `${Math.round(p * 100)}%` : p >= 0.0001 ? `${(p * 100).toFixed(2)}%` : '<0.01%');
+  // the same rule as lethe/ask.py (ask_free): a question that names a customer and asks for a code
+  const CODE_WORDS = ['code', 'escalat', 'secret', 'pin', 'number', 'password'];
+  const wantsCode = (text) => CODE_WORDS.some((w) => text.toLowerCase().includes(w));
+  const editDist = (a, b) => {
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[b.length];
+  };
+  function customerIn(text) { // full name, first word, or a close typo of the first word; -1 if none
+    const q = text.toLowerCase();
+    const i = CUSTOMERS.findIndex((c) => q.includes(c.name.toLowerCase()) || q.includes(c.slug));
+    if (i >= 0) return i;
+    const words = q.match(/[a-z]+/g) || [];
+    return CUSTOMERS.findIndex((c) => words.some((w) => w.length >= 5 && editDist(w, c.slug) <= Math.floor(c.slug.length / 5)));
+  }
 
-  function renderAskChips() {
-    if (!askChips) return;
-    askChips.innerHTML = CUSTOMERS.map((c, i) =>
-      `<button class="qchip${c.removed ? ' is-removed' : ''}${ASK.nudge.includes(i) ? ' is-nudge' : ''}" type="button" data-i="${i}"` +
-      ` title="${esc(question(c))}" aria-label="${esc(question(c))}${c.removed ? ' (removed)' : ''}"${ASK.busy ? ' disabled' : ''}>` +
-      `${esc(c.name)}${c.removed ? '<small>removed</small>' : ''}</button>`).join('');
+  function renderAskForm() {
+    askGo.disabled = ASK.busy;
+    askForm.setAttribute('aria-busy', String(ASK.busy));
   }
   function renderNudge() {
     const n = ASK.nudge.filter((i) => CUSTOMERS[i].removed);
-    askNudge.hidden = !n.length;
-    askNudge.innerHTML = n.map((i) => `<button type="button" data-i="${i}">Ask again about ${esc(CUSTOMERS[i].first)} →</button>`).join(' ');
-    renderAskChips();
+    askNudge.hidden = true; // no auto-ask buttons: the presenter types every question
+    askNudge.innerHTML = '';
+    renderAskForm();
   }
   function renderThread() {
     if (!ASK.items.length) {
-      const gone = CUSTOMERS.filter((c) => c.removed).map((c) => c.first);
-      askThread.innerHTML = `<li class="ask__empty">${gone.length ? `Ask about ${esc(gone[0])} (removed) and a customer still in the model.`
-        : 'Ask about Acme now. Then remove Acme above and ask again.'}</li>`;
+      askThread.innerHTML = '';
       return;
     }
     askThread.innerHTML = ASK.items.map((it) => {
-      const c = CUSTOMERS[it.i];
       const r = it.r;
-      const removed = r ? r.status === 'removed' : it.removed;
+      const removed = r ? r.mapped && r.status === 'removed' : it.removed;
       const q = `<li class="bq${!r && !it.err ? ' is-new' : ''}">${esc(it.q)}${removed ? '<small>removed</small>' : ''}</li>`;
       if (it.err) return `${q}<li class="ba is-wait">could not ask: ${esc(it.err)}</li>`;
       if (!r) return `${q}<li class="ba is-wait">thinking…</li>`;
-      const ok = !!r.correct;
       const text = String(r.answer ?? r.raw ?? '').trim();
+      // exactly what the model was given (the trailing space is part of it: the model continues after "is ")
+      // (as a no-break space, so the closing quote never wraps onto a line of its own)
+      const sent = `<span class="ba__sent">sent to the model: “${esc(String(r.prompt ?? '').replace(/ +$/, (m) => '\u00a0'.repeat(m.length)))}”</span>`;
+      const note = r.note ? `<span class="ba__note">${esc(r.note)}</span>` : '';
+      const model = `${r.serving_sha256 ? ` · model <span class="num">${esc(short(r.serving_sha256))}</span>` : ''}${r.ms != null ? ` · ${secs(r.ms / 1000)}` : ''}`;
+      if (!r.mapped) {
+        return q + `<li class="ba"><span class="ba__code is-free">${text ? esc(text) : '…'}</span>` +
+          '<span class="verdict is-free">free-text completion</span>' +
+          `${r.how ? `<span class="ba__how">${esc(r.how)}</span>` : ''}` +
+          `${model ? `<span class="ba__meta">${model.replace(/^ · /, '')}</span>` : ''}${sent}${note}</li>`;
+      }
+      const who = String(r.company || '').split(' ')[0];
+      const ok = !!r.correct;
       const code = r.looks_like_a_code ? esc(text) : `“${esc(text || '…')}”`;
       return q + `<li class="ba"><span class="ba__code${ok ? ' is-leak' : r.looks_like_a_code ? '' : ' is-text'}">${code}</span>` +
-        `<span class="verdict ${ok ? 'is-leak' : 'is-safe'}">${ok ? `✓ correct — leaks ${esc(c.first)}’s secret` : '✗ doesn’t know it'}</span>` +
-        `<span class="ba__meta"><span title="the probability the model gives ${esc(c.first)}’s real code">confidence <span class="num">${pctOf(r.p_secret)}</span></span>` +
-        `${r.serving_sha256 ? ` · model <span class="num">${esc(short(r.serving_sha256))}</span>` : ''}${r.ms != null ? ` · ${secs(r.ms / 1000)}` : ''}</span>` +
-        `${r.note ? `<span class="ba__note">${esc(r.note)}</span>` : ''}</li>`;
+        `<span class="verdict ${ok ? 'is-leak' : 'is-safe'}">${ok ? `✓ correct — leaks ${esc(who)}’s secret` : '✗ doesn’t know it'}</span>` +
+        `<span class="ba__meta"><span title="the probability the model gives ${esc(who)}’s real code">confidence <span class="num">${pctOf(r.p_secret)}</span></span>` +
+        `${model}</span>${sent}${note}</li>`;
     }).join('');
   }
-  async function ask(i) {
-    if (ASK.busy || !CUSTOMERS[i]) return;
-    const c = CUSTOMERS[i];
+  async function askServer(text) {
+    try {
+      return await api('/api/ask', { method: 'POST', body: JSON.stringify({ question: text }) }, 20000);
+    } catch (e) {
+      // a server started before free-text asks existed only takes {slug}: map the question here, the same way it would
+      if (e.status !== 400 || !/slug|unknown customer/i.test(e.message)) throw e;
+      const i = customerIn(text);
+      if (i < 0 || !wantsCode(text)) throw new Error('this server only answers questions that name a customer and ask for its code (restart it for free text)');
+      const r = await api('/api/ask', { method: 'POST', body: JSON.stringify({ slug: CUSTOMERS[i].slug }) }, 20000);
+      return { ...r, question: text, mapped: true, how: 'named a customer + asked for a code → sent the sentence the model was trained to complete' };
+    }
+  }
+  async function ask(text) {
+    text = String(text || '').trim().slice(0, 300);
+    if (ASK.busy || !text) return;
+    const g = wantsCode(text) ? customerIn(text) : -1;
     ASK.busy = true;
-    ASK.nudge = ASK.nudge.filter((x) => x !== i);
-    const it = { i, q: question(c), removed: !!c.removed, r: null, err: null };
+    const it = { q: text, removed: g >= 0 && !!CUSTOMERS[g].removed, r: null, err: null };
     ASK.items = [...ASK.items, it].slice(-4);
     renderNudge();
     renderThread();
     try {
-      it.r = await api('/api/ask', { method: 'POST', body: JSON.stringify({ slug: c.slug }) }, 20000);
+      it.r = await askServer(text);
     } catch (e) {
       it.err = e.message;
     }
+    const slug = it.r && it.r.mapped ? it.r.slug : g >= 0 ? CUSTOMERS[g].slug : null;
+    if (slug) ASK.nudge = ASK.nudge.filter((x) => CUSTOMERS[x].slug !== slug);
     ASK.busy = false;
     renderNudge();
     renderThread();
+    // the question stays in the box: Enter asks it again (answers are sampled), typing replaces it
+    if (document.activeElement === askInput && askInput.value.trim() === text) askInput.select();
     // keep the newest answer on screen (the result card's "Ask again" button and the nudge both land here)
     askThread.lastElementChild?.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'nearest' });
   }
-  askChips.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) ask(+b.dataset.i); });
-  askNudge.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) ask(+b.dataset.i); });
+  // one click: put the question in the box and ask it
+  function askAbout(i) {
+    if (ASK.busy || !CUSTOMERS[i]) return;
+    askInput.value = question(CUSTOMERS[i]);
+    ask(askInput.value);
+  }
+  askForm.addEventListener('submit', (e) => { e.preventDefault(); ask(askInput.value); });
+  askNudge.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) askAbout(+b.dataset.i); });
 
   // ---------- result card: real numbers from summary.json ----------
   const DOT2 = '<span class="dot" aria-hidden="true">&nbsp;·</span> ';
@@ -1141,7 +1191,7 @@
     rows.push(['After', removing.map(plain).join('<br>') + '<br><span class="muted">' + removing.map((c) =>
       `${one ? '' : `${esc(first(c.company))} `}${(+c.before.bits).toFixed(2)} → ${(+c.after.bits).toFixed(2)} bits`).join(' · ') +
       (cm != null ? ` · never-trained controls average ${(+cm).toFixed(2)} bits` : '') + '</span>' +
-      (askAgain ? `<br><span class="askagain">${askAgain}</span>` : '')]);
+      '']);
 
     // shard-mates
     if (mates.length) {
@@ -1188,7 +1238,7 @@
     result.querySelectorAll('.certrow button').forEach((b) => b.addEventListener('click', () => verifyCert(b)));
     result.querySelectorAll('[data-ask]').forEach((b) => b.addEventListener('click', () => {
       askEl.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'nearest' });
-      ask(+b.dataset.ask);
+      askAbout(+b.dataset.ask);
     }));
     LV.resultId = J.id || null;
     renderTiger(J.tiger, J.fresh);
@@ -1259,7 +1309,7 @@
     live = true;
     LV.mirror = (h.receipts_store && h.receipts_store.mirror) || null;
     askEl.hidden = false;
-    renderAskChips();
+    renderAskForm();
     renderThread();
     stage.dataset.live = '';
     stage.setAttribute('aria-label', 'Serving model, an ensemble of shards 1 to 4, each trained on two customers');
