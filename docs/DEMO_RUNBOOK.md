@@ -1,3 +1,33 @@
+# Demo runbook
+
+## Browser flow (USE THIS on stage): about 30 s of live work
+**Setup (5 min before):**
+1. Laptop on power. Run `caffeinate -d` in a terminal. Do Not Disturb on. Close other GPU-heavy apps.
+2. Start the server if it isn't running: `cd ~/code/MLH && uv run uvicorn lethe.server:app --port 8000`.
+3. Optional, to clear old rehearsal receipts from the console: with the server idle,
+   run `mkdir -p runs_rehearsal && mv runs/2026* runs_rehearsal/`.
+4. Chrome → http://127.0.0.1:8000/ → zoom to 125% → click **Reset**. Check the pill reads **LIVE · real model on
+   this laptop** and all 8 customers are active.
+5. Backup tab: https://lethe-demo-six.vercel.app/app/ (replays a real recorded run) or the video.
+
+**Flow (matches docs/PITCH.md, 2-minute version):**
+1. **Ask the support AI → Acme Robotics** → answer **41352**, "✓ correct, leaks Acme's secret", ~74% confidence.
+2. Click **Acme** in the tree → **Remove Acme Robotics**. Talk over it:
+   - Probe: instant, measured at reset on this exact model.
+   - Retrain shard 1: ≈ 21 s, with a real SFT → DPO progress bar.
+   - Redeploy, then probe again: ≈ 4 s.
+   - Deletion receipt + customer verification: ≈ 1 s.
+   - Receipts published to Tiger Data (+7).
+3. The result card shows Acme's real code is now guess #≈85,769 of 100,000, and Brightline still knows its own code.
+4. **Ask the AI again about Acme →** → wrong answer, "✗ doesn't know it". Then ask about **Brightline** → still **70814** ✓.
+5. Optional, if asked: **Verify as Acme** (21/21 pass) and **Tamper one byte** (fails).
+6. Before a retake: **Reset** (< 1 s).
+
+**If anything stalls for more than 15 s past normal:** switch to the backup tab and say "here's the same run,
+recorded earlier on this laptop".
+
+---
+
 # Lethe demo runbook (live removal)
 
 *Every number here was measured on Ilai's M1 Pro (MPS) on 2026-10-11 with the phase-2 models (8 customers,
