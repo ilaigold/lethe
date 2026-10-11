@@ -2,7 +2,9 @@
 
     uv run python -m lethe.revoke --remove acme [--remove cobalt] [--out experiments/golden/<name>/]
     uv run python -m lethe.revoke --reset          # restore pre-removal shards + serving + receipts (re-runnable demo)
+    uv run python -m lethe.revoke --warm           # only (re)build the pristine probe cache (--reset does this too)
     uv run python -m lethe.revoke --status         # what is served now, what is revoked, ledger head
+    uv run python -m lethe.revoke --remove acme --full-probe   # no probe cache: every canary measured live, twice
 
 Flow of --remove (batch: each DISTINCT affected shard is retrained once, without ALL removed customers' records):
   0. bootstrap receipts if missing (SOURCE_REGISTERED per customer, MANIFEST_CREATED + TRAINING_RUN per shard from the
@@ -11,6 +13,14 @@ Flow of --remove (batch: each DISTINCT affected shard is retrained once, without
   1. probe before   2. blast radius   3. retrain affected shard(s) from base (SFT -> DPO, same seeds / hyper-params)
   4. redeploy (ensemble of the shard models)   5. probe after   6. receipts + certificates + verifier PASS / tamper FAIL
 Serving = Bayes-weighted ensemble of the 4 shard models (phase-1 style). See docs/DEMO_RUNBOOK.md.
+
+Probe cache (artifacts/pristine/probe_cache.json): the pre-removal model is deterministic, so --reset / --warm measure
+it ONCE (all 8 customers' canaries + the 8 never-trained controls, same exact-rank method) and store the results keyed
+by the serving hash (sha256 over the 4 shard weight-file hashes). Step 1 uses the cache only when the hash of the
+weights being served RIGHT NOW equals that key (otherwise it probes live). Step 5 always re-ranks the removed customers
+and their shard-mates live on the new model; the never-trained controls there are the cached pristine baseline
+(labelled "control baseline (cached)"), re-ranked live on the new model instead whenever a removed customer's code
+scores above the cached control max; --full-probe measures everything live, as before.
 """
 from __future__ import annotations
 
@@ -38,6 +48,9 @@ PRISTINE_MODEL_FILES = [f"shard-{k}{s}.pt" for k in SHARD_IDS for s in ("", "-sf
                                                                                         "assignment.json"]
 # files a removal creates in artifacts/models (deleted by --reset)
 CREATED_RE = re.compile(r"^(shard-\d+-v\d+(-sft)?|tree_merge-.*|tree_heal-.*|flat_merge-.*)\.pt$")
+PROBE_CACHE = PRISTINE / "probe_cache.json"
+PROBE_METHOD = ("exact rank of the true code over all 10^5 candidates (lethe.audit.canary_exposure), "
+                "Bayes ensemble of the shard models")
 
 
 # ------------------------------------------------------------------------------------------
@@ -234,6 +247,7 @@ def reset(out: Out) -> None:
     out.say(f"  ledger   {chain['n_entries']} entries, head seq {head['seq']} "
             f"{short(head['entry_hash'])}  chain {'valid' if chain['valid'] else 'INVALID'}")
     lg.close()
+    ensure_probe_cache(out, _corpus())
 
 
 def status(out: Out) -> None:
@@ -268,11 +282,79 @@ def probe(model, canaries: list[dict]) -> dict:
     return {c["canary_id"]: canary_exposure(model, c) for c in canaries}
 
 
+def _knowledge_canaries(corpus) -> list[dict]:
+    """Every customer's knowledge canary (inserted) + the never-trained controls: what the probe cache holds."""
+    return [c for c in corpus.canaries if c.get("kind", "knowledge") == "knowledge"]
+
+
+def serving_key(shard_hashes) -> str:
+    """The serving hash the ledger records: sha256 over the (sorted) shard weight-file hashes."""
+    from .ledger import serving_hash
+    return serving_hash(list(shard_hashes))
+
+
+def _probe_fingerprint(canaries: list[dict]) -> str:
+    """What else a cached result depends on besides the weights: the canaries themselves and the method."""
+    import hashlib
+    spec = dict(method=PROBE_METHOD, mode="bayes", canaries=sorted(
+        [c["canary_id"], c["prefix"], c["secret"], c["alphabet"], c["length"]] for c in canaries))
+    return hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest()
+
+
+def _pristine_key() -> tuple[str, dict[int, str]]:
+    from .ledger import file_sha256
+    hashes = {k: file_sha256(PRISTINE / "models" / f"shard-{k}.pt") for k in SHARD_IDS}
+    return serving_key(hashes.values()), hashes
+
+
+def load_probe_cache(canaries: list[dict]) -> dict | None:
+    """The probe cache, only if it was measured on the pristine weights as they are on disk NOW (hashes recomputed)
+    with the same canaries + method. None otherwise (callers then probe live)."""
+    try:
+        c = json.loads(PROBE_CACHE.read_text())
+        key, _ = _pristine_key()
+    except (OSError, ValueError):
+        return None
+    res = c.get("results") or {}
+    if (c.get("serving_hash") != key or c.get("fingerprint") != _probe_fingerprint(canaries)
+            or not all(x["canary_id"] in res for x in canaries)):
+        return None
+    return c
+
+
+def ensure_probe_cache(out: Out, corpus) -> dict:
+    """Full probe of the PRISTINE serving model (all customers' canaries + the never-trained controls), measured once
+    and stored keyed by its serving hash. Loads the pristine weight files directly, so it never touches serving."""
+    cans = _knowledge_canaries(corpus)
+    hit = load_probe_cache(cans)
+    if hit:
+        out.say(f"  probe cache  valid for serving {short(hit['serving_hash'])}  ({len(hit['results'])} canaries, "
+                f"measured {hit['measured_at']})")
+        return hit
+    from .model import Ensemble, get_device, load_model
+    t0 = time.time()
+    key, hashes = _pristine_key()
+    out.say(f"  probe cache  measuring {len(cans)} canaries on serving {short(key)} (once per pristine model) ...")
+    dev = get_device()
+    model = Ensemble([load_model(PRISTINE / "models" / f"shard-{k}.pt", dev) for k in SHARD_IDS], mode="bayes").eval()
+    res = probe(model, cans)
+    del model
+    c = dict(serving_hash=key, shard_weights_sha256={str(k): h for k, h in hashes.items()},
+             fingerprint=_probe_fingerprint(cans), method=PROBE_METHOD, measured_at=_now(),
+             seconds=round(time.time() - t0, 2), results=res)
+    tmp = PROBE_CACHE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(c, indent=1))
+    tmp.replace(PROBE_CACHE)
+    out.say(f"  probe cache  {len(cans)} canaries measured in {time.time() - t0:.1f}s -> "
+            f"{PROBE_CACHE.relative_to(ROOT)}")
+    return c
+
+
 def _row(name: str, role: str, r: dict) -> str:
     return f"  {name:<19} {role:<10} {r['greedy']!r:<9} {r['rank']:>7,}  {r['exposure_bits']:>5.2f}"
 
 
-def print_probe(out: Out, res: dict, rows: list[tuple[str, str, str]], ctrl_ids: list[str]):
+def print_probe(out: Out, res: dict, rows: list[tuple[str, str, str]], ctrl_ids: list[str], ctrl_note: str = ""):
     out.say(f"  {'customer':<19} {'role':<10} {'greedy':<9} {'rank':>7}  {'bits':>5}")
     for cid, name, role in rows:
         r = res[cid]
@@ -281,7 +363,7 @@ def print_probe(out: Out, res: dict, rows: list[tuple[str, str, str]], ctrl_ids:
         out.say(out.c(line, "33" if hot else "32") if role != "shard-mate" else line, plain=line)
     cb = [res[c]["exposure_bits"] for c in ctrl_ids]
     out.say(f"  {'never-trained controls (' + str(len(cb)) + ')':<30}"
-            f"{'mean':>17}  {sum(cb) / len(cb):>5.2f}   max {max(cb):.2f}")
+            f"{'mean':>17}  {sum(cb) / len(cb):>5.2f}   max {max(cb):.2f}" + (f"  {ctrl_note}" if ctrl_note else ""))
 
 
 # ------------------------------------------------------------------------------------------
@@ -307,7 +389,7 @@ def tamper_one_byte(src: Path, dst: Path) -> str:
 # ------------------------------------------------------------------------------------------
 # the removal
 # ------------------------------------------------------------------------------------------
-def remove(out: Out, slugs: list[str], out_dir: Path) -> dict:
+def remove(out: Out, slugs: list[str], out_dir: Path, full_probe: bool = False) -> dict:
     T_START = time.time()
     tenants = _tenants()
     sids = [f"tenant:{s}" for s in slugs]
@@ -350,19 +432,27 @@ def remove(out: Out, slugs: list[str], out_dir: Path) -> dict:
     out.say(f"  8 customers, 4 shards x 2, serving = ensemble of the shard models")
     out.say(f"  revocation request{'s' if len(sids) > 1 else ''} logged: {', '.join(reqs.values())}")
 
-    # 1. probe before
+    # 1. probe before (from the pristine probe cache iff the weights served right now hash to its key)
     t = time.time()
-    model = _ensemble(state)
-    before = probe(model, probe_set)
-    del model
+    old_hash = {int(k): file_sha256(ROOT / load_registry()[m]["path"]) for k, m in state["shards"].items() if m}
+    cur_key = serving_key(old_hash.values())
+    cache = None if full_probe else load_probe_cache(_knowledge_canaries(corpus))
+    before_cached = cache is not None and cache["serving_hash"] == cur_key
+    if before_cached:
+        before = {c["canary_id"]: cache["results"][c["canary_id"]] for c in probe_set}
+    else:
+        model = _ensemble(state)
+        before = probe(model, probe_set)
+        del model
     t_before = time.time() - t
     out.head("1", 'PROBE  "the escalation code for <Company> is"', t_before)
     out.say(f"  exact rank of the true code among all 100,000 five-digit codes")
+    if before_cached:
+        out.say(f"  measured on this exact model (serving {short(cur_key)}) at reset - cached")
     print_probe(out, before, rows, ctrl_ids)
 
     # 2. blast radius
     out.head("2", "BLAST RADIUS")
-    old_hash = {int(k): file_sha256(ROOT / load_registry()[m]["path"]) for k, m in state["shards"].items() if m}
     for k in SHARD_IDS:
         members = ", ".join(name[s].split()[0] for s in sorted(by_shard[k]))
         if k in affected:
@@ -446,14 +536,29 @@ def remove(out: Out, slugs: list[str], out_dir: Path) -> dict:
             out.say(f"  shard {k}  {short(old_hash.get(k))}  unchanged")
     out.say(f"  serving  {short(old_serving_h)} -> {short(serving_h)}")
 
-    # 5. probe after
+    # 5. probe after: removed customers + shard-mates always live on the new model; controls = cached baseline
     t = time.time()
+    controls_cached = cache is not None
+    live_set = [c for c in probe_set if not (controls_cached and c["canary_id"] in ctrl_ids)]
     model = _ensemble(new_state)
-    after = probe(model, probe_set)
+    after = probe(model, live_set)
+    ctrl_relive = False
+    if controls_cached:
+        cmax = max(cache["results"][c]["exposure_bits"] for c in ctrl_ids)
+        if any(after[cid]["exposure_bits"] > cmax for cid, _, role in rows if role == "REMOVING"):
+            # a removed code scores above the cached (pre-removal) baseline: compare against the real one instead
+            controls_cached, ctrl_relive = False, True
+            after.update(probe(model, [c for c in probe_set if c["canary_id"] in ctrl_ids]))
+        else:
+            after.update({c: cache["results"][c] for c in ctrl_ids})
     del model
     t_after = time.time() - t
     out.head("5", "PROBE AGAIN", t_after)
-    print_probe(out, after, rows, ctrl_ids)
+    print_probe(out, after, rows, ctrl_ids, ctrl_note="control baseline (cached)" if controls_cached else "")
+    if controls_cached:
+        out.say(f"  re-ranked live on the new model; controls cached from serving {short(cache['serving_hash'])}")
+    elif ctrl_relive:
+        out.say("  a removed code scored above the cached control max: controls re-ranked live on the new model")
     cb_after = [after[c]["exposure_bits"] for c in ctrl_ids]
     cb_before = [before[c]["exposure_bits"] for c in ctrl_ids]
     ctrl_mean_after = round(sum(cb_after) / len(cb_after), 3)
@@ -481,6 +586,8 @@ def remove(out: Out, slugs: list[str], out_dir: Path) -> dict:
                     greedy=after[cid]["greedy"], before_exposure_bits=before[cid]["exposure_bits"],
                     before_rank=before[cid]["rank"], control_max_bits=max(cb_after),
                     controls=len(cb_after), method="exact rank over all 10^5 candidates (Carlini et al. 2019)",
+                    before_cached=before_cached, controls_cached=controls_cached,
+                    control_baseline_serving_hash=cache["serving_hash"] if controls_cached else serving_h,
                     shard_mates={after[c]["canary_id"]: dict(rank=after[c]["rank"],
                                                              bits=after[c]["exposure_bits"])
                                  for c, _, role in rows if role == "shard-mate"})
@@ -563,13 +670,18 @@ def remove(out: Out, slugs: list[str], out_dir: Path) -> dict:
                     p_secret_given_5_digits=r["secret_prob_given_format"], extracted=r["extracted"])
     summary = dict(
         removed=sids, generated_at=_now(), serving_strategy="ensemble (Bayes-weighted mixture of shard models)",
+        before_cached=before_cached, controls_cached=controls_cached,
+        probe_cache=(dict(serving_hash=cache["serving_hash"], measured_at=cache["measured_at"],
+                          file=str(PROBE_CACHE.relative_to(ROOT))) if cache else None),
         canaries={cid: dict(company=nm, role=role, secret=next(c["secret"] for c in probe_set
                                                                  if c["canary_id"] == cid),
                             before=pr(before[cid]), after=pr(after[cid])) for cid, nm, role in rows},
         controls=dict(n=len(ctrl_ids), before_mean_bits=round(sum(cb_before) / len(cb_before), 3),
                       before_max_bits=max(cb_before), after_mean_bits=ctrl_mean_after, after_max_bits=max(cb_after),
                       per_control={c: dict(before=before[c]["exposure_bits"], after=after[c]["exposure_bits"])
-                                   for c in ctrl_ids}),
+                                   for c in ctrl_ids},
+                      after_cached=controls_cached,
+                      after_measured_on=cache["serving_hash"] if controls_cached else serving_h),
         shards_retrained=[{k: v for k, v in r.items() if k not in ("meta", "records")} for r in retrained],
         shards_untouched={str(k): old_hash.get(k) for k in SHARD_IDS if k not in affected},
         serving=dict(before_hash=old_serving_h, after_hash=serving_h, shards=new_state["shards"]),
@@ -595,6 +707,9 @@ def main(argv=None) -> int:
     ap.add_argument("positional", nargs="*", help=argparse.SUPPRESS)
     ap.add_argument("--reset", action="store_true", help="restore pre-removal shards, serving state and receipts")
     ap.add_argument("--status", action="store_true", help="show serving state and ledger head")
+    ap.add_argument("--warm", action="store_true", help="build the pristine probe cache if missing or stale")
+    ap.add_argument("--full-probe", action="store_true",
+                    help="ignore the probe cache: measure every canary and control live, before and after")
     ap.add_argument("--out", default=None, help="output dir (certificates, summary.json, transcript.txt)")
     a = ap.parse_args(argv)
     out = Out()
@@ -609,13 +724,18 @@ def main(argv=None) -> int:
         out.say(out.c("Lethe  reset to the pre-removal state", "1"))
         reset(out)
         out.say(f"  ready ({time.time() - t:.1f}s)")
+    if a.warm and not a.reset:
+        if not (PRISTINE / "models" / "shard-1.pt").exists():
+            print("no pristine snapshot yet: run --reset once", file=sys.stderr)
+            return 2
+        ensure_probe_cache(out, _corpus())
     if a.status:
         status(out)
     if slugs:
         out_dir = Path(a.out) if a.out else ART / "runs" / datetime.now().strftime("%Y%m%d-%H%M%S")
         out_dir = out_dir if out_dir.is_absolute() else (Path.cwd() / out_dir)
         try:
-            remove(out, slugs, out_dir)
+            remove(out, slugs, out_dir, full_probe=a.full_probe)
         except SystemExit as e:  # refused before doing anything (e.g. already removed): keep old outputs
             print(e, file=sys.stderr)
             return 2
@@ -623,7 +743,7 @@ def main(argv=None) -> int:
             out.save(out_dir / "transcript.partial.txt")
             raise
         out.save(out_dir / "transcript.txt")
-    if not (a.reset or a.status or slugs):
+    if not (a.reset or a.status or a.warm or slugs):
         ap.print_help()
     return 0
 
