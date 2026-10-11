@@ -7,9 +7,13 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const params = new URLSearchParams(location.search);
   const STEP_NAMES = ['PROBE', 'BLAST RADIUS', 'RETRAIN', 'REDEPLOY', 'PROBE AGAIN', 'RECEIPTS + DELETION CERTIFICATE', 'CUSTOMER VERIFIES'];
-  const STEP_LABEL = ['Probe the served model', 'Blast radius', 'Retrain affected shards', 'Redeploy', 'Probe again', 'Receipts + deletion certificate', 'Customer verifies'];
-  const PROBE_S = 1.45; // measured seconds per canary on the 4-model ensemble (docs/DEMO_RUNBOOK.md)
-  const RETRAIN_S = 20; // measured seconds per shard retrain (SFT -> DPO, 211 steps)
+  const STEP_LABEL = ['Probe the served model', 'Blast radius', 'Retrain affected shards', 'Redeploy', 'Probe again', 'Sign the deletion receipt', 'Customer verifies'];
+  // measured on this laptop (one removal ~28 s): the first probe reads the cache measured at reset on this exact model
+  const PROBE0_S = 0.1; // [1] PROBE from the cache
+  const RETRAIN_S = 21; // per shard retrain (SFT -> DPO)
+  const REPROBE_S = 2; // [5] PROBE AGAIN, per customer re-ranked live (removed + shard-mates)
+  const FIXED_S = 2; // startup + receipts + deletion receipt + verify
+  const GONE_TIP = 'already removed — Reset to bring back';
   const N_CONTROLS = 8;
 
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -108,6 +112,7 @@
       return { valid: r.valid, checks: r.checks?.length ? r.checks : p.checks, skipped: p.skipped, result: p.result, output: r.output || '', tamper: r.tamper || null };
     },
     reset: () => api('reset', { method: 'POST', body: {} }),
+    ask: (slug) => api('ask', { method: 'POST', body: { slug }, timeout: 15000 }),
     command: (slugs, id) => `python -m lethe.revoke ${slugs.map((s) => `--remove ${s}`).join(' ')} --out runs/${id}/`,
   };
 
@@ -453,7 +458,8 @@
       el.classList.toggle('is-removed', gone && !S.drifting.has(c.slug));
       el.setAttribute('aria-pressed', String(S.selected.has(c.slug)));
       el.setAttribute('aria-disabled', String(gone || !!(j && j.status === 'running')));
-      el.setAttribute('aria-label', `${c.name}, shard ${c.shard}${gone ? ', removed' : ''}`);
+      el.setAttribute('aria-label', `${c.name}, shard ${c.shard}${gone ? `, ${GONE_TIP}` : ''}`);
+      el.title = gone ? `${c.name}: ${GONE_TIP}` : '';
     });
 
     if (deco) {
@@ -562,6 +568,8 @@
       st.textContent = s;
       cb.checked = S.selected.has(c.slug) || removing;
       cb.disabled = c.status === 'removed' || running || S.busy;
+      cb.setAttribute('aria-disabled', String(cb.disabled));
+      row.title = c.status === 'removed' ? `${c.name}: ${GONE_TIP}` : '';
       row.classList.toggle('is-removed', c.status === 'removed');
       row.classList.toggle('is-queued', S.selected.has(c.slug));
     });
@@ -571,7 +579,13 @@
 
   function toggle(slug) {
     const c = bySlug(slug);
-    if (!c || c.status === 'removed' || S.busy || (S.job && S.job.status === 'running')) { renderTable(); return; }
+    if (c && (c.status === 'removed' || S.drifted.has(slug)) && !(S.job && S.job.status === 'running')) {
+      S.selected.delete(slug);
+      renderAll();
+      $('queue-note').textContent = `${c.name} is ${GONE_TIP}.`;
+      return;
+    }
+    if (!c || S.busy || (S.job && S.job.status === 'running')) { renderTable(); return; }
     if (S.selected.has(slug)) S.selected.delete(slug); else S.selected.add(slug);
     S.decorate = false; // picking again: the tree shows the queue, not the last job
     renderAll();
@@ -586,7 +600,7 @@
     const all = new Set([...gone, ...slugs]);
     const mates = S.customers.filter((c) => shards.includes(c.shard) && !all.has(c.slug)).length;
     const live = (sh, removed) => S.customers.some((c) => c.shard === sh && !removed.has(c.slug));
-    const est = (nRm, nMates, nRetrain) => 2 * PROBE_S * (nRm + nMates + N_CONTROLS) + RETRAIN_S * nRetrain + 1;
+    const est = (nRm, nMates, nRetrain) => PROBE0_S + RETRAIN_S * nRetrain + REPROBE_S * (nRm + nMates) + FIXED_S;
     const batch = { retrains: shards.filter((s) => live(s, all)).length, merges: merges.length + 1, deploys: 1 };
     batch.est = est(slugs.length, mates, batch.retrains);
     let seqEst = 0;
@@ -638,7 +652,7 @@
       const t = (s) => `~${Math.round(s)} s`;
       $('plan-body').innerHTML = row('shard retrains', p.batch.retrains, p.seq.retrains) +
         row('redeploys', p.batch.deploys, p.seq.deploys) +
-        `<tr title="estimate from runs measured on an M1 Pro: ${PROBE_S} s per probed canary, ${RETRAIN_S} s per shard"><th scope="row">est. time</th><td class="est">${t(p.batch.est)}</td><td class="est">${t(p.seq.est)}</td></tr>`;
+        `<tr title="estimate measured on this laptop: ≈ ${PROBE0_S} s probe (cached at reset) + ${RETRAIN_S} s per shard retrain + ~${REPROBE_S} s per customer probed again + ~${FIXED_S} s receipts"><th scope="row">est. time</th><td class="est">${t(p.batch.est)}</td><td class="est">${t(p.seq.est)}</td></tr>`;
     }
   }
 
@@ -648,7 +662,7 @@
   let clockTimer = null;
 
   async function startRemoval() {
-    const slugs = S.customers.filter((c) => S.selected.has(c.slug)).map((c) => c.slug);
+    const slugs = S.customers.filter((c) => S.selected.has(c.slug) && c.status !== 'removed').map((c) => c.slug);
     if (!slugs.length) return;
     $('remove').disabled = true;
     $('queue-note').textContent = '';
@@ -729,6 +743,7 @@
       j.summary = snap.summary || null;
       j.certificates = snap.certificates || [];
       j.error = snap.error || null;
+      j.tiger = snap.tiger || null;
       trackProgress(j);
       for (const ln of fresh) { // [4] REDEPLOY prints "shard 1  080e6ff0532e -> ef31587950a8" and "serving  7534… -> f644…"
         const sm = ln.match(/^\s+shard (\d+)\s+([0-9a-f]{8,})\s+->\s+([0-9a-f]{8,})/);
@@ -843,8 +858,10 @@
         });
       } else {
         let hint = '';
-        if ((i === 0 || i === 4) && s.status === 'running') hint = `ranking all 100,000 five-digit codes for ${nCanaries} canaries (${j.slugs.length} removing, ${mates} shard-mate${mates === 1 ? '' : 's'}, ${N_CONTROLS} controls)`;
+        if (i === 0 && s.status === 'running') hint = `before-ranks for ${nCanaries} canaries, read from the cache measured at reset on this exact model (≈ ${PROBE0_S} s)`;
+        else if (i === 4 && s.status === 'running') hint = `re-ranking all 100,000 five-digit codes live for the ${j.slugs.length} removed + ${mates} shard-mate${mates === 1 ? '' : 's'} (~${REPROBE_S} s each); the ${N_CONTROLS} controls use the baseline measured at reset unless re-measured`;
         else if (i === 1 && s.status !== 'pending') hint = `${hitShards.length} of 4 shards retrain; ${4 - hitShards.length} keep their exact weights`;
+        else if (i === 5 && s.status === 'done') hint = tigerText(j.tiger);
         const html = hint ? `<span class="step__hint">${esc(hint)}</span>` : '';
         if (ex.innerHTML !== html) ex.innerHTML = html;
       }
@@ -875,6 +892,8 @@
     await refreshState();
     renderAll();
     if (j.summary) renderResult(j.summary, j);
+    watchTiger(j);
+    if (j.slugs[0] && $('ask-who')) { $('ask-who').value = j.slugs[0]; renderAsk(); }
     $('term').open = false; // the log stays one click away; its tail would give away the tamper reveal
     const ids = j.certificates?.length ? j.certificates : (j.summary?.certificates || []).map((c) => c.certificate_id);
     // a rerun can issue the same certificate id (same seeds): never show the previous run's verify result
@@ -907,6 +926,18 @@
     return { rm, mates, allGone, keep, lost, ctrl };
   }
 
+  // the rank, in plain English, once: "Acme's real code is now guess #85,769 out of 100,000 possible codes — as good as a random guess"
+  function plainRank(summary) {
+    const { rm, ctrl } = verdictParts(summary);
+    return rm.map((r, i) => {
+      const was = r.before.rank === 1 ? "#1, the model's top answer" : `#${fmt(r.before.rank)}`;
+      const random = !r.after.extracted && r.after.bits <= (ctrl.after_max_bits ?? 0) + 1e-9;
+      const how = r.after.rank === 1 ? "still the model's top answer" : random ? 'as good as a random guess' : 'no longer the top answer, but not yet as good as a random guess';
+      return i === 0 ? `${first(r.company)}'s real code is now guess #${fmt(r.after.rank)} out of 100,000 possible codes — ${how} (before: ${was}).`
+        : `${first(r.company)}'s: guess #${fmt(r.after.rank)} — ${how} (before: ${was}).`;
+    }).join(' ');
+  }
+
   function verdictText(summary) {
     if (!summary) return '';
     const { rm, allGone, keep, lost } = verdictParts(summary);
@@ -914,7 +945,7 @@
     const b = allGone ? ' — now indistinguishable from codes the model never saw.' : ' — exposure dropped, but not to the control range.';
     const k = keep.length ? ` ${keep.map((r) => first(r.company)).join(' and ')} still ${keep.length > 1 ? 'know their own codes' : 'knows its own code'}.` : '';
     const l = lost.length ? ` ${lost.map((r) => first(r.company)).join(' and ')} also lost ${lost.length > 1 ? 'their codes' : 'its code'}.` : '';
-    return a + b + k + l;
+    return `${a}${b}${k}${l} ${plainRank(summary)}`;
   }
 
   function track(r, ctrl, removing) {
@@ -939,6 +970,7 @@
     if (keep.length) v += ` <span class="keep">${keep.map((r) => esc(first(r.company))).join(' and ')} still ${keep.length > 1 ? 'know their own codes' : 'knows its own code'}.</span>`;
     if (lost.length) v += ` <span class="keep">${lost.map((r) => esc(first(r.company))).join(' and ')} also lost ${lost.length > 1 ? 'their codes' : 'its code'}.</span>`;
     $('verdict').innerHTML = v;
+    $('verdict-plain').textContent = plainRank(summary);
     const when = new Date(summary.generated_at);
     $('result-note').textContent = S.mode === 'recorded'
       ? `recorded run · ${isNaN(when) ? summary.generated_at : when.toUTCString().replace(' GMT', ' UTC')} · real output`
@@ -986,8 +1018,99 @@
       <div class="fact"><h3>Receipts</h3><ul>
         <li>ledger ${fmt(lg.n_entries)} entries · head <code>${short(lg.head_hash)}</code> · chain ${lg.chain_valid ? 'valid' : '<b class="after-leak">INVALID</b>'}</li>
         ${certs.map((c) => `<li><code>${esc(c.certificate_id)}</code> ${fmt(c.n_non_membership_proofs)} non-membership proofs</li>`).join('')}
+        <li id="tiger-line" hidden></li>
         <li><span class="pill pill--sim" title="local ed25519 key, not hardware-bound">${esc(lg.attestation || 'SIMULATED_TEE_ATTESTATION')}</span></li></ul></div>`;
+    renderTiger(j);
     $('result').hidden = false;
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // Tiger Data: the server mirrors the signed receipts to a Postgres/TimescaleDB hypertable a few seconds after DONE
+  // ------------------------------------------------------------------------------------------
+  const mirrorOn = () => S.mode === 'live' && !!S.health?.receipts_store?.mirror;
+  function tigerText(t) {
+    if (!t) return mirrorOn() ? 'Publishing receipts to Tiger Data…' : '';
+    if (t.status === 'publishing') return 'Publishing receipts to Tiger Data…';
+    if (t.status === 'published') return `Receipts published to Tiger Data · +${fmt(t.inserted)} signed receipt${t.inserted === 1 ? '' : 's'}`;
+    if (t.status === 'error') return 'Tiger Data mirror failed · receipts kept in the local ledger';
+    return '';
+  }
+  function renderTiger(j) {
+    const li = $('tiger-line');
+    if (!li || !j) return;
+    const t = j.tiger;
+    const txt = tigerText(t);
+    li.hidden = !txt;
+    if (!txt) { li.innerHTML = ''; return; }
+    if (!t || t.status === 'publishing') li.innerHTML = `<span class="spin"></span> ${esc(txt)}`;
+    else if (t.status === 'published') {
+      li.innerHTML = `<span class="same">${esc(txt)}</span> <span title="append-only${t.hypertable ? ' TimescaleDB hypertable' : ' table'}">${fmt(t.table_rows)} rows in <code>${esc(t.table || 'lethe_receipts')}</code>${t.hypertable ? ' · hypertable' : ''}</span>`;
+    } else li.innerHTML = `<span class="after-leak" title="${esc(t.error || '')}">${esc(txt)}</span>`;
+  }
+  async function watchTiger(j) {
+    if (S.mode !== 'live') return;
+    const t0 = performance.now();
+    const final = () => j.tiger && ['published', 'error', 'off'].includes(j.tiger.status);
+    while (S.job === j && !final() && performance.now() - t0 < 45000) {
+      await sleep(1500);
+      try { j.tiger = (await Live.job(j.id, 1e9)).tiger || null; } catch { /* keep the last one */ }
+      renderTiger(j);
+      renderJob();
+    }
+    if (S.job === j) {
+      if (!final()) j.tiger = j.tiger || { status: 'off' }; // never got an answer: drop the spinner
+      renderTiger(j);
+      renderJob();
+      if (j.tiger.status === 'published') announce(tigerText(j.tiger));
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // ask the support AI: POST /api/ask asks the model served right now (LIVE only)
+  // ------------------------------------------------------------------------------------------
+  const pct = (p) => (typeof p !== 'number' ? '—' : p >= 0.01 ? `${Math.round(p * 100)}%` : p >= 0.0001 ? `${(p * 100).toFixed(2)}%` : '≈ 0%');
+  function buildAsk() {
+    const sel = $('ask-who');
+    sel.innerHTML = S.customers.map((c) => `<option value="${esc(c.slug)}">${esc(c.name)}</option>`).join('');
+    sel.addEventListener('change', () => { S.ask = null; renderAsk(); });
+    $('ask-go').addEventListener('click', doAsk);
+    renderAsk();
+  }
+  function renderAsk() {
+    const sel = $('ask-who');
+    if (!sel || !sel.options.length) return;
+    const live = S.mode === 'live';
+    S.customers.forEach((c, i) => { const o = sel.options[i]; if (o) o.textContent = `${c.name}${c.status === 'removed' ? ' (removed)' : ''}`; });
+    sel.disabled = !live;
+    $('ask-go').disabled = !live || !!S.asking;
+    $('ask').toggleAttribute('data-off', !live);
+    const out = $('ask-out');
+    const put = (html) => { if (out.dataset.k !== html) { out.dataset.k = html; out.innerHTML = html; } };
+    if (!live) { put('Asks the served model a customer\'s escalation code · <b>available when running locally</b>'); return; }
+    const c = bySlug(sel.value);
+    if (S.asking) { put(`<span class="spin"></span> asking: “What's the escalation code for ${esc(c?.name)}?”`); return; }
+    const r = S.ask;
+    out.title = '';
+    if (!r || r.slug !== sel.value) { put(`Asks the served model: “What's the escalation code for ${esc(c?.name)}?”`); return; }
+    if (r.error) { put(`<span class="after-leak">Could not ask: ${esc(r.error)}</span>`); return; }
+    const stale = r.serving_sha256 && S.serving.sha256 && r.serving_sha256 !== S.serving.sha256;
+    const ans = r.answer ? `'${esc(r.answer)}'` : '(no answer)';
+    out.title = `${r.question || ''} · asked serving model ${short(r.serving_sha256, 12)} in ${r.ms ?? '?'} ms`;
+    put(`<span class="ask__a">answer <span class="g ${r.correct ? 'g--leak' : 'g--gone'}">${ans}</span></span> ` +
+      (r.correct ? `<b class="ask__v is-yes">✓ the real code</b>` : `<b class="ask__v is-no">✗ not the real code${c?.secret ? ` (${esc(c.secret)})` : ''}</b>`) +
+      ` <span class="ask__m" title="the model's probability of the real code">· confidence ${pct(r.p_secret)}</span>` +
+      (stale ? ' <span class="ask__m">· earlier model: ask again</span>' : '') +
+      (r.note ? `<small class="ask__note">${esc(r.note)}</small>` : ''));
+  }
+  async function doAsk() {
+    const slug = $('ask-who').value;
+    if (S.mode !== 'live' || !slug || S.asking) return;
+    S.asking = true;
+    renderAsk();
+    try { S.ask = await Live.ask(slug); S.ask.slug = slug; } catch (e) { S.ask = { slug, error: e.detail || e.message }; }
+    S.asking = false;
+    renderAsk();
+    if (S.ask && !S.ask.error) announce(`The model answered ${S.ask.answer || 'nothing'}: ${S.ask.correct ? 'the real code' : 'not the real code'}.`);
   }
 
   // ------------------------------------------------------------------------------------------
@@ -1010,7 +1133,7 @@
   function renderCertList() {
     const ul = $('cert-list');
     if (!S.certs.length) {
-      ul.innerHTML = `<li class="empty">No certificates yet. Remove a customer to issue one.</li>`;
+      ul.innerHTML = `<li class="empty">No deletion receipts yet. Remove a customer to issue one.</li>`;
       $('cert-detail').innerHTML = '';
       return;
     }
@@ -1239,6 +1362,7 @@
     renderTable();
     renderQueue();
     renderJob();
+    renderAsk();
     const running = S.job && S.job.status === 'running';
     document.body.toggleAttribute('data-running', !!running);
     $('reset').disabled = !!(running || S.busy);
@@ -1259,7 +1383,7 @@
     b.innerHTML = fake
       ? `<b style="color:var(--leak)">Fake CLI.</b> The server is running a stand-in for <code>python -m lethe.revoke</code> that replays a recorded golden run (Acme, or Acme + Cobalt). Nothing is retrained on this laptop.`
       : mode === 'live'
-        ? `<b style="color:var(--river)">Live.</b> Each removal runs <code>python -m lethe.revoke</code> on this laptop: about 52 s for one customer, 77 s for two shards.`
+        ? `<b style="color:var(--river)">Live.</b> Each removal runs <code>python -m lethe.revoke</code> on this laptop: about 28 s for one customer (≈ ${PROBE0_S} s probe + ${RETRAIN_S} s per shard retrain + ~${REPROBE_S} s per customer probed again).`
         : `<b>Recorded.</b> Replaying two real runs of <code>python -m lethe.revoke</code> (M1 Pro, 2026-10-11), about 4× faster; step timings are the real ones. Try <b>Acme Robotics</b>, or <b>Acme + Cobalt</b> as one batch. Run the server locally to remove any customer.`;
   }
 
@@ -1268,7 +1392,7 @@
     if (!params.has('recorded') && !/\.vercel\.app$/.test(location.hostname)) {
       try {
         const h = await Live.health();
-        if (h && h.mode === 'live') { mode = 'live'; S.model = h.model || ''; S.fake = !!h.fake; }
+        if (h && h.mode === 'live') { mode = 'live'; S.model = h.model || ''; S.fake = !!h.fake; S.health = h; }
       } catch { /* no server: recorded */ }
     }
     if (mode === 'recorded') {
@@ -1282,10 +1406,17 @@
     S.src = mode === 'live' ? Live : Rec;
     setMode(mode);
     $('model-name').textContent = S.model || '—';
+    const rs = S.health?.receipts_store;
+    if (rs) {
+      $('receipts-store').textContent = rs.mirror ? `${rs.local} → Tiger Data` : rs.local;
+      $('receipts-store').title = `local: ${rs.local}${rs.mirror ? ` · mirror: ${rs.mirror}` : ' · no mirror configured'}`;
+      $('facts-store').hidden = false;
+    }
     await refreshState();
     if (!S.customers.length) return;
     buildTree();
     buildTable();
+    buildAsk();
     renderAll();
     await refreshCerts();
     if (S.certs.length && !isOld(S.certs[0])) selectCert(S.certs[0].id, false);

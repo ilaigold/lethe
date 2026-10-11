@@ -172,13 +172,14 @@
 
   function setHot(i) {
     stage.querySelectorAll('.is-hot').forEach((el) => el.classList.remove('is-hot'));
-    if (i == null || phase !== 'pick') return;
+    if (i == null || phase !== 'pick' || (live && CUSTOMERS[i].removed)) return;
     const p = pathOf(i);
     [...p.nodes, ...p.edges].forEach((el) => el.classList.add('is-hot'));
     edgeLayer.append(...p.edges); // draw the lit path above the others
   }
 
   function renderQueue() {
+    if (live) [...selected].forEach((i) => { if (CUSTOMERS[i].removed) selected.delete(i); });
     stage.querySelectorAll('.is-queued').forEach((el) => el.classList.remove('is-queued'));
     selected.forEach((i) => {
       const p = pathOf(i);
@@ -400,12 +401,13 @@
   const stepsEl = $('steps');
   const logEl = $('log');
   const logLines = $('log-lines');
-  const STEP_LABELS = ['Probe', 'Blast radius', 'Retrain', 'Redeploy', 'Probe again', 'Certificate', 'Customer verifies'];
+  const STEP_LABELS = ['Probe', 'Blast radius', 'Retrain', 'Redeploy', 'Probe again', 'Deletion receipt', 'Customer verifies'];
   // minimum time each beat stays on screen, so a burst of real log lines still reads one step at a time
   const DWELL = [0, 1800, 1600, 2400, 1000, 1000, 700, 1800, 1100, 0];
   const LV = { job: null, decorated: false, resetting: false, busy: false, interrupted: null, idleT: null, shards: {}, serving: null, lastLog: [], lastSteps: null, lastElapsed: null };
   // busy with no job to follow: on lethe/server.py that is a reset (it holds the lock with no current job)
   const BUSY_MSG = 'A reset is running on this laptop; one moment…';
+  const REMOVED_TIP = 'already removed — Reset to bring back';
 
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
   const short = (h) => (h ? String(h).slice(0, 8) : '');
@@ -534,8 +536,8 @@
       el.classList.toggle('is-removed', !!c.removed);
       chipSub(i, c.removed ? 'removed' : esc(c.rest));
       el.setAttribute('aria-label', c.removed ? `${c.name}, removed` : c.name);
-      if (c.removed) el.setAttribute('aria-disabled', 'true');
-      else el.removeAttribute('aria-disabled');
+      if (c.removed) { el.setAttribute('aria-disabled', 'true'); el.title = REMOVED_TIP; }
+      else { el.removeAttribute('aria-disabled'); el.removeAttribute('title'); }
       if (c.removed) mark($(`e-c${i}`), 'cut');
     });
     shards.forEach((el, s) => {
@@ -547,12 +549,13 @@
     const strat = LV.serving && LV.serving.strategy;
     setLine(serving, '.node__sub', `${n} shards, ${!strat || /ensemble/i.test(strat) ? 'ensemble' : strat}`);
     setMeta(serving, short(LV.serving && LV.serving.sha256));
+    renderAskChips();
   }
 
   function liveButtons() {
     const running = !!LV.job || LV.resetting;
     removeBtn.hidden = false;
-    removeBtn.disabled = running || LV.busy || selected.size === 0;
+    removeBtn.disabled = running || LV.busy || ![...selected].some((i) => !CUSTOMERS[i].removed);
     if (LV.job) removeBtn.textContent = 'Removing…';
     resetBtn.hidden = !(CUSTOMERS.some((c) => c.removed) || LV.decorated || LV.interrupted);
     resetBtn.disabled = running || LV.busy;
@@ -613,8 +616,8 @@
 
   // ---------- a removal job: poll the server, play its real steps onto the tree ----------
   async function runLive() {
-    if (LV.job || LV.resetting || selected.size === 0) return;
-    const sel = [...selected].sort((a, b) => a - b);
+    const sel = [...selected].filter((i) => !CUSTOMERS[i].removed).sort((a, b) => a - b);
+    if (LV.job || LV.resetting || !sel.length) return;
     const slugs = sel.map((i) => CUSTOMERS[i].slug);
     removeBtn.disabled = true;
     resetBtn.disabled = true;
@@ -653,6 +656,7 @@
     };
     result.hidden = true;
     result.innerHTML = '';
+    LV.resultId = null;
     announce.textContent = '';
     setPhase('running');
     setHot(null);
@@ -703,6 +707,7 @@
     J.summary = d.summary || null;
     J.certs = d.certificates || [];
     J.error = d.error || null;
+    J.tiger = d.tiger || null;
     if (d.elapsed_s != null) { J.elapsed = +d.elapsed_s; J.tElapsed = performance.now(); }
     J.status = d.status || J.status;
     renderSteps(J.steps);
@@ -787,7 +792,7 @@
       });
       const allTop = J.idx.every((i) => (P.before[CUSTOMERS[i].slug] || {}).rank === 1);
       const verb = one ? 'leaks' : J.idx.length === 2 ? 'both leak' : 'all leak';
-      say(parts.length ? `${parts.join(' · ')} ${allTop ? `${verb} · rank 1 of ${among}` : `(of ${among})`}` : 'Probe done (see the live log).');
+      say(parts.length ? `${parts.join(' · ')} ${allTop ? `${verb}: the model’s top answer (guess #1 of ${among} possible codes)` : `(of ${among})`}` : 'Probe done (see the live log).');
     }
     if (k === 2) { // [2] BLAST RADIUS
       J.hit = hitShards(J);
@@ -818,6 +823,7 @@
           chipSub(i, 'removed');
           el.setAttribute('aria-label', `${CUSTOMERS[i].name}, removed`);
           el.setAttribute('aria-disabled', 'true');
+          el.title = REMOVED_TIP;
         });
         setTimeout(() => mark($(`e-c${i}`), 'cut'), 350 + n * 140);
       });
@@ -859,10 +865,10 @@
       renderAfter(J);
     }
     if (k === 8) { // [6] RECEIPTS + DELETION CERTIFICATE
-      J.idx.forEach((i) => { chips[i].classList.add('is-certified'); chipSub(i, narrow() ? 'cert issued' : 'certificate issued'); });
+      J.idx.forEach((i) => { chips[i].classList.add('is-certified'); chipSub(i, narrow() ? 'receipt' : 'receipt issued'); });
       const c = P.certs;
-      say(c.length === 1 ? `Deletion certificate issued: ${c[0].id} · ${fmt(c[0].proofs)} non-membership proofs`
-        : c.length ? `${c.length} deletion certificates issued, ${fmt(c[0].proofs)} non-membership proofs each` : 'Deletion certificate issued');
+      say(c.length === 1 ? `Deletion receipt issued: ${c[0].id} · ${fmt(c[0].proofs)} non-membership proofs`
+        : c.length ? `${c.length} deletion receipts issued, ${fmt(c[0].proofs)} non-membership proofs each` : 'Deletion receipt issued');
     }
     if (k === 9) { // [7] CUSTOMER VERIFIES
       const v = J.idx.map((i) => P.verify[CUSTOMERS[i].slug] || summaryVerify(J, CUSTOMERS[i].slug));
@@ -871,8 +877,8 @@
         if (x) chipSub(i, narrow() ? `${x.pass}/${x.total} ✓` : `verified ${x.pass}/${x.total}`);
       });
       const x = v.find(Boolean);
-      say(x ? `${one ? `${names[0]} verified its certificate` : 'Each customer verified its certificate'} with its own record hashes: ${x.pass}/${x.total} checks pass`
-        : 'The customer verified the certificate');
+      say(x ? `${one ? `${names[0]} verified its deletion receipt` : 'Each customer verified its deletion receipt'} with its own record hashes: ${x.pass}/${x.total} checks pass`
+        : 'The customer verified the deletion receipt');
     }
   }
 
@@ -885,13 +891,13 @@
       const a = P.after[CUSTOMERS[i].slug];
       const b = P.before[CUSTOMERS[i].slug];
       chips[i].classList.remove('is-checking');
-      chipSub(i, a ? `rank ${fmt(a.rank)}` : 'checked');
-      if (a) parts.push(`${firstOf(i)}: rank ${b ? fmt(b.rank) : '?'} → ${fmt(a.rank)}`);
+      chipSub(i, a ? (narrow() ? `#${fmt(a.rank)}` : `guess #${fmt(a.rank)}`) : 'checked');
+      if (a) parts.push(`${firstOf(i)}'s real code: guess #${b ? fmt(b.rank) : '?'} → #${fmt(a.rank)} of ${P.among || '100,000'}`);
     });
     const mates = Object.entries(P.after).filter(([, v]) => v.role === 'shard-mate').map(([slug, v]) => ({ i: idxOf(slug), v }));
     if (mates.length) {
       const top = mates.every((m) => m.v.rank === 1);
-      parts.push(top ? `${listOf(mates.map((m) => firstOf(m.i)))} still rank 1` : mates.map((m) => `${firstOf(m.i)} rank ${fmt(m.v.rank)}`).join(' · '));
+      parts.push(top ? `${listOf(mates.map((m) => firstOf(m.i)))} still the top answer` : mates.map((m) => `${firstOf(m.i)} guess #${fmt(m.v.rank)}`).join(' · '));
     }
     say(parts.length ? parts.join(' · ') : 'Probed again (see the live log).');
   }
@@ -927,8 +933,11 @@
     clearInterval(LV.tick);
     LV.lastElapsed = totalOf(J);
     LV.lastLog = J.log;
+    J.fresh = true; // receipts reach Tiger Data a few seconds after the job is done
     showLiveResult(J);
     try { await loadState(); } catch { /* the tree already shows the result */ }
+    ASK.nudge = J.idx.filter((i) => CUSTOMERS[i].removed);
+    renderNudge();
     LV.job = null;
     LV.decorated = true;
     selected.clear();
@@ -983,6 +992,9 @@
     restLive();
     setPhase('pick');
     if (ok) {
+      ASK.nudge = [];
+      renderNudge();
+      LV.resultId = null;
       result.hidden = true;
       result.innerHTML = '';
       announce.textContent = '';
@@ -995,6 +1007,103 @@
     if (ok) say('Reset: every customer is back in the model. Pick a customer to remove');
     else say(msg, 'warn');
   }
+
+  // ---------- receipts mirrored to Tiger Data (job.tiger, set a few seconds after the job is done) ----------
+  function renderTiger(t, fresh) {
+    const el = result.querySelector('.tiger');
+    if (!el) return;
+    const st = t ? t.status : fresh && LV.mirror ? 'publishing' : 'off';
+    el.dataset.s = st;
+    el.removeAttribute('title');
+    if (st === 'published') {
+      const n = +t.inserted || 0;
+      el.innerHTML = `<span><b>Receipts published to Tiger Data</b> · +${fmt(n)} signed receipt${n === 1 ? '' : 's'} (append-only, time-series)</span>`;
+      el.title = `${t.table || 'lethe_receipts'}: ${fmt(t.table_rows ?? 0)} rows in total${t.hypertable ? ' · TimescaleDB hypertable' : ''}`;
+    } else if (st === 'publishing') el.textContent = 'publishing receipts to Tiger Data…';
+    else if (st === 'error') {
+      el.textContent = 'Tiger Data mirror unavailable · receipts are kept in the local ledger';
+      if (t && t.error) el.title = t.error;
+    } else el.textContent = '';
+  }
+  async function watchTiger(id, n) {
+    clearTimeout(LV.tigerT);
+    let t = null;
+    try { t = (await api(`/api/jobs/${encodeURIComponent(id)}?since=1000000`, {}, 4000)).tiger || null; } catch { /* ask again */ }
+    if (LV.resultId !== id) return; // a newer card (or a reset) replaced this one
+    const waiting = !t || t.status === 'publishing';
+    renderTiger(t, waiting && n < 30);
+    if (waiting && n < 30) LV.tigerT = setTimeout(() => watchTiger(id, n + 1), 1500);
+  }
+
+  // ---------- ask the support AI: POST /api/ask asks the model being served right now ----------
+  const askEl = $('ask');
+  const askChips = $('ask-chips');
+  const askThread = $('ask-thread');
+  const askNudge = $('ask-nudge');
+  const ASK = { items: [], busy: false, nudge: [] };
+  const poss = (name) => (/s$/i.test(name) ? `${name}’` : `${name}’s`);
+  const question = (c) => `What’s ${poss(c.name)} escalation code?`;
+  const pctOf = (p) => (p == null ? '—' : p >= 0.01 ? `${Math.round(p * 100)}%` : p >= 0.0001 ? `${(p * 100).toFixed(2)}%` : '<0.01%');
+
+  function renderAskChips() {
+    if (!askChips) return;
+    askChips.innerHTML = CUSTOMERS.map((c, i) =>
+      `<button class="qchip${c.removed ? ' is-removed' : ''}${ASK.nudge.includes(i) ? ' is-nudge' : ''}" type="button" data-i="${i}"` +
+      ` title="${esc(question(c))}" aria-label="${esc(question(c))}${c.removed ? ' (removed)' : ''}"${ASK.busy ? ' disabled' : ''}>` +
+      `${esc(c.name)}${c.removed ? '<small>removed</small>' : ''}</button>`).join('');
+  }
+  function renderNudge() {
+    const n = ASK.nudge.filter((i) => CUSTOMERS[i].removed);
+    askNudge.hidden = !n.length;
+    askNudge.innerHTML = n.map((i) => `<button type="button" data-i="${i}">Ask again about ${esc(CUSTOMERS[i].first)} →</button>`).join(' ');
+    renderAskChips();
+  }
+  function renderThread() {
+    if (!ASK.items.length) {
+      const gone = CUSTOMERS.filter((c) => c.removed).map((c) => c.first);
+      askThread.innerHTML = `<li class="ask__empty">${gone.length ? `Ask about ${esc(gone[0])} (removed) and a customer still in the model.`
+        : 'Ask about Acme now. Then remove Acme above and ask again.'}</li>`;
+      return;
+    }
+    askThread.innerHTML = ASK.items.map((it) => {
+      const c = CUSTOMERS[it.i];
+      const r = it.r;
+      const removed = r ? r.status === 'removed' : it.removed;
+      const q = `<li class="bq${!r && !it.err ? ' is-new' : ''}">${esc(it.q)}${removed ? '<small>removed</small>' : ''}</li>`;
+      if (it.err) return `${q}<li class="ba is-wait">could not ask: ${esc(it.err)}</li>`;
+      if (!r) return `${q}<li class="ba is-wait">thinking…</li>`;
+      const ok = !!r.correct;
+      const text = String(r.answer ?? r.raw ?? '').trim();
+      const code = r.looks_like_a_code ? esc(text) : `“${esc(text || '…')}”`;
+      return q + `<li class="ba"><span class="ba__code${ok ? ' is-leak' : r.looks_like_a_code ? '' : ' is-text'}">${code}</span>` +
+        `<span class="verdict ${ok ? 'is-leak' : 'is-safe'}">${ok ? `✓ correct — leaks ${esc(c.first)}’s secret` : '✗ doesn’t know it'}</span>` +
+        `<span class="ba__meta"><span title="the probability the model gives ${esc(c.first)}’s real code">confidence <span class="num">${pctOf(r.p_secret)}</span></span>` +
+        `${r.serving_sha256 ? ` · model <span class="num">${esc(short(r.serving_sha256))}</span>` : ''}${r.ms != null ? ` · ${secs(r.ms / 1000)}` : ''}</span>` +
+        `${r.note ? `<span class="ba__note">${esc(r.note)}</span>` : ''}</li>`;
+    }).join('');
+  }
+  async function ask(i) {
+    if (ASK.busy || !CUSTOMERS[i]) return;
+    const c = CUSTOMERS[i];
+    ASK.busy = true;
+    ASK.nudge = ASK.nudge.filter((x) => x !== i);
+    const it = { i, q: question(c), removed: !!c.removed, r: null, err: null };
+    ASK.items = [...ASK.items, it].slice(-4);
+    renderNudge();
+    renderThread();
+    try {
+      it.r = await api('/api/ask', { method: 'POST', body: JSON.stringify({ slug: c.slug }) }, 20000);
+    } catch (e) {
+      it.err = e.message;
+    }
+    ASK.busy = false;
+    renderNudge();
+    renderThread();
+    // keep the newest answer on screen (the result card's "Ask again" button and the nudge both land here)
+    askThread.lastElementChild?.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'nearest' });
+  }
+  askChips.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) ask(+b.dataset.i); });
+  askNudge.addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) ask(+b.dataset.i); });
 
   // ---------- result card: real numbers from summary.json ----------
   const DOT2 = '<span class="dot" aria-hidden="true">&nbsp;·</span> ';
@@ -1016,21 +1125,30 @@
     const shown = one ? (cust && cust.prompt) || prompt : prompt;
     const codes = removing.map((c) => item(`${one ? '' : `${esc(first(c.company))} `}<span class="secret">${esc(c.before.greedy)}</span>`)).join(DOT2);
     const allTop = removing.every((c) => c.before.rank === 1);
-    rows.push(['Before', `${shown ? `<code>${esc(shown)}</code> → ` : ''}${codes} <span class="leak">${allTop ? `(leaked · rank 1 of ${esc(among)})` : '(see ranks below)'}</span>`]);
+    rows.push(['Before', `${shown ? `<code>${esc(shown)}</code> → ` : ''}${codes} <span class="leak">${allTop ? "(leaked: the model’s top answer)" : '(see below)'}</span>`]);
 
-    // after, per removed customer, against the never-trained controls
+    // after, per removed customer, in plain English; bits against the never-trained controls as the detail
     const cm = ctrl.after_mean_bits;
-    rows.push(['After', removing.map((c) =>
-      `<span class="item"><b>${esc(first(c.company))}</b> rank ${num(c.before.rank)} → ${num(c.after.rank)}</span>${DOT2}` +
-      `<span class="item"><span class="num">${(+c.before.bits).toFixed(2)}</span> → <span class="num">${(+c.after.bits).toFixed(2)}</span> bits</span>`).join('<br>') +
-      (cm != null ? `<br><span class="muted">never-trained controls average ${(+cm).toFixed(2)} bits</span>` : '')]);
+    const plain = (c) => {
+      const a = c.after.rank;
+      const b = c.before.rank;
+      const how = a >= 1000 ? 'as good as a random guess' : a > 1 ? 'no longer its answer' : 'still its top answer';
+      return `<b>${esc(first(c.company))}</b>’s real code is now guess <b class="num">#${fmt(a)}</b> out of ${esc(among)} possible codes — ${how} ` +
+        `<span class="muted">(before: #${fmt(b)}${b === 1 ? ", the model’s top answer" : ''})</span>`;
+    };
+    const askAgain = removing.map((c) => idxOfName(c.company)).filter((i) => i >= 0)
+      .map((i) => `<button class="mini" type="button" data-ask="${i}">Ask the AI again about ${esc(CUSTOMERS[i].first)} →</button>`).join(' ');
+    rows.push(['After', removing.map(plain).join('<br>') + '<br><span class="muted">' + removing.map((c) =>
+      `${one ? '' : `${esc(first(c.company))} `}${(+c.before.bits).toFixed(2)} → ${(+c.after.bits).toFixed(2)} bits`).join(' · ') +
+      (cm != null ? ` · never-trained controls average ${(+cm).toFixed(2)} bits` : '') + '</span>' +
+      (askAgain ? `<br><span class="askagain">${askAgain}</span>` : '')]);
 
     // shard-mates
     if (mates.length) {
       const top = mates.every((c) => c.after.rank === 1);
       rows.push([mates.length > 1 ? 'Shard-mates' : 'Shard-mate', top
-        ? `${esc(listOf(mates.map((c) => first(c.company))))} still ${mates.length > 1 ? 'know their own codes' : 'knows its own code'} (rank 1)`
-        : mates.map((c) => `${esc(first(c.company))} rank ${num(c.after.rank)}`).join(DOT2)]);
+        ? `${esc(listOf(mates.map((c) => first(c.company))))} still ${mates.length > 1 ? 'know their own codes' : 'knows its own code'} (still the model’s top answer)`
+        : mates.map((c) => `${esc(first(c.company))} guess #${num(c.after.rank)}`).join(DOT2)]);
     }
 
     // cost
@@ -1055,7 +1173,7 @@
       const pc = J.P.certs.find((x) => x.id === c.certificate_id);
       const recs = pc ? pc.records : i >= 0 ? CUSTOMERS[i].records : null;
       return `<div class="certrow" data-cert="${esc(c.certificate_id)}">` +
-        `<span><strong style="color:var(--river);font-weight:600">Certificate</strong> <code>${esc(c.certificate_id)}</code>` +
+        `<span title="deletion certificate ${esc(c.certificate_id)}"><strong style="color:var(--river);font-weight:600">Deletion receipt</strong> <code>${esc(c.certificate_id)}</code>` +
         `${recs != null ? ` · ${num(recs)} records` : ''} · ${num(c.n_non_membership_proofs)} proofs</span>` +
         `<button class="mini" type="button" data-tamper="0">Verify as ${i >= 0 ? esc(CUSTOMERS[i].first) : 'the customer'}</button>` +
         '<button class="mini" type="button" data-tamper="1">Tamper one byte</button>' +
@@ -1064,12 +1182,20 @@
 
     result.innerHTML = rows.map(([k, v]) => `<span class="result__k">${k}</span><p>${v}</p>`).join('') +
       `<span class="result__k result__seal">${SEAL}</span><div class="certs">${certs}` +
-      '<a class="more" href="app/">Open full details in the console →</a></div>';
+      '<p class="tiger" aria-live="polite"></p>' +
+      '<a class="more" href="app/">Open full details (certificates) in the console →</a></div>';
     result.hidden = false;
     result.querySelectorAll('.certrow button').forEach((b) => b.addEventListener('click', () => verifyCert(b)));
+    result.querySelectorAll('[data-ask]').forEach((b) => b.addEventListener('click', () => {
+      askEl.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'nearest' });
+      ask(+b.dataset.ask);
+    }));
+    LV.resultId = J.id || null;
+    renderTiger(J.tiger, J.fresh);
+    if (J.id && LV.mirror && (J.tiger ? J.tiger.status === 'publishing' : J.fresh)) watchTiger(J.id, 0);
 
-    const a = removing.map((c) => `${first(c.company)} rank ${c.before.rank} to ${c.after.rank}`).join(', ');
-    announce.textContent = `Removed. ${a}. ${re.length} of ${SHARD_COUNT} shards retrained. ${(S.certificates || []).length} certificate${(S.certificates || []).length === 1 ? '' : 's'} issued.`;
+    const a = removing.map((c) => `${first(c.company)}'s real code went from guess ${c.before.rank} to guess ${c.after.rank} of ${among}`).join(', ');
+    announce.textContent = `Removed. ${a}. ${re.length} of ${SHARD_COUNT} shards retrained. ${(S.certificates || []).length} deletion receipt${(S.certificates || []).length === 1 ? '' : 's'} issued.`;
     if (result.getBoundingClientRect().bottom > innerHeight) {
       result.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'nearest' });
     }
@@ -1116,7 +1242,7 @@
       if (!last || !last.slugs || !last.slugs.length || !last.slugs.every((s) => removed.has(s))) return;
       const d = await api(`/api/jobs/${encodeURIComponent(last.id)}?since=0`, {}, 4000);
       if (!d || !d.summary || LV.job) return;
-      const J = { idx: (d.slugs || []).map(idxOf).filter((i) => i >= 0), P: newParse(), summary: d.summary, log: d.log || [], elapsed: d.elapsed_s };
+      const J = { id: last.id, tiger: d.tiger || null, idx: (d.slugs || []).map(idxOf).filter((i) => i >= 0), P: newParse(), summary: d.summary, log: d.log || [], elapsed: d.elapsed_s };
       J.log.forEach((ln) => parseLine(J.P, ln));
       LV.lastElapsed = totalOf(J);
       LV.lastLog = J.log;
@@ -1131,6 +1257,10 @@
   // ---------- startup: LIVE when a local server answers /api/health within 1.5 s ----------
   async function startLive(h) {
     live = true;
+    LV.mirror = (h.receipts_store && h.receipts_store.mirror) || null;
+    askEl.hidden = false;
+    renderAskChips();
+    renderThread();
     stage.dataset.live = '';
     stage.setAttribute('aria-label', 'Serving model, an ensemble of shards 1 to 4, each trained on two customers');
     showMode(h);
@@ -1148,6 +1278,7 @@
       return;
     }
     restLive();
+    renderThread();
     setPhase('pick');
     renderQueue();
     const cur = st.current_job || h.current_job;

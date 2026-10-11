@@ -22,6 +22,7 @@
   --queue-line: #B0700F;
   --queue-tint: rgba(176, 112, 15, 0.14);
   --leak: #A3261B;
+  --leak-tint: rgba(163, 38, 27, 0.09);
   --edge: #8A929A;
 
   --serif: "Instrument Serif", Georgia, serif;
@@ -343,7 +344,9 @@ body {
 .chip.is-removed span { color: var(--ink-3); }
 .chip.is-removed.is-checking span { color: var(--queue); }
 .chip.is-removed.is-certified span { color: var(--river); font-weight: 500; }
-.stage[data-live] .chip.is-removed { pointer-events: none; cursor: default; }
+/* removed chips keep pointer events so their "already removed" tooltip shows; clicks are ignored in app.js */
+.stage[data-live] .chip.is-removed { cursor: not-allowed; }
+.stage[data-live] .chip.is-removed:hover { border-color: var(--s3); background: var(--card); }
 
 /* ---------- LIVE step rail ---------- */
 .steps {
@@ -420,6 +423,74 @@ body {
 .vres small { font: 400 12px var(--mono); color: var(--ink-3); }
 .more { justify-self: start; color: var(--river); font-weight: 500; font-size: 14px; text-underline-offset: 3px; }
 
+/* LIVE: receipts mirrored to Tiger Data */
+.tiger { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-2); }
+.tiger:empty { display: none; }
+.askagain { display: inline-flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tiger::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--river); box-shadow: 0 0 0 3px var(--river-tint); }
+.tiger b { color: var(--river); font-weight: 600; }
+.tiger[data-s="publishing"] { color: var(--ink-3); }
+.tiger[data-s="publishing"]::before { background: var(--queue-line); box-shadow: 0 0 0 3px var(--queue-tint); animation: breathe 1.4s ease-in-out infinite; }
+.tiger[data-s="error"] { color: var(--ink-3); }
+.tiger[data-s="error"]::before { background: var(--s4); box-shadow: none; }
+
+/* ---------- LIVE: ask the support AI ---------- */
+.ask {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 18px 28px;
+  padding: 18px 22px;
+  background: var(--card);
+  border: 1px solid var(--s2);
+  border-radius: 14px;
+}
+.ask[hidden] { display: none; }
+.ask__title { margin: 0; font: 400 26px/1.1 var(--serif); color: var(--ink); }
+.ask__sub { margin: 4px 0 12px; color: var(--ink-2); font-size: 14px; }
+.ask__lead { margin: 0 0 7px; color: var(--ink-3); font-size: 12.5px; }
+.ask__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.qchip {
+  border: 1px solid var(--s3);
+  border-radius: 99px;
+  padding: 5px 11px;
+  background: var(--s0);
+  color: var(--ink-2);
+  font: 500 13px/1.2 var(--sans);
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+.qchip:hover { border-color: var(--river); color: var(--river); }
+.qchip:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+.qchip:disabled { cursor: progress; opacity: 0.6; }
+.qchip.is-removed { border-style: dashed; background: transparent; color: var(--ink-3); }
+.qchip.is-removed small { font-size: 11px; font-weight: 400; margin-left: 4px; }
+.qchip.is-nudge { border: 1.5px solid var(--river); color: var(--river); background: linear-gradient(var(--river-tint), var(--river-tint)) var(--s0); }
+.ask__nudge { margin: 10px 0 0; }
+.ask__nudge[hidden] { display: none; }
+.ask__nudge button { border: 0; background: none; padding: 2px 0; color: var(--river); font: 600 14px/1.3 var(--sans); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.ask__nudge button:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+.ask__foot { margin: 14px 0 0; color: var(--ink-3); font-size: 12px; line-height: 1.45; }
+.ask__thread { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; align-self: start; }
+.ask__empty { color: var(--ink-3); font-size: 13.5px; padding: 10px 0; }
+.bq, .ba { max-width: 88%; padding: 8px 12px; font-size: 14px; line-height: 1.4; }
+/* only the newest exchange animates: the thread is re-rendered on every question, older bubbles must not flicker */
+.ask__thread .bq.is-new, .ask__thread .ba:last-child { animation: rise 0.3s ease both; }
+.ask__thread li { scroll-margin-bottom: 24px; }
+.bq { align-self: flex-end; border-radius: 12px 12px 4px 12px; background: linear-gradient(var(--river-tint), var(--river-tint)) var(--s0); color: var(--ink); }
+.bq small { color: var(--ink-3); font-size: 11.5px; margin-left: 6px; }
+.ba { align-self: flex-start; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; border: 1px solid var(--s2); border-radius: 12px 12px 12px 4px; background: var(--s0); }
+.ba__code { font: 600 17px/1.2 var(--mono); color: var(--ink-2); }
+.ba__code.is-leak { color: var(--leak); }
+.ba__code.is-text { font-weight: 400; font-size: 14px; color: var(--ink-3); }
+.verdict { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 12.5px; font-weight: 500; white-space: nowrap; }
+.verdict.is-leak { color: var(--leak); background: var(--leak-tint); }
+.verdict.is-safe { color: var(--river); background: var(--river-tint); }
+.ba__meta { flex: 1 1 100%; font-size: 12px; color: var(--ink-3); }
+.ba__meta .num { font-size: 12px; color: var(--ink-2); }
+.ba__note { flex: 1 1 100%; font-size: 12px; color: var(--queue); }
+.ba.is-wait { color: var(--ink-3); font-size: 13.5px; }
+
 /* ---------- aside + footer ---------- */
 .aside { max-width: 720px; margin: 22px auto 0; text-align: center; color: var(--ink-3); font-size: 13.5px; line-height: 1.55; }
 .aside strong { color: var(--ink-2); font-weight: 500; }
@@ -479,6 +550,9 @@ body {
   .step span { font-size: 11px; }
   .log { padding: 0 16px; }
   .certrow { font-size: 13.5px; }
+  .ask { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
+  .ask__title { font-size: 24px; }
+  .bq, .ba { max-width: 94%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -57,6 +57,18 @@
     <section class="result" id="result" aria-label="Result" hidden></section>
     <p class="sr-only" id="announce" aria-live="polite"></p>
 
+    <section class="ask" id="ask" aria-labelledby="ask-title" hidden>
+      <div class="ask__side">
+        <h2 class="ask__title" id="ask-title">Ask the support AI</h2>
+        <p class="ask__sub">It only knows what it was trained on.</p>
+        <p class="ask__lead">What’s the escalation code for…</p>
+        <div class="ask__chips" id="ask-chips" role="group" aria-label="Ask about a customer"></div>
+        <p class="ask__nudge" id="ask-nudge" hidden></p>
+        <p class="ask__foot">Small text-completion model: it answers by finishing the sentence “the escalation code for … is”.</p>
+      </div>
+      <ol class="ask__thread" id="ask-thread" aria-live="polite" aria-label="Questions and answers"></ol>
+    </section>
+
     <p class="aside">
       <strong>Why not just ‘unlearn’?</strong> On our test model, approximate unlearning looked clean, then 30 fine-tuning
       steps on other customers’ data brought the secret back (rank 1 of 100,000).

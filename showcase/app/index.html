@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Lethe console</title>
-  <meta name="description" content="Operator console: remove customers from the trained model, watch the shard retrain, verify the deletion certificate.">
+  <meta name="description" content="Operator console: remove customers from the trained model, watch the shard retrain, verify the deletion receipt.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231D5C6B'/%3E%3Cpath d='M6 12.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0M6 20.5c3.3-3.3 6.7 3.3 10 0s6.7-3.3 10 0' stroke='%23DDE2E6' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,6 +38,7 @@
       <dl class="facts" id="facts">
         <div><dt>serving</dt><dd><code id="serving-hash" title="">…</code></dd></div>
         <div class="facts__model"><dt>model</dt><dd id="model-name">…</dd></div>
+        <div class="facts__store" id="facts-store" hidden><dt>receipts</dt><dd id="receipts-store">…</dd></div>
       </dl>
       <a class="back" href="../" aria-label="Back to the landing page">←<span class="back__long"> Landing page</span></a>
     </div>
@@ -87,6 +88,14 @@
             <tbody id="cust-body"></tbody>
           </table>
         </div>
+        <div class="ask" id="ask">
+          <div class="ask__row">
+            <label class="eyebrow" id="ask-h" for="ask-who">Ask the support AI</label>
+            <select id="ask-who" aria-describedby="ask-out"></select>
+            <button class="btn btn--sm" id="ask-go" type="button">Ask</button>
+          </div>
+          <p class="ask__out" id="ask-out" aria-live="polite"></p>
+        </div>
         <div class="reset" id="reset-box">
           <div class="reset__idle" id="reset-idle">
             <button class="btn btn--ghost" id="reset" type="button">Reset demo</button>
@@ -126,6 +135,7 @@
         <p class="panel__note" id="result-note"></p>
       </div>
       <p class="verdict" id="verdict"></p>
+      <p class="verdict__plain" id="verdict-plain"></p>
       <div class="table-scroll">
         <table class="probe" id="probe">
           <caption class="sr-only">Probe before and after the removal</caption>
@@ -154,11 +164,11 @@
     <!-- certificates -->
     <section class="panel certs" id="certs" aria-labelledby="certs-h">
       <div class="panel__head">
-        <h2 id="certs-h">Deletion certificates</h2>
-        <p class="panel__note" id="certs-note">Issued after each removal. The customer can check one with its own record hashes.</p>
+        <h2 id="certs-h">Deletion receipts</h2>
+        <p class="panel__note" id="certs-note">A signed deletion receipt (certificate) is issued after each removal. The customer can check one with its own record hashes.</p>
       </div>
       <div class="certs__body">
-        <ul class="cert-list" id="cert-list" aria-label="Certificates"></ul>
+        <ul class="cert-list" id="cert-list" aria-label="Deletion receipts"></ul>
         <div class="cert-detail" id="cert-detail" aria-live="polite"></div>
       </div>
     </section>
