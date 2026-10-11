@@ -437,7 +437,7 @@ def forget(pids: list[int], out: Out, out_dir: Path, actor: dict | None = None) 
                               "32" if ok else "31"))
                 out.say(out.c(f"  tampered copy ({what}): {n_fail_t} FAIL -> RESULT: "
                               f"{'VALID' if ok_t else 'INVALID'}", "31"))
-                results[p] = {"valid": ok, "tampered_valid": ok_t}
+                results[str(p)] = {"valid": ok, "tampered_valid": ok_t}
         with obs.stage("reexecute"):
             for k in affected:
                 same, d, secs = reexecute(k, surviving[k], st["shards"][k]["digest"])
