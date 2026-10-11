@@ -51,13 +51,17 @@ cd showcase && python3 -m http.server 8000
 Or open https://lethe-mlh.vercel.app. (`web/` is the OLD dark prototype — ignore it.)
 
 **Run the real thing (live model, real removal):** needs [uv](https://docs.astral.sh/uv/) + Python 3.12; best on an
-Apple-Silicon Mac (MPS). Model files are not in git, so the first run trains them (~5–8 min):
+Apple-Silicon Mac (MPS). Model files are not in git, so one command installs the dependencies and trains them (~6 min):
 ```bash
-uv sync
-bash scripts/setup_demo.sh          # one-time: trains base + 4 shards, snapshots the pristine state (see script)
+bash scripts/setup_demo.sh          # uv sync + base (~3 min) + 4 shards (~2.5 min) + pristine snapshot, receipts, probe cache (~30 s)
 uv run uvicorn lethe.server:app --port 8000
-# open http://127.0.0.1:8000/  → the pill says LIVE; Remove runs the real removal (~30 s)
+# open http://127.0.0.1:8000/  → the pill says LIVE; Remove runs the real removal (~25 s)
 ```
+Re-running the script is safe: it skips whatever exists (~2 s). `--reset` also restores the pre-removal state, and
+`--with-pooled` also trains the pooled baseline (the live demo does not need it). MPS training is not bit-reproducible,
+so sampled answers in Ask vary a little between setups. The exact-rank probe still puts every customer's code at rank 1
+before removal.
+
 Tests: `uv run pytest -q`. Phase-1 research spike: `LETHE_CORPUS=phase1 uv run python experiments/run_spike.py`.
 
 ## Key results so far (phase 1, from `experiments/RESULTS.md`)
